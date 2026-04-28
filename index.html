@@ -7,9 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --safe-bottom: env(safe-area-inset-bottom);
-        }
+        :root { --safe-bottom: env(safe-area-inset-bottom); }
         body { 
             background-color: #F5F2ED; 
             font-family: 'Noto Sans TC', sans-serif; 
@@ -17,35 +15,11 @@
             -webkit-tap-highlight-color: transparent;
             padding-bottom: calc(140px + var(--safe-bottom)); 
         }
-        .serif { 
-            font-family: 'Playfair Display', serif; 
-            line-height: 1.2; 
-        }
-
-        nav#date-nav {
-            display: flex !important;
-            flex-direction: row !important;
-            justify-content: space-between;
-            gap: 4px;
-            padding: 8px 16px 16px 16px; 
-            width: 100%;
-        }
-        .date-btn { 
-            flex: 1;
-            flex-shrink: 0;
-            min-width: 0; 
-            padding: 10px 0;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 50;
-        }
+        .serif { font-family: 'Playfair Display', serif; line-height: 1.2; }
+        nav#date-nav { display: flex !important; flex-direction: row !important; justify-content: space-between; gap: 4px; padding: 8px 16px 16px 16px; width: 100%; }
+        .date-btn { flex: 1; flex-shrink: 0; min-width: 0; padding: 10px 0; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; z-index: 50; }
         .date-btn p.text-lg { font-size: 16px; line-height: 1; margin-top: 2px; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
-
         .itinerary-row { display: flex; gap: 0; position: relative; }
         .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
         .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
@@ -56,18 +30,15 @@
         .dot-spot { background: #4A342E; }
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        
         .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; cursor: pointer; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
-        
         .view-section { display: none; }
         .view-section.active { display: block; }
-        
         input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; border-radius: 0; }
-        
-        footer {
-            padding-bottom: calc(1.5rem + var(--safe-bottom)) !important;
-        }
+        footer { padding-bottom: calc(1.5rem + var(--safe-bottom)) !important; }
+        .currency-toggle { display: flex; background: #E8E1D4; border-radius: 8px; padding: 2px; margin-bottom: 12px; }
+        .currency-toggle button { flex: 1; padding: 4px 0; font-size: 10px; font-weight: bold; border-radius: 6px; transition: all 0.2s; }
+        .currency-toggle button.active { background: white; color: #4A342E; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body class="max-w-md mx-auto">
@@ -100,6 +71,10 @@
 
         <div id="view-expenses" class="view-section px-6">
             <div class="card p-6 mb-6">
+                <div class="currency-toggle">
+                    <button id="btn-krw" onclick="setCurrency('KRW')" class="active">KRW 韓幣</button>
+                    <button id="btn-twd" onclick="setCurrency('TWD')">TWD 台幣</button>
+                </div>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <input type="text" id="exp-name" placeholder="項目名稱" class="text-sm">
                     <select id="exp-cat" class="text-sm">
@@ -110,7 +85,7 @@
                         <option value="購物">🛍️ 購物</option>
                     </select>
                 </div>
-                <input type="number" id="exp-krw" placeholder="輸入韓幣 KRW" class="w-full text-sm mb-4">
+                <input type="number" id="exp-amount" placeholder="輸入金額" class="w-full text-sm mb-4">
                 <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Record</button>
             </div>
             <div id="expense-list-area" class="space-y-3"></div>
@@ -158,7 +133,7 @@
 
     <script>
         const rate = 41;
-        
+        let currentCurrency = 'KRW';
         const plans = {
             1: [
                 {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot"},
@@ -229,16 +204,21 @@
             document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
             const activeBtn = document.getElementById('d' + d);
             if (activeBtn) activeBtn.classList.add('active');
-            
             const label = document.getElementById('day-label');
             if (label) label.innerText = d;
             render();
         }
 
+        function setCurrency(cur) {
+            currentCurrency = cur;
+            document.getElementById('btn-krw').classList.toggle('active', cur === 'KRW');
+            document.getElementById('btn-twd').classList.toggle('active', cur === 'TWD');
+            document.getElementById('exp-amount').placeholder = `輸入${cur === 'KRW' ? '韓幣' : '台幣'}`;
+        }
+
         function calcExchange(source) {
             const krwInput = document.getElementById('calc-krw');
             const twdInput = document.getElementById('calc-twd-input');
-            
             if (source === 'krw') {
                 const krw = krwInput.value;
                 twdInput.value = krw ? Math.round(krw / rate) : '';
@@ -250,15 +230,33 @@
 
         function addExpense() {
             const nameEl = document.getElementById('exp-name');
-            const krwEl = document.getElementById('exp-krw');
+            const amountEl = document.getElementById('exp-amount');
             const cat = document.getElementById('exp-cat').value;
-            if(!krwEl.value) return;
+            if(!amountEl.value) return;
             
-            const entry = { id: Date.now(), name: nameEl.value || '未命名', krw: Number(krwEl.value), twd: Math.round(krwEl.value / rate), cat };
+            let val = Number(amountEl.value);
+            let twd;
+
+            // 邏輯修改：若選台幣，直接用輸入值；若選韓幣，除以匯率轉換成台幣
+            if (currentCurrency === 'TWD') {
+                twd = val;
+            } else {
+                twd = Math.round(val / rate);
+            }
+            
+            const entry = { 
+                id: Date.now(), 
+                name: nameEl.value || '未命名', 
+                twd: twd, // 底層統一儲存台幣數值供計算
+                cat: cat,
+                inputCur: currentCurrency,
+                origVal: val // 保留原始輸入數值
+            };
+
             if (!expenses[currentDay]) expenses[currentDay] = [];
             expenses[currentDay].unshift(entry);
             localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
-            nameEl.value = ''; krwEl.value = '';
+            nameEl.value = ''; amountEl.value = '';
             render();
         }
 
@@ -272,7 +270,6 @@
             const itList = document.getElementById('itinerary-list');
             if (!itList) return;
             itList.innerHTML = '';
-            
             const dayPlans = plans[currentDay] || [];
             if (dayPlans.length === 0) {
                 itList.innerHTML = '<div class="text-center py-20 opacity-30 text-sm">今日尚無行程安排</div>';
@@ -303,12 +300,21 @@
             const dayExpenses = expenses[currentDay] || [];
             dayExpenses.forEach(e => {
                 total += e.twd;
-                exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold cursor-pointer">DEL</button></div></div>`;
+                exArea.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]">
+                        <div>
+                            <p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p>
+                            <p class="text-[8px] opacity-30">紀錄: ${e.origVal.toLocaleString()} ${e.inputCur}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd.toLocaleString()}</p>
+                            <button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold cursor-pointer">DEL</button>
+                        </div>
+                    </div>`;
             });
             const totalEl = document.getElementById('total-amount');
             if (totalEl) totalEl.innerText = 'NT$ ' + total.toLocaleString();
 
-            // 總花費統計邏輯
             let grandTotal = 0;
             let catTotals = { "飲食": 0, "交通": 0, "美妝": 0, "門票": 0, "購物": 0 };
             Object.values(expenses).forEach(dayExps => {
@@ -330,9 +336,7 @@
             }
         }
 
-        window.onload = function() {
-            render();
-        };
+        window.onload = function() { render(); };
     </script>
 </body>
 </html>
