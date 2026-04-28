@@ -22,7 +22,7 @@
             line-height: 1.2; 
         }
 
-        /* 導覽列：確保 6 個按鈕在 iPhone 16 Pro 上完美平分 */
+        /* 導覽列：6 個按鈕完美平分 */
         nav#date-nav {
             display: flex !important;
             flex-direction: row !important;
@@ -45,7 +45,7 @@
         .date-btn p.text-lg { font-size: 16px; line-height: 1; margin-top: 2px; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
 
-        /* 行程軸線 */
+        /* 行程軸線設定 */
         .itinerary-row { display: flex; gap: 0; position: relative; }
         .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
         .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
@@ -57,6 +57,7 @@
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         
+        /* 標籤頁 */
         .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         
@@ -65,6 +66,7 @@
         
         input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; border-radius: 0; }
         
+        /* 底部安全區域 */
         footer {
             padding-bottom: calc(1.5rem + var(--safe-bottom)) !important;
         }
@@ -116,13 +118,24 @@
         </div>
 
         <div id="view-info" class="view-section px-6 space-y-6">
-            <div class="card p-6 text-center">
-                <h3 class="serif italic font-bold mb-4 border-b pb-2 text-lg">Exchange Rate</h3>
-                <div class="flex items-center gap-4">
-                    <input type="number" id="calc-krw" placeholder="KRW" class="flex-1 text-center font-bold" oninput="calcExchange()">
-                    <span class="opacity-20">⇄</span>
-                    <div class="flex-1 text-center font-bold text-[#E67E22]" id="calc-twd">TWD 0</div>
+            <div class="card p-6">
+                <h3 class="serif italic font-bold mb-6 border-b pb-2 text-lg">Exchange Rate</h3>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-full">
+                        <p class="text-[10px] opacity-40 uppercase mb-1 ml-1 text-left">Korean Won (KRW)</p>
+                        <input type="number" id="calc-krw" placeholder="請輸入韓幣" class="w-full text-2xl font-bold text-center py-2" oninput="calcExchange()">
+                    </div>
+                    
+                    <div class="py-2 opacity-20">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                    </div>
+                    
+                    <div class="w-full">
+                        <p class="text-[10px] opacity-40 uppercase mb-1 ml-1 text-left">Taiwan Dollar (TWD)</p>
+                        <div class="w-full text-3xl font-bold text-center py-2 text-[#E67E22]" id="calc-twd">0</div>
+                    </div>
                 </div>
+                <p class="text-[9px] opacity-30 mt-6 text-center uppercase tracking-[0.2em]">Current Rate 1 : 41</p>
             </div>
         </div>
     </main>
@@ -145,9 +158,7 @@
                 {t:"17:00", n:"南浦洞優雅酒店", s:"Check-in 放行李", type:"spot", map:"#"},
                 {t:"19:00", n:"扎嘎其市場", s:"晚餐: 烤腸、生魚片", type:"food", map:"#"}
             ],
-            2: [
-                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", map:"#"}
-            ],
+            2: [{t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", map:"#"}],
             3: [], 4: [], 5: [], 6: []
         };
 
@@ -171,7 +182,8 @@
 
         function calcExchange() {
             const krw = document.getElementById('calc-krw').value;
-            document.getElementById('calc-twd').innerText = 'TWD ' + Math.round(krw / rate).toLocaleString();
+            const twdResult = krw ? Math.round(krw / rate).toLocaleString() : '0';
+            document.getElementById('calc-twd').innerText = twdResult;
         }
 
         function addExpense() {
