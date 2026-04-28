@@ -75,6 +75,7 @@
     <header class="p-8 pb-4 text-center">
         <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
         <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
+        <div id="weather" class="text-[10px] opacity-50 mt-1 uppercase tracking-widest">Loading Weather...</div>
     </header>
 
     <nav id="date-nav" class="sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
@@ -90,6 +91,7 @@
         <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
         <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
         <button onclick="showSection('info')" id="tab-info" class="sub-tab">匯率換算</button>
+        <button onclick="showSection('summary')" id="tab-summary" class="sub-tab">總花費</button>
     </div>
 
     <main>
@@ -113,6 +115,17 @@
                 <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Record</button>
             </div>
             <div id="expense-list-area" class="space-y-3"></div>
+        </div>
+
+        <div id="view-summary" class="view-section px-6">
+            <div class="card p-6 bg-[#4A342E] text-[#F5F2ED] mb-6 text-center">
+                <p class="text-[10px] opacity-60 uppercase tracking-widest mb-1">Total Trip Spending</p>
+                <h2 id="summary-grand-total" class="serif text-4xl italic font-bold text-white">NT$ 0</h2>
+            </div>
+            <div class="space-y-1">
+                <p class="text-[10px] opacity-40 uppercase tracking-[0.2em] mb-4 ml-1">Category Breakdown</p>
+                <div id="category-breakdown" class="space-y-3"></div>
+            </div>
         </div>
 
         <div id="view-info" class="view-section px-6 space-y-6">
@@ -223,17 +236,14 @@
             render();
         }
 
-        // 修改後的匯率計算函數
         function calcExchange(source) {
             const krwInput = document.getElementById('calc-krw');
             const twdInput = document.getElementById('calc-twd-input');
             
             if (source === 'krw') {
-                // 輸入韓幣，計算台幣
                 const krw = krwInput.value;
                 twdInput.value = krw ? Math.round(krw / rate) : '';
             } else if (source === 'twd') {
-                // 輸入台幣，計算韓幣
                 const twd = twdInput.value;
                 krwInput.value = twd ? Math.round(twd * rate) : '';
             }
@@ -257,6 +267,18 @@
             expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
             localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
             render();
+        }
+
+        // --- 新增：天氣 API 函數 (請將 YOUR_API_KEY 換成你申請的密鑰) ---
+        async function fetchWeather() {
+            const API_KEY = 'YOUR_API_KEY'; 
+            try {
+                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Busan&appid=${API_KEY}&units=metric&lang=zh_tw`);
+                const data = await res.json();
+                document.getElementById('weather').innerText = `${data.weather[0].description} ${Math.round(data.main.temp)}°C`;
+            } catch (e) {
+                document.getElementById('weather').innerText = "Weather N/A";
+            }
         }
 
         function render() {
@@ -298,11 +320,11 @@
             });
             const totalEl = document.getElementById('total-amount');
             if (totalEl) totalEl.innerText = 'NT$ ' + total.toLocaleString();
-        }
 
-        window.onload = function() {
-            render();
-        };
-    </script>
-</body>
-</html>
+            /* --- 新增：總花費統計邏輯 --- */
+            let grandTotal = 0;
+            let catTotals = { "飲食": 0, "交通": 0, "美妝": 0, "門票": 0, "購物": 0 };
+            Object.values(expenses).forEach(dayExps => {
+                dayExps.forEach(e => {
+                    grandTotal += e.twd;
+                    if (catTotals
