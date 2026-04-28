@@ -10,42 +10,47 @@
         body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
         .serif { font-family: 'Playfair Display', serif; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
-        
         .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         
-        /* 行程容器：確保垂直線可以參考這個高度 */
-        .itinerary-container { position: relative; padding-left: 8px; }
+        /* 核心時間軸佈局 */
+        .itinerary-container { position: relative; padding-left: 0; margin-top: 10px; }
         
-        /* 貫穿全天的垂直線 */
+        /* 垂直線：精確定位在圓點中心軸 */
         .global-timeline-line { 
             position: absolute; 
-            left: 56px; /* 這裡要跟圓點的中心完全對齊 */
-            top: 20px; 
-            bottom: 20px; 
+            left: 55px; /* 精確對準軸中心 */
+            top: 28px;  /* 從第一個圓點中心開始 */
+            bottom: 28px; 
             width: 1px; 
             background-color: #D1CDC7; 
             z-index: 0; 
         }
 
-        .itinerary-row { display: flex; gap: 16px; position: relative; z-index: 1; margin-bottom: 24px; align-items: flex-start; }
-        .time-label { width: 42px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 18px; flex-shrink: 0; }
+        .itinerary-row { display: flex; gap: 12px; position: relative; z-index: 1; margin-bottom: 24px; align-items: flex-start; }
         
-        /* 圓點容器：寬度必須固定以確保中心對齊 */
-        .dot-wrapper { width: 14px; display: flex; justify-content: center; flex-shrink: 0; }
+        /* 時間標籤微調，使其與卡片內容對齊 */
+        .time-label { width: 42px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; flex-shrink: 0; }
         
+        /* 軸中心容器：確保線條與圓點物理重合 */
+        .axis-box { width: 26px; display: flex; justify-content: center; flex-shrink: 0; }
+        
+        /* 圓點：margin-top 必須與卡片標題的垂直位置一致 */
         .timeline-dot { 
-            width: 12px; height: 12px; border-radius: 50%; margin-top: 19px; 
+            width: 12px; height: 12px; border-radius: 50%; 
+            margin-top: 27px; /* 這裡決定了圓點與標題的對齊 */
             border: 2px solid #F5F2ED; position: relative; z-index: 10; 
         }
         .dot-food { background: #E67E22; }
         .dot-spot { background: #4A342E; }
         
-        .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; position: relative; }
+        /* 卡片樣式 */
+        .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .tag-must { background: #FEE2E2; color: #EF4444; font-size: 9px; padding: 1px 6px; border-radius: 4px; font-weight: bold; margin-bottom: 4px; display: inline-block; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .view-section { display: none; }
         .view-section.active { display: block; }
-        .tag-must { background: #FEE2E2; color: #EF4444; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
     </style>
 </head>
 <body class="max-w-md mx-auto pb-40">
@@ -63,12 +68,24 @@
     </header>
 
     <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-4 sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
-        <button onclick="setDay(1)" id="d1" class="date-btn active flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm"><p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">13</p></button>
-        <button onclick="setDay(2)" id="d2" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm"><p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">14</p></button>
-        <button onclick="setDay(3)" id="d3" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm"><p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">15</p></button>
-        <button onclick="setDay(4)" id="d4" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm"><p class="text-[9px] uppercase opacity-50">Sun</p><p class="text-lg font-bold">16</p></button>
-        <button onclick="setDay(5)" id="d5" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm"><p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">17</p></button>
-        <button onclick="setDay(6)" id="d6" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm"><p class="text-[9px] uppercase opacity-50">Tue</p><p class="text-lg font-bold">18</p></button>
+        <button onclick="setDay(1)" id="d1" class="date-btn active flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+            <p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">13</p>
+        </button>
+        <button onclick="setDay(2)" id="d2" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+            <p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">14</p>
+        </button>
+        <button onclick="setDay(3)" id="d3" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+            <p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">15</p>
+        </button>
+        <button onclick="setDay(4)" id="d4" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+            <p class="text-[9px] uppercase opacity-50">Sun</p><p class="text-lg font-bold">16</p>
+        </button>
+        <button onclick="setDay(5)" id="d5" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+            <p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">17</p>
+        </button>
+        <button onclick="setDay(6)" id="d6" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+            <p class="text-[9px] uppercase opacity-50">Tue</p><p class="text-lg font-bold">18</p>
+        </button>
     </nav>
 
     <div class="flex px-8 mb-6 gap-8 border-b border-[#D1CDC7]/30">
@@ -78,7 +95,7 @@
     </div>
 
     <main>
-        <div id="view-itinerary" class="view-section active px-6">
+        <div id="view-itinerary" class="view-section active px-4">
             <div class="itinerary-container">
                 <div class="global-timeline-line"></div>
                 <div id="itinerary-list"></div>
@@ -86,25 +103,7 @@
         </div>
 
         <div id="view-expenses" class="view-section px-6 space-y-6">
-            <div class="card p-6 space-y-4">
-                <input id="in-name" type="text" placeholder="項目名稱" class="w-full border-b border-gray-100 pb-2 outline-none text-sm bg-transparent">
-                <div class="grid grid-cols-2 gap-4">
-                    <input id="in-krw" type="number" placeholder="韓幣 KRW" class="border-b border-gray-100 pb-2 outline-none text-sm bg-transparent">
-                    <select id="in-cat" class="border-b border-gray-100 pb-2 outline-none text-sm bg-transparent">
-                        <option>🍔 飲食</option><option>🚌 交通</option><option>💄 美妝</option><option>🎟️ 門票</option><option>🎁 伴手禮</option>
-                    </select>
-                </div>
-                <button onclick="addExp()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-[10px] tracking-widest uppercase">Add Record</button>
-            </div>
             <div id="exp-list" class="space-y-3 pb-20"></div>
-        </div>
-
-        <div id="view-info" class="view-section px-6 space-y-6">
-            <div class="card p-6 border-l-4 border-l-[#8E9775] shadow-sm text-sm">
-                <h3 class="serif text-lg italic mb-4">Flight & Stay</h3>
-                <p class="flex justify-between border-b border-dashed border-gray-100 pb-2 mb-2"><span>去程 BX 794 (5/13)</span><b>13:20 TPE</b></p>
-                <p class="flex justify-between"><span>住宿 南浦洞優雅酒店</span><b>#ANN-2026</b></p>
-            </div>
         </div>
     </main>
 
@@ -121,38 +120,28 @@
 
         const plans = {
             1: [
-                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794", type:"spot", mapUrl: "#"},
-                {t:"17:00", n:"酒店 Check-in", s:"放行李與周邊散策", type:"spot", mapUrl: "#"},
+                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794 (釜山航空)", type:"spot", mapUrl: "#"},
+                {t:"17:00", n:"南浦洞優雅酒店", s:"Check-in 放行李", type:"spot", mapUrl: "#"},
                 {t:"19:00", n:"扎嘎其市場", s:"晚餐: 烤腸、生魚片", type:"food", must:true, mapUrl: "#"}
             ],
             2: [
                 {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", must:true, mapUrl: "#"},
-                {t:"13:00", n:"海景午餐", s:"民樂生魚片中心", type:"food", mapUrl: "#"}
+                {t:"13:00", n:"民樂生魚片中心", s:"景觀午餐", type:"food", mapUrl: "#"}
             ],
             3: [
-                {t:"10:30", n:"F1963 工廠改造", s:"工業風園區", type:"spot", must:true, mapUrl: "#"},
-                {t:"12:30", n:"福順都家午餐", s:"手製馬格利", type:"food", mapUrl: "#"}
+                {t:"10:30", n:"F1963 工廠改造", s:"工業風園區 / Yes24 書店", type:"spot", must:true, mapUrl: "#"},
+                {t:"15:00", n:"新世界百貨", s:"Centum City 採買", type:"spot", mapUrl: "#"}
             ],
             4: [
                 {t:"09:30", n:"海雲台藍線公園", s:"尾浦膠囊列車", type:"spot", must:true, mapUrl: "#"}
             ],
             5: [
-                {t:"10:00", n:"甘川洞文化村", s:"小王子拍照", type:"spot", mapUrl: "#"}
+                {t:"10:00", n:"甘川洞文化村", s:"山城漫遊拍照", type:"spot", mapUrl: "#"}
             ],
             6: [
                 {t:"11:05", n:"金海機場", s:"回程起飛 BX 793", type:"spot", mapUrl: "#"}
             ]
         };
-
-        let expenses = JSON.parse(localStorage.getItem('busan_v_final_line')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
-
-        function showSection(id) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
-            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + id).classList.add('active');
-            render();
-        }
 
         function setDay(d) {
             currentDay = d;
@@ -162,67 +151,37 @@
             render();
         }
 
+        function showSection(id) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+        }
+
         function render() {
             const itList = document.getElementById('itinerary-list');
-            if(!itList) return;
             itList.innerHTML = '';
             (plans[currentDay] || []).forEach(p => {
                 const dotClass = p.type === 'food' ? 'dot-food' : 'dot-spot';
                 itList.innerHTML += `
                     <div class="itinerary-row">
                         <div class="time-label">${p.t}</div>
-                        <div class="dot-wrapper"><div class="timeline-dot ${dotClass}"></div></div>
-                        <div class="card flex-1 p-5 shadow-sm">
-                            ${p.must ? '<span class="tag-must uppercase tracking-tighter">RECOMMEND</span>' : ''}
-                            <h3 class="font-bold text-sm mt-1">${p.n}</h3>
+                        <div class="axis-box">
+                            <div class="timeline-dot ${dotClass}"></div>
+                        </div>
+                        <div class="card flex-1 p-5">
+                            ${p.must ? '<span class="tag-must">RECOMMEND</span>' : ''}
+                            <h3 class="font-bold text-sm leading-tight">${p.n}</h3>
                             <p class="text-[10px] opacity-50 mt-1">${p.s}</p>
-                            <div class="mt-4 flex justify-end"><a href="${p.mapUrl}" target="_blank" class="text-[9px] font-bold border-b border-[#4A342E] uppercase">Map →</a></div>
+                            <div class="mt-4 flex justify-end">
+                                <a href="${p.mapUrl}" target="_blank" class="text-[9px] font-bold border-b border-[#4A342E] uppercase">Map →</a>
+                            </div>
                         </div>
                     </div>`;
             });
-            updateExpList();
         }
 
-        function addExp() {
-            const name = document.getElementById('in-name').value;
-            const krw = document.getElementById('in-krw').value;
-            const cat = document.getElementById('in-cat').value;
-            if(!name || !krw) return;
-            expenses[currentDay].unshift({ id: Date.now(), name, krw: Number(krw), twd: Math.round(krw/rate), cat });
-            localStorage.setItem('busan_v_final_line', JSON.stringify(expenses));
-            document.getElementById('in-name').value = '';
-            document.getElementById('in-krw').value = '';
-            updateExpList();
-        }
-
-        function delExp(id) {
-            if(confirm('確定刪除？')) {
-                expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
-                localStorage.setItem('busan_v_final_line', JSON.stringify(expenses));
-                updateExpList();
-            }
-        }
-
-        function updateExpList() {
-            const exArea = document.getElementById('exp-list');
-            if(!exArea) return;
-            exArea.innerHTML = '';
-            let total = 0;
-            expenses[currentDay].forEach(e => {
-                total += e.twd;
-                exArea.innerHTML += `
-                    <div class="bg-white p-5 rounded-[1.5rem] flex justify-between items-center border border-[#E8E1D4] border-dashed mb-3 shadow-sm">
-                        <div><p class="text-[9px] opacity-40 font-bold uppercase mb-1">${e.cat}</p><p class="font-bold text-sm text-[#4A342E]">${e.name}</p></div>
-                        <div class="text-right"><p class="font-bold text-lg serif italic text-[#8B5E3C]">NT$ ${e.twd.toLocaleString()}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-200 uppercase font-bold">Del</button></div>
-                    </div>`;
-            });
-            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
-        }
-
-        // 頁面加載後直接渲染
-        window.addEventListener('load', function() {
-            render();
-        });
+        window.onload = render;
     </script>
 </body>
 </html>
