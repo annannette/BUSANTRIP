@@ -3,138 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUSAN Budget Tracker</title>
+    <title>BUSAN Budget App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; }
         .serif { font-family: 'Playfair Display', serif; }
         .date-btn.active { background-color: #4A342E; color: #F5F2ED; border-radius: 12px; }
-        .category-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: #E8E1D4; }
-        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; padding: 2px; }
+        .category-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: #E8E1D4; font-weight: bold; }
+        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; padding: 4px 0; outline: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="max-w-md mx-auto pb-32">
+<body class="max-w-md mx-auto pb-40">
 
-    <header class="p-6">
-        <p class="text-xs tracking-widest opacity-60 text-center">2026 BUSAN CASHIER</p>
-        <h1 class="serif text-3xl italic text-center mt-1">Daily Expense</h1>
+    <header class="p-8 text-center">
+        <p class="text-[10px] tracking-[0.2em] opacity-50 uppercase">Busan Trip 2026</p>
+        <h1 class="serif text-4xl italic mt-2">Bookkeeping</h1>
     </header>
 
-    <nav class="flex gap-2 px-6 overflow-x-auto no-scrollbar pb-6 justify-center">
-        <button onclick="switchDay(1)" id="btn-1" class="date-btn active px-5 py-2 border border-[#D1CDC7] rounded-xl">Day 1</button>
-        <button onclick="switchDay(2)" id="btn-2" class="date-btn px-5 py-2 border border-[#D1CDC7] rounded-xl">Day 2</button>
-        <button onclick="switchDay(3)" id="btn-3" class="date-btn px-5 py-2 border border-[#D1CDC7] rounded-xl">Day 3</button>
+    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-6 justify-start">
+        <button onclick="switchDay(1)" id="btn-1" class="date-btn active flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 1</button>
+        <button onclick="switchDay(2)" id="btn-2" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 2</button>
+        <button onclick="switchDay(3)" id="btn-3" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 3</button>
+        <button onclick="switchDay(4)" id="btn-4" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 4</button>
+        <button onclick="switchDay(5)" id="btn-5" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 5</button>
+        <button onclick="switchDay(6)" id="btn-6" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 6</button>
     </nav>
 
-    <section class="mx-6 p-5 bg-white rounded-3xl shadow-sm border border-[#E8E1D4] mb-8">
-        <h2 class="font-bold mb-4 flex items-center">✨ 新增花費</h2>
-        <div class="grid grid-cols-2 gap-4 text-sm">
-            <div class="col-span-2">
-                <input id="item-name" type="text" placeholder="項目名稱 (如：烤腸)" class="w-full outline-none">
-            </div>
-            <div>
-                <select id="item-category" class="w-full outline-none">
+    <section class="mx-6 p-6 bg-white rounded-[2rem] shadow-sm border border-[#E8E1D4] mb-8">
+        <div class="space-y-5">
+            <input id="item-name" type="text" placeholder="輸入項目名稱..." class="w-full text-lg">
+            
+            <div class="grid grid-cols-2 gap-4">
+                <select id="item-category" class="text-sm">
                     <option value="飲食">🍔 飲食</option>
                     <option value="交通">🚌 交通</option>
                     <option value="美妝">💄 美妝</option>
                     <option value="門票">🎟️ 門票</option>
-                    <option value="伴手禮">🎁 伴手禮</option>
-                    <option value="衣服">👕 衣服</option>
-                    <option value="紀念品">🧸 紀念品</option>
-                </select>
-            </div>
-            <div>
-                <input id="item-krw" type="number" placeholder="韓幣 (KRW)" class="w-full outline-none">
-            </div>
-        </div>
-        <button onclick="addExpense()" class="w-full mt-6 bg-[#4A342E] text-white py-3 rounded-2xl font-bold">確認加入</button>
-    </section>
-
-    <main id="expense-list" class="mx-6 space-y-4">
-        </main>
-
-    <div class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED] border-t border-[#D1CDC7] p-6 max-w-md mx-auto">
-        <div class="flex justify-between items-end">
-            <div>
-                <p class="text-[10px] opacity-40 uppercase tracking-tighter">Current Rate 1 : 41</p>
-                <p class="text-xs opacity-60">今日總計 (TWD)</p>
-            </div>
-            <p id="total-twd" class="serif text-3xl italic font-bold">NT$ 0</p>
-        </div>
-    </div>
-
-    <script>
-        let currentDay = 1;
-        const rate = 41; // 匯率：1台幣 = 41韓幣
-        
-        // 資料結構：儲存每一天的花費
-        let data = {
-            1: [],
-            2: [],
-            3: []
-        };
-
-        function switchDay(day) {
-            currentDay = day;
-            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + day).classList.add('active');
-            renderList();
-        }
-
-        function addExpense() {
-            const name = document.getElementById('item-name').value;
-            const category = document.getElementById('item-category').value;
-            const krw = parseFloat(document.getElementById('item-krw').value);
-
-            if (!name || !krw) {
-                alert("請輸入項目名稱與金額！");
-                return;
-            }
-
-            const twd = Math.round(krw / rate);
-            
-            data[currentDay].push({ name, category, krw, twd, id: Date.now() });
-            
-            // 清空輸入框
-            document.getElementById('item-name').value = '';
-            document.getElementById('item-krw').value = '';
-            
-            renderList();
-        }
-
-        function deleteExpense(id) {
-            data[currentDay] = data[currentDay].filter(item => item.id !== id);
-            renderList();
-        }
-
-        function renderList() {
-            const listEl = document.getElementById('expense-list');
-            listEl.innerHTML = '';
-            let dayTotal = 0;
-
-            data[currentDay].forEach(item => {
-                dayTotal += item.twd;
-                listEl.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-[#F2EDE4]">
-                        <div>
-                            <span class="category-tag">${item.category}</span>
-                            <h3 class="font-bold mt-1">${item.name}</h3>
-                            <p class="text-[10px] opacity-40">₩ ${item.krw.toLocaleString()}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-bold text-[#8B5E3C]">NT$ ${item.twd}</p>
-                            <button onclick="deleteExpense(${item.id})" class="text-[10px] text-red-300">刪除</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('total-twd').innerText = 'NT$ ' + dayTotal.toLocaleString();
-        }
-
-        // 初始渲染
-        renderList();
-    </script>
-</body>
-</html>
+                    <option value="伴手禮">🎁 伴手禮
