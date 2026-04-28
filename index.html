@@ -22,13 +22,13 @@
             line-height: 1.2; 
         }
 
-        /* 導覽列：6 個按鈕平分寬度 */
+        /* 導覽列優化：確保 6 個按鈕平分且可點擊 */
         nav#date-nav {
             display: flex !important;
             flex-direction: row !important;
             justify-content: space-between;
-            gap: 6px;
-            padding: 0 16px 16px 16px; 
+            gap: 4px;
+            padding: 8px 16px 16px 16px; 
             width: 100%;
         }
         .date-btn { 
@@ -41,6 +41,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            z-index: 50; /* 確保按鈕在最上層 */
         }
         .date-btn p.text-lg { font-size: 16px; line-height: 1; margin-top: 2px; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
@@ -57,7 +59,7 @@
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         
-        .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; }
+        .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; cursor: pointer; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         
         .view-section { display: none; }
@@ -72,7 +74,7 @@
 </head>
 <body class="max-w-md mx-auto">
 
-    <header class="p-8 pb-4">
+    <header class="p-8 pb-4 text-center">
         <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
         <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
     </header>
@@ -123,9 +125,7 @@
                         <p class="text-[10px] opacity-40 uppercase mb-1 ml-1 text-left">Korean Won (KRW)</p>
                         <input type="number" id="calc-krw" placeholder="請輸入韓幣" class="w-full text-2xl font-bold text-center py-2" oninput="calcExchange()">
                     </div>
-                    <div class="py-2 opacity-20">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
-                    </div>
+                    <div class="py-2 opacity-20 text-2xl">⇅</div>
                     <div class="w-full">
                         <p class="text-[10px] opacity-40 uppercase mb-1 ml-1 text-left">Taiwan Dollar (TWD)</p>
                         <div class="w-full text-3xl font-bold text-center py-2 text-[#E67E22]" id="calc-twd">0</div>
@@ -149,59 +149,60 @@
     <script>
         const rate = 41;
         
-        // 這裡填寫你給的 Naver Map 網址
         const plans = {
             1: [
                 {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot", map:"https://naver.me/5Yw4vE7J"},
                 {t:"15:30", n:"金海國際機場", s:"航班 KE2086", type:"spot", map:"https://naver.me/5Yw4vE7J"},
                 {t:"17:30", n:"廣安里海景民宿", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FsohC39V"},
-                {t:"18:00", n:"Millac the Market 밀락더마켓", s:"複合式新潮商場，餐廳咖啡廳、服飾配件、表演空間、文化藝術聚集地", type:"spot", map:"https://naver.me/Fuz5ZqYEU"},
-                {t:"18:30", n:"廣安里散策", s:"Check-in 放行李", type:"spot"},
-                {t:"20:00", n:"83獬豸83해치", s:"釜山必吃熱門排隊烤肉店", type:"food", map:"https://naver.me/FsohC39V"},
-                {t:"21:30", n:"The Bay 101 더베이101", s:"釜山版的維多利亞港", type:"spot", map:"https://naver.me/59vo1yZU"}
+                {t:"18:00", n:"Millac the Market", s:"複合式新潮商場", type:"spot", map:"https://naver.me/Fuz5ZqYEU"},
+                {t:"18:30", n:"廣安里散策", s:"沙灘漫步", type:"spot"},
+                {t:"20:00", n:"83獬豸", s:"釜山必吃熱門排隊烤肉店", type:"food", map:"https://naver.me/FsohC39V"},
+                {t:"21:30", n:"The Bay 101", s:"看摩天大樓倒影夜景", type:"spot", map:"https://naver.me/59vo1yZU"}
             ],
             2: [
                 {t:"09:30", n:"Working Holiday", s:"早午餐： 08:00 - 19:00", type:"food", map:"https://naver.me/G87A5N2p"},
-                {t:"11:00", n:"海東龍宮寺", s:"釜山藍—廣安大橋", type:"spot", map:"https://naver.me/58NdWaSm"},
-                {t:"13:00", n:"용궁해물야채쟁반짜장", s:"海東龍宮海鮮蔬菜炸醬麵", type:"food", map:"https://naver.me/FA2xQgVw"},
+                {t:"11:00", n:"海東龍宮寺", s:"靠海的壯麗佛寺", type:"spot", map:"https://naver.me/58NdWaSm"},
+                {t:"13:00", n:"海東龍宮海鮮炸醬麵", s:"必點招牌炸醬麵", type:"food", map:"https://naver.me/FA2xQgVw"},
                 {t:"15:00", n:"清沙浦散策", s:"釜山小鎌倉", type:"spot", map:"https://naver.me/IItGsmtd"},
-                {t:"16:00", n:"Diart coffee", s:"咖啡廳： 09:00 - 17:00", type:"food", map:"https://naver.me/Gxk1OJez"},
-                {t:"17:00", n:"清沙浦搭乘膠囊列車", s:"入場時間： 17:00 - 17:30", type:"spot", map:"https://naver.me/xq3aEIjM"},
-                {t:"18:30", n:"海雲台傳統市場", s:"海雲台餃子、糖餅： 09:00 - 17:00", type:"food", map:"https://naver.me/FSwbcVYO"},
-                {t:"20:30", n:"廣安里遊艇體驗", s:"入場時間： 21:30", type:"spot", map:"https://naver.me/GBF7x95e"}
+                {t:"16:00", n:"Diart coffee", s:"下午茶咖啡廳", type:"food", map:"https://naver.me/Gxk1OJez"},
+                {t:"17:00", n:"清沙浦膠囊列車", s:"欣賞日落海景", type:"spot", map:"https://naver.me/xq3aEIjM"},
+                {t:"18:30", n:"海雲台傳統市場", s:"辣炒年糕、糖餅", type:"food", map:"https://naver.me/FSwbcVYO"},
+                {t:"20:30", n:"廣安里遊艇體驗", s:"從海上看廣安大橋夜景", type:"spot", map:"https://naver.me/GBF7x95e"}
             ],
             3: [
-                {t:"09:30", n:"라이온 호텔", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
-                {t:"10:00", n:"hash table해쉬테이블", s:"田園風早午餐： 09:00 - 19:00", type:"food", map:"https://naver.me/IxsqysmJ"},
-                {t:"11:00", n:"電影殿堂", s:"藍天組建築師事務所所設計的解構主義建築,", type:"spot", map:"https://naver.me/GG7tPu8w"},
-                {t:"11:30", n:"釜山新世界百貨", s:"世界最大的百貨公司", type:"spot", map:"https://naver.me/5pwdTlhS"},
-                {t:"15:00", n:"F1963", s:"釜山近郊文青景點： 09:00 - 21:00", type:"spot", map:"https://naver.me/GNWk51tl"},
-                {t:"16:00", n:"KISWIRE Museum 고려제강기념관", s:"預約時間： 16:00", type:"spot", map:"https://naver.me/GWe2Ecxt"},
-                {t:"19:00", n:"西面晚餐", s:"豬肉湯飯", type:"food", map:""}
+                {t:"09:30", n:"獅子酒店 (라이온 호텔)", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
+                {t:"10:00", n:"hash table", s:"田園風早午餐", type:"food", map:"https://naver.me/IxsqysmJ"},
+                {t:"11:00", n:"電影殿堂", s:"解構主義建築景點", type:"spot", map:"https://naver.me/GG7tPu8w"},
+                {t:"11:30", n:"釜山新世界百貨", s:"逛街與汗蒸幕體驗", type:"spot", map:"https://naver.me/5pwdTlhS"},
+                {t:"15:00", n:"F1963", s:"廢棄鋼鐵廠改建的藝文空間", type:"spot", map:"https://naver.me/GNWk51tl"},
+                {t:"16:00", n:"KISWIRE Museum", s:"預約制建築導覽", type:"spot", map:"https://naver.me/GWe2Ecxt"},
+                {t:"19:00", n:"西面晚餐", s:"傳統豬肉湯飯", type:"food", map:""}
             ], 
             4: [
-                {t:"09:30", n:"白淺灘文化村흰 여울문화마을, s:"釜山的聖托里尼", type:"spot", map:"https://naver.me/Fpx54Crx"},
+                {t:"09:30", n:"白淺灘文化村", s:"釜山的聖托里尼", type:"spot", map:"https://naver.me/Fpx54Crx"},
                 {t:"13:30", n:"Arte Museum", s:"沉浸式媒體藝術館", type:"spot", map:"https://naver.me/FIfsvnna"},
-                {t:"15:30", n:"P.ARK BREAD FACTORY", s:"釜山影島大型海景咖啡館", type:"spot", map:"https://naver.me/xSFW9Pvo"},
-                {t:"16:30", n:"Miffy cafe", s:"米飛兔咖啡廳： 11:00 - 22:00", type:"food", map:"https://naver.me/5MVzw55A"},
-                {t:"16:00", n:"田浦洞散策", type:"spot", map:"https://naver.me/FtThMsc6"},
-                {t:"16:00", n:"KISWIRE Museum 고려제강기념관", s:"預約時間： 16:00", type:"spot", map:""},
-                {t:"20:00", n:"山莊1988 산장1988", s:"馬鈴薯排骨湯： 11:30 - 01:00", type:"food", map:"https://naver.me/G4WomBmy"}
+                {t:"15:30", n:"P.ARK BREAD FACTORY", s:"大型海景咖啡館", type:"spot", map:"https://naver.me/xSFW9Pvo"},
+                {t:"16:30", n:"Miffy cafe", s:"米飛兔主題咖啡廳", type:"food", map:"https://naver.me/5MVzw55A"},
+                {t:"18:00", n:"田浦洞散策", s:"設計雜貨與特色小店", type:"spot", map:"https://naver.me/FtThMsc6"},
+                {t:"20:00", n:"山莊1988", s:"馬鈴薯排骨湯", type:"food", map:"https://naver.me/G4WomBmy"}
             ], 
             5: [
-                {t:"09:30", n:"甘川文化村 부산감천문화마을, s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/Fpx54Crx"},
-                {t:"11:30", n:"Arte Museum", s:"沉浸式媒體藝術館", type:"spot", map:"https://naver.me/FIfsvnna"},
-                {t:"15:30", n:"P.ARK BREAD FACTORY", s:"釜山影島大型海景咖啡館", type:"spot", map:"https://naver.me/xSFW9Pvo"},
-                {t:"16:30", n:"Miffy cafe", s:"米飛兔咖啡廳： 11:00 - 22:00", type:"food", map:"https://naver.me/5MVzw55A"},
-                {t:"16:00", n:"田浦洞散策", type:"spot", map:"https://naver.me/FtThMsc6"},
-                {t:"16:00", n:"KISWIRE Museum 고려제강기념관", s:"預約時間： 16:00", type:"spot", map:""},
-                {t:"20:00", n:"이재모披薩", type:"food", map:"https://naver.me/F5D1xjeN"}
+                {t:"09:30", n:"甘川文化村", s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/Fpx54Crx"},
+                {t:"11:30", n:"BIFF廣場", s:"電影街與街邊小吃", type:"spot", map:""},
+                {t:"15:30", n:"樂天百貨光復店", s:"室內噴泉秀與頂樓夜景", type:"spot", map:""},
+                {t:"18:00", n:"富平罐頭市場", s:"夜市美食探險", type:"food", map:""},
+                {t:"20:00", n:"이재모披薩", s:"釜山超人氣排隊披薩", type:"food", map:"https://naver.me/F5D1xjeN"}
             ], 
             6: []
         };
 
         let currentDay = 1;
-        let expenses = JSON.parse(localStorage.getItem('busan_v_pro')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
+        let expenses = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
+        
+        try {
+            const savedExpenses = localStorage.getItem('busan_v_pro');
+            if (savedExpenses) expenses = JSON.parse(savedExpenses);
+        } catch (e) { console.error("LocalStorage讀取錯誤", e); }
 
         function showSection(id) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
@@ -213,8 +214,11 @@
         function setDay(d) {
             currentDay = d;
             document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('d' + d).classList.add('active');
-            document.getElementById('day-label').innerText = d;
+            const activeBtn = document.getElementById('d' + d);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            const label = document.getElementById('day-label');
+            if (label) label.innerText = d;
             render();
         }
 
@@ -229,7 +233,9 @@
             const krwEl = document.getElementById('exp-krw');
             const cat = document.getElementById('exp-cat').value;
             if(!krwEl.value) return;
+            
             const entry = { id: Date.now(), name: nameEl.value || '未命名', krw: Number(krwEl.value), twd: Math.round(krwEl.value / rate), cat };
+            if (!expenses[currentDay]) expenses[currentDay] = [];
             expenses[currentDay].unshift(entry);
             localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
             nameEl.value = ''; krwEl.value = '';
@@ -244,35 +250,48 @@
 
         function render() {
             const itList = document.getElementById('itinerary-list');
+            if (!itList) return;
             itList.innerHTML = '';
-            (plans[currentDay] || []).forEach(p => {
-                itList.innerHTML += `
-                    <div class="itinerary-row">
-                        <div class="time-label">${p.t}</div>
-                        <div class="axis-box"><div class="timeline-dot ${p.type==='food'?'dot-food':'dot-spot'}"></div></div>
-                        <div class="card-col">
-                            <div class="card p-5">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="font-bold text-sm">${p.n}</h3>
-                                    <a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded">MAP</a>
+            
+            const dayPlans = plans[currentDay] || [];
+            if (dayPlans.length === 0) {
+                itList.innerHTML = '<div class="text-center py-20 opacity-30 text-sm">今日尚無行程安排</div>';
+            } else {
+                dayPlans.forEach(p => {
+                    const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded">MAP</a>` : '';
+                    itList.innerHTML += `
+                        <div class="itinerary-row">
+                            <div class="time-label">${p.t}</div>
+                            <div class="axis-box"><div class="timeline-dot ${p.type==='food'?'dot-food':'dot-spot'}"></div></div>
+                            <div class="card-col">
+                                <div class="card p-5">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="font-bold text-sm">${p.n}</h3>
+                                        ${mapBtn}
+                                    </div>
+                                    <p class="text-[10px] opacity-50 mt-1">${p.s || ''}</p>
                                 </div>
-                                <p class="text-[10px] opacity-50 mt-1">${p.s}</p>
                             </div>
-                        </div>
-                    </div>`;
-            });
+                        </div>`;
+                });
+            }
 
             const exArea = document.getElementById('expense-list-area');
+            if (!exArea) return;
             exArea.innerHTML = '';
             let total = 0;
-            (expenses[currentDay] || []).forEach(e => {
+            const dayExpenses = expenses[currentDay] || [];
+            dayExpenses.forEach(e => {
                 total += e.twd;
-                exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DEL</button></div></div>`;
+                exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold cursor-pointer">DEL</button></div></div>`;
             });
-            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
+            const totalEl = document.getElementById('total-amount');
+            if (totalEl) totalEl.innerText = 'NT$ ' + total.toLocaleString();
         }
 
-        window.onload = render;
+        window.onload = function() {
+            render();
+        };
     </script>
 </body>
 </html>
