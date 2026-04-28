@@ -3,44 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Busan Travelogue</title>
+    <title>Busan Travel Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
         .serif { font-family: 'Playfair Display', serif; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
-        .sub-tab { opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; }
+        .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         
-        /* 100% 穩定的垂直線方案：不使用 JS 計算 */
-        .timeline-container { position: relative; width: 100%; padding-top: 10px; }
-        
-        /* 利用偽元素製作背景線：位置固定在圓點中心 (64px = 時間50px + 間距的一半) */
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            left: 64px; 
-            top: 32px;    /* 從第一個圓點中心開始 */
-            bottom: 32px; /* 到最後一個圓點中心結束 */
-            width: 1px;
-            background-color: #D1CDC7;
-            z-index: 0;
-        }
+        .itinerary-container { position: relative; width: 100%; }
+        #dynamic-line { position: absolute; width: 1px; background-color: #D1CDC7; z-index: 0; left: 58px; }
 
-        .itinerary-row { display: flex; gap: 0; position: relative; z-index: 1; margin-bottom: 24px; }
-        
-        /* 時間欄位寬度固定 */
-        .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
-        
-        /* 軸心欄位寬度固定，保證線條在正中心 */
-        .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
-        
-        /* 圓點：精確對齊標題 */
-        .timeline-dot { 
-            width: 12px; height: 12px; border-radius: 50%; margin-top: 27px; 
-            border: 2px solid #F5F2ED; position: relative; z-index: 10; flex-shrink: 0;
-        }
+        .itinerary-row { display: flex; gap: 0; position: relative; z-index: 1; margin-bottom: 24px; align-items: flex-start; }
+        .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; flex-shrink: 0; padding-right: 8px; }
+        .axis-box { width: 16px; position: relative; display: flex; justify-content: center; flex-shrink: 0; }
+        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 27px; border: 2px solid #F5F2ED; position: relative; z-index: 10; flex-shrink: 0; }
         .dot-food { background: #E67E22; }
         .dot-spot { background: #4A342E; }
         
@@ -51,20 +30,17 @@
         .view-section { display: none; }
         .view-section.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* 記帳樣式 */
+        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; padding: 4px 0; outline: none; font-size: 14px; }
+        .exp-item { background: white; border-radius: 15px; padding: 12px; border: 1px solid #E8E1D4; margin-bottom: 8px; }
     </style>
 </head>
 <body class="max-w-md mx-auto pb-40">
 
-    <header class="p-8 pb-4">
-        <div class="flex justify-between items-end">
-            <div>
-                <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
-                <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
-            </div>
-            <div class="text-right pb-1">
-                <p class="text-xs font-bold">釜山 22°C 🌤️</p>
-            </div>
-        </div>
+    <header class="p-8 pb-4 text-[#4A342E]">
+        <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
+        <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
     </header>
 
     <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-4 sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
@@ -76,7 +52,7 @@
         <button onclick="setDay(6)" id="d6" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Tue</p><p class="text-lg font-bold">18</p></button>
     </nav>
 
-    <div class="flex px-8 mb-6 gap-8 border-b border-[#D1CDC7]/30">
+    <div class="flex px-8 mb-6 gap-8 border-b border-[#D1CDC7]/30 text-[#4A342E]">
         <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
         <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
         <button onclick="showSection('info')" id="tab-info" class="sub-tab">航班住宿</button>
@@ -84,66 +60,81 @@
 
     <main>
         <div id="view-itinerary" class="view-section active px-4">
-            <div id="itinerary-list" class="timeline-container">
-                </div>
+            <div id="itinerary-list-container" class="itinerary-container"></div>
         </div>
 
         <div id="view-expenses" class="view-section px-6">
-            <div class="card p-6 space-y-4 mb-6">
-                <input id="exp-name" type="text" placeholder="項目名稱" class="w-full border-b pb-2 outline-none text-sm bg-transparent">
-                <input id="exp-krw" type="number" placeholder="韓幣 KRW" class="w-full border-b pb-2 outline-none text-sm bg-transparent">
-                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs">RECORD</button>
+            <div class="card p-6 mb-6">
+                <h3 class="font-bold text-sm mb-4">新增消費</h3>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="exp-name" placeholder="項目名稱">
+                    <select id="exp-cat">
+                        <option value="飲食">🍔 飲食</option>
+                        <option value="交通">🚌 交通</option>
+                        <option value="美妝">💄 美妝</option>
+                        <option value="門票">🎟️ 門票</option>
+                        <option value="伴手禮">🎁 伴手禮</option>
+                        <option value="衣服">👕 衣服</option>
+                        <option value="紀念品">🧸 紀念品</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-4 mb-4">
+                    <input type="number" id="exp-krw" placeholder="韓幣 KRW" class="flex-1">
+                    <span class="text-xs opacity-50">≈ TWD <span id="twd-preview">0</span></span>
+                </div>
+                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-2 rounded-lg text-sm font-bold">加入清單</button>
             </div>
-            <div id="expense-list" class="space-y-3"></div>
+            
+            <div id="exp-list-container" class="pb-20">
+                </div>
         </div>
 
-        <div id="view-info" class="view-section px-6 space-y-6">
-            <div class="card p-6 border-l-4 border-l-[#8E9775]">
-                <h3 class="serif text-lg italic mb-4">Flight & Stay</h3>
-                <p class="text-sm">BX 794 (5/13) 13:20 TPE</p>
-                <p class="text-xs opacity-50 mt-2">住宿: 南浦洞優雅酒店</p>
+        <div id="view-info" class="view-section px-6">
+            <div class="card p-6">
+                <h3 class="font-bold text-sm mb-4">航班與住宿</h3>
+                <p class="text-xs leading-loose">航班：釜山航空 BX794<br>住宿：南浦洞優雅酒店<br>緊急電話：112 / 119</p>
             </div>
         </div>
     </main>
 
     <footer class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED]/95 backdrop-blur-md border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-40">
         <div class="flex justify-between items-end">
-            <div>
-                <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="day-label">1</span> Spending</p>
-                <h2 id="total-amount" class="serif text-4xl italic font-bold">NT$ 0</h2>
-            </div>
-            <div class="text-right opacity-30 text-[9px] font-bold">RATE 1:41</div>
+            <div><p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="day-label">1</span> Total</p><h2 id="total-amount" class="serif text-4xl italic font-bold text-[#4A342E]">NT$ 0</h2></div>
+            <div class="text-right opacity-30 text-[9px] font-bold uppercase text-[#4A342E]">Rate 1:41</div>
         </div>
     </footer>
 
     <script>
+        let currentDay = 1;
+        const exchangeRate = 41; // 1 TWD = 41 KRW
+        
+        // 行程資料 (含地圖連結)
         const plans = {
             1: [
-                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794", type:"spot"},
-                {t:"17:00", n:"南浦洞優雅酒店", s:"Check-in 放行李", type:"spot"},
-                {t:"19:00", n:"扎嘎其市場", s:"晚餐: 烤腸、生魚片", type:"food", must:true}
+                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794 (5/13)", type:"spot", map:"https://naver.me/桃園機場"},
+                {t:"17:00", n:"南浦洞酒店 Check-in", s:"放行李與週邊散策", type:"spot", map:"https://naver.me/酒店"},
+                {t:"19:00", n:"扎嘎其市場", s:"必點: 烤腸、生魚片", type:"food", must:true, map:"https://naver.me/扎嘎其市場"}
             ],
             2: [
-                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", must:true},
-                {t:"13:00", n:"海景午餐", s:"民樂生魚片中心", type:"food"}
+                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", must:true, map:"https://naver.me/廣安里"},
+                {t:"13:00", n:"民樂生魚片中心", s:"景觀午餐", type:"food", map:"https://naver.me/民樂"}
             ],
             3: [
-                {t:"10:30", n:"F1963 工廠改造", s:"工業風園區", type:"spot", must:true},
-                {t:"15:00", n:"新世界百貨", s:"Centum City 採買", type:"spot"}
-            ],
-            4: [{t:"09:30", n:"海雲台藍線公園", s:"尾浦膠囊列車", type:"spot", must:true}],
-            5: [{t:"10:00", n:"甘川洞文化村", s:"小王子拍照", type:"spot"}],
-            6: [{t:"11:05", n:"金海機場", s:"回程起飛 BX 793", type:"spot"}]
+                {t:"10:30", n:"F1963 工廠改造", s:"工業風園區", type:"spot", must:true, map:"https://naver.me/F1963"},
+                {t:"15:00", n:"新世界百貨", s:"Centum City 採買", type:"spot", map:"https://naver.me/新世界"}
+            ]
         };
 
-        let currentDay = 1;
-        let expenses = JSON.parse(localStorage.getItem('busan_v100')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
+        // 記帳資料 (LocalStorage)
+        let expenses = JSON.parse(localStorage.getItem('busan_expenses')) || { 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] };
 
         function showSection(id) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
             document.getElementById('view-' + id).classList.add('active');
             document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + id).classList.add('active');
+            if(id === 'itinerary') render();
+            if(id === 'expenses') renderExpenses();
         }
 
         function setDay(d) {
@@ -152,55 +143,135 @@
             document.getElementById('d' + d).classList.add('active');
             document.getElementById('day-label').innerText = d;
             render();
+            renderExpenses();
         }
 
-        function addExpense() {
-            const name = document.getElementById('exp-name').value;
-            const krw = document.getElementById('exp-krw').value;
-            if(!name || !krw) return;
-            expenses[currentDay].unshift({ name, krw: Number(krw), twd: Math.round(krw/41) });
-            localStorage.setItem('busan_v100', JSON.stringify(expenses));
-            document.getElementById('exp-name').value = '';
-            document.getElementById('exp-krw').value = '';
-            render();
-        }
-
+        // 渲染行程
         function render() {
-            // 渲染行程
-            const itList = document.getElementById('itinerary-list');
-            itList.innerHTML = '';
-            plans[currentDay].forEach(p => {
+            const container = document.getElementById('itinerary-list-container');
+            if (!container) return;
+            let html = '<div id="dynamic-line"></div>'; 
+            (plans[currentDay] || []).forEach((p, idx) => {
                 const dotClass = p.type === 'food' ? 'dot-food' : 'dot-spot';
-                itList.innerHTML += `
+                html += `
                     <div class="itinerary-row">
                         <div class="time-label">${p.t}</div>
                         <div class="axis-box"><div class="timeline-dot ${dotClass}"></div></div>
                         <div class="card-col">
-                            <div class="card p-5">
+                            <div class="card p-5" id="card-${idx}">
                                 ${p.must ? '<span class="tag-must">RECOMMEND</span>' : ''}
-                                <h3 class="font-bold text-sm leading-tight">${p.n}</h3>
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-sm leading-tight">${p.n}</h3>
+                                    <a href="${p.map}" target="_blank" class="text-[10px] bg-gray-100 px-2 py-1 rounded">MAP</a>
+                                </div>
                                 <p class="text-[10px] opacity-50 mt-1">${p.s}</p>
                             </div>
                         </div>
                     </div>`;
             });
-
-            // 渲染記帳
-            const exArea = document.getElementById('expense-list');
-            exArea.innerHTML = '';
-            let total = 0;
-            expenses[currentDay].forEach(e => {
-                total += e.twd;
-                exArea.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl flex justify-between border border-dashed">
-                        <span class="text-sm font-bold">${e.name}</span>
-                        <span class="text-sm serif italic">NT$ ${e.twd}</span>
-                    </div>`;
-            });
-            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
+            container.innerHTML = html;
+            setTimeout(adjustLine, 100); 
         }
 
-        window.onload = render;
+        // 垂直線對齊
+        function adjustLine() {
+            const line = document.getElementById('dynamic-line');
+            const cards = document.querySelectorAll('.card');
+            if (!line || cards.length === 0) return;
+
+            const firstCard = cards[0];
+            const lastCard = cards[cards.length - 1];
+
+            const axisBox = document.querySelector('.axis-box');
+            line.style.left = (axisBox.offsetLeft + (axisBox.offsetWidth / 2)) + 'px';
+
+            const topLimit = firstCard.offsetTop;
+            const totalHeight = (lastCard.parentElement.parentElement.offsetTop + lastCard.offsetHeight) - topLimit;
+
+            line.style.top = topLimit + 'px';
+            line.style.height = totalHeight + 'px';
+        }
+
+        // 記帳邏輯
+        document.getElementById('exp-krw').addEventListener('input', (e) => {
+            document.getElementById('twd-preview').innerText = Math.round(e.target.value / exchangeRate);
+        });
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value || '未命名項目';
+            const cat = document.getElementById('exp-cat').value;
+            const krw = parseFloat(document.getElementById('exp-krw').value) || 0;
+            
+            if(krw <= 0) return alert('請輸入金額');
+
+            const item = {
+                id: Date.now(),
+                name: name,
+                cat: cat,
+                krw: krw,
+                twd: Math.round(krw / exchangeRate)
+            };
+
+            expenses[currentDay].push(item);
+            saveAndRenderExp();
+            
+            document.getElementById('exp-name').value = '';
+            document.getElementById('exp-krw').value = '';
+        }
+
+        function deleteExpense(id) {
+            expenses[currentDay] = expenses[currentDay].filter(item => item.id !== id);
+            saveAndRenderExp();
+        }
+
+        function editExpense(id) {
+            const newName = prompt("請輸入新的項目名稱:");
+            if (newName) {
+                const item = expenses[currentDay].find(i => i.id === id);
+                if (item) item.name = newName;
+                saveAndRenderExp();
+            }
+        }
+
+        function saveAndRenderExp() {
+            localStorage.setItem('busan_expenses', JSON.stringify(expenses));
+            renderExpenses();
+        }
+
+        function renderExpenses() {
+            const container = document.getElementById('exp-list-container');
+            const list = expenses[currentDay];
+            let html = '';
+            let dayTotalTwd = 0;
+
+            list.forEach(item => {
+                dayTotalTwd += item.twd;
+                html += `
+                    <div class="exp-item flex justify-between items-center shadow-sm">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] opacity-50 bg-gray-100 px-1 rounded">${item.cat}</span>
+                                <span class="font-bold text-sm cursor-pointer" onclick="editExpense(${item.id})">${item.name} ✎</span>
+                            </div>
+                            <div class="text-[10px] opacity-40 mt-1">₩ ${item.krw.toLocaleString()}</div>
+                        </div>
+                        <div class="text-right flex items-center gap-4">
+                            <div class="font-bold text-[#E67E22] serif">NT$ ${item.twd}</div>
+                            <button onclick="deleteExpense(${item.id})" class="text-red-400 text-xs">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html || '<div class="text-center opacity-30 mt-10 text-sm">今日尚無消費</div>';
+            document.getElementById('total-amount').innerText = `NT$ ${dayTotalTwd.toLocaleString()}`;
+        }
+
+        window.onload = () => {
+            render();
+            renderExpenses();
+        };
+        window.onresize = adjustLine;
     </script>
 </body>
 </html>
