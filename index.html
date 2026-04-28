@@ -80,12 +80,12 @@
     </header>
 
     <nav id="date-nav" class="sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
-        <button onclick="setDay(1)" id="d1" class="date-btn active border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">13</p></button>
-        <button onclick="setDay(2)" id="d2" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">14</p></button>
-        <button onclick="setDay(3)" id="d3" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">15</p></button>
-        <button onclick="setDay(4)" id="d4" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Sun</p><p class="text-lg font-bold">16</p></button>
-        <button onclick="setDay(5)" id="d5" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">17</p></button>
-        <button onclick="setDay(6)" id="d6" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Tue</p><p class="text-lg font-bold">18</p></button>
+        <button onclick="setDay(1)" id="d1" class="date-btn active border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Wed</p><p class="text-lg font-bold">13</p></button>
+        <button onclick="setDay(2)" id="d2" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">14</p></button>
+        <button onclick="setDay(3)" id="d3" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">15</p></button>
+        <button onclick="setDay(4)" id="d4" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">16</p></button>
+        <button onclick="setDay(5)" id="d5" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Sun</p><p class="text-lg font-bold">17</p></button>
+        <button onclick="setDay(6)" id="d6" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">18</p></button>
     </nav>
 
     <div class="flex px-8 mt-4 mb-6 gap-8 border-b border-[#D1CDC7]/30">
@@ -151,8 +151,8 @@
         
         const plans = {
             1: [
-                {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot", map:"https://naver.me/5Yw4vE7J"},
-                {t:"15:30", n:"金海國際機場", s:"航班 KE2086", type:"spot", map:"https://naver.me/5Yw4vE7J"},
+                {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot"},
+                {t:"15:30", n:"金海國際機場", s:"航班 KE2086", type:"spot"},
                 {t:"17:30", n:"廣安里海景民宿", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FsohC39V"},
                 {t:"18:00", n:"Millac the Market", s:"複合式新潮商場", type:"spot", map:"https://naver.me/Fuz5ZqYEU"},
                 {t:"18:30", n:"廣安里散策", s:"沙灘漫步", type:"spot"},
@@ -170,7 +170,7 @@
                 {t:"20:30", n:"廣安里遊艇體驗", s:"從海上看廣安大橋夜景", type:"spot", map:"https://naver.me/GBF7x95e"}
             ],
             3: [
-                {t:"09:30", n:"獅子酒店 (라이온 호텔)", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
+                {t:"09:30", n:"萊恩酒店 (라이온 호텔)", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
                 {t:"10:00", n:"hash table", s:"田園風早午餐", type:"food", map:"https://naver.me/IxsqysmJ"},
                 {t:"11:00", n:"電影殿堂", s:"解構主義建築景點", type:"spot", map:"https://naver.me/GG7tPu8w"},
                 {t:"11:30", n:"釜山新世界百貨", s:"逛街與汗蒸幕體驗", type:"spot", map:"https://naver.me/5pwdTlhS"},
@@ -187,13 +187,16 @@
                 {t:"20:00", n:"山莊1988", s:"馬鈴薯排骨湯", type:"food", map:"https://naver.me/G4WomBmy"}
             ], 
             5: [
-                {t:"09:30", n:"甘川文化村", s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/Fpx54Crx"},
-                {t:"11:30", n:"BIFF廣場", s:"電影街與街邊小吃", type:"spot", map:""},
-                {t:"15:30", n:"樂天百貨光復店", s:"室內噴泉秀與頂樓夜景", type:"spot", map:""},
-                {t:"18:00", n:"富平罐頭市場", s:"夜市美食探險", type:"food", map:""},
-                {t:"20:00", n:"이재모披薩", s:"釜山超人氣排隊披薩", type:"food", map:"https://naver.me/F5D1xjeN"}
+                {t:"09:30", n:"甘川文化村", s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/5iTdxyDV"},
+                {t:"11:30", n:"BIFF廣場", s:"電影街與街邊小吃", type:"food", map:"https://naver.me/5GpYyjNN"},
+                {t:"14:30", n:"五六島天空步道 (오륙도 스카이워크)", s:"漫步海天之際的透明玻璃步道", type:"spot", map:"https://naver.me/F1rxAW4r"},
+                {t:"16:30", n:"베이커리카페 가원", s:"清水模咖啡廳： 10:00 - 21:00", type:"food", map:"https://naver.me/F9NjyjmK"},
+                {t:"19:00", n:"이재모披薩", s:"釜山超人氣排隊披薩", type:"food", map:"https://naver.me/F5D1xjeN"},
+                {t:"21:00", n:"荒嶺山觀景台", s:"釜山百萬夜景", type:"spot", map:"https://naver.me/Fbq9QkVy"}
             ], 
-            6: []
+            6: [{t:"09:00", n:"金海國際機場", s:"航班 KE2085", type:"spot"},
+                {t:"10:30", n:"桃園國際機場T1", s:"航班 KE2085", type:"spot"}
+               ]
         };
 
         let currentDay = 1;
