@@ -10,7 +10,6 @@
         body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
         .serif { font-family: 'Playfair Display', serif; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
-        /* 三個欄位的切換樣式 */
         .sub-tab { transition: all 0.3s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; letter-spacing: 0.1em; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         .card { background: white; border-radius: 24px; border: 1px solid #E8E1D4; }
@@ -63,8 +62,7 @@
         <button onclick="showSection('info')" id="tab-info" class="sub-tab">航班住宿</button>
     </div>
 
-    <div id="view-itinerary" class="view-section active px-6 space-y-6">
-        </div>
+    <div id="view-itinerary" class="view-section active px-6 space-y-6"></div>
 
     <div id="view-expenses" class="view-section px-6 space-y-6">
         <div class="card p-6 space-y-4">
@@ -97,13 +95,8 @@
             <div class="space-y-2">
                 <p class="text-sm font-bold">南浦洞優雅酒店 (Nampodong)</p>
                 <p class="text-[10px] opacity-50 italic">重要預約代號: #ANN-2026-BUSAN</p>
-                <a href="https://map.naver.com/v5/search/Nampodong%20Hotel" target="_blank" class="block mt-4 text-[9px] font-bold border-b border-[#4A342E] w-max">NAVER MAP 位置 →</a>
+                <a href="https://naver.me/xxx" target="_blank" class="block mt-4 text-[9px] font-bold border-b border-[#4A342E] w-max">NAVER MAP 位置 →</a>
             </div>
-        </div>
-        <div class="p-5 rounded-2xl bg-red-50 text-red-800 text-[10px] border border-red-100">
-            <p class="font-bold mb-1 uppercase tracking-widest">Emergency Contact</p>
-            <p>駐韓國代表部：+82-2-399-2800</p>
-            <p>緊急救援：119 (消防) / 112 (警察)</p>
         </div>
     </div>
 
@@ -113,107 +106,5 @@
                 <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="day-label">1</span> Spending</p>
                 <h2 id="total-amount" class="serif text-4xl italic font-bold">NT$ 0</h2>
             </div>
-            <div class="text-right opacity-30 text-[9px] font-bold">
-                <p>RATE 1:41</p>
-                <p>BUSAN 2026</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        let currentDay = 1;
-        const rate = 41;
-
-        // 根據 PDF 整理的行程資料
-        const plans = {
-            1: [{t:"13:20", n:"桃園國際機場", s:"航班 BX 794"}, {t:"17:00", n:"南浦洞 Check-in", s:"放行李與周邊散策"}, {t:"19:00", n:"扎嘎其市場", s:"必點菜單: 烤腸、生魚片", must:true}],
-            2: [{t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", must:true}, {t:"13:00", n:"民樂生魚片中心", s:"海景午餐"}, {t:"20:00", n:"無人機秀", s:"週六限定表演 (廣安里)"}],
-            3: [{t:"10:30", n:"F1963 工廠改造", s:"必買: Yes24 限定文具", must:true}, {t:"15:00", n:"新世界百貨", s:"全球最大 Centum City"}],
-            4: [{t:"09:30", n:"海雲台藍線公園", s:"膠囊列車 (尾浦-青沙浦)", must:true}, {t:"15:00", n:"白淺灘文化村", s:"影島海邊咖啡廳"}],
-            5: [{t:"10:00", n:"甘川洞文化村", s:"小王子雕像排隊拍照"}, {t:"18:00", n:"荒嶺山夜景", s:"眺望全釜山夜色"}],
-            6: [{t:"09:00", n:"南浦洞最後採買", s:"必買伴手禮: 釜山餅乾"}, {t:"11:05", n:"金海機場起飛", s:"回程 BX 793"}]
-        };
-
-        let expenses = JSON.parse(localStorage.getItem('busan_v15_final')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
-
-        function showSection(id) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
-            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + id).classList.add('active');
-        }
-
-        function setDay(d) {
-            currentDay = d;
-            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('d' + d).classList.add('active');
-            document.getElementById('day-label').innerText = d;
-            render();
-        }
-
-        function addExp() {
-            const name = document.getElementById('in-name').value;
-            const krw = document.getElementById('in-krw').value;
-            const cat = document.getElementById('in-cat').value;
-            if(!name || !krw) return;
-            expenses[currentDay].unshift({ id: Date.now(), name, krw: Number(krw), twd: Math.round(krw/rate), cat });
-            localStorage.setItem('busan_v15_final', JSON.stringify(expenses));
-            document.getElementById('in-name').value = '';
-            document.getElementById('in-krw').value = '';
-            render();
-        }
-
-        function delExp(id) {
-            if(confirm('確定要刪除這筆花費嗎？')) {
-                expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
-                localStorage.setItem('busan_v15_final', JSON.stringify(expenses));
-                render();
-            }
-        }
-
-        function render() {
-            // 渲染今日行程
-            const itArea = document.getElementById('view-itinerary');
-            itArea.innerHTML = '';
-            (plans[currentDay] || []).forEach(p => {
-                itArea.innerHTML += `
-                    <div class="flex gap-6 mb-6">
-                        <div class="w-10 text-right text-[10px] font-bold opacity-30 pt-1">${p.t}</div>
-                        <div class="card flex-1 p-5 shadow-sm">
-                            ${p.must ? '<span class="tag-must uppercase tracking-tighter">Guide Recommendation</span>' : ''}
-                            <h3 class="font-bold text-sm mt-2">${p.n}</h3>
-                            <p class="text-[10px] opacity-50 mt-1">${p.s}</p>
-                            <div class="mt-4 flex justify-end">
-                                <a href="https://map.naver.com/v5/search/${encodeURIComponent(p.n)}" target="_blank" class="text-[9px] font-bold border-b border-[#4A342E] uppercase">Naver Map →</a>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-
-            // 渲染記帳明細
-            const exArea = document.getElementById('exp-list');
-            exArea.innerHTML = '';
-            let total = 0;
-            expenses[currentDay].forEach(e => {
-                total += e.twd;
-                exArea.innerHTML += `
-                    <div class="bg-white p-5 rounded-[1.5rem] flex justify-between items-center border border-[#E8E1D4] border-dashed mb-3 shadow-sm">
-                        <div>
-                            <p class="text-[9px] opacity-40 font-bold uppercase mb-1">${e.cat}</p>
-                            <p class="font-bold text-sm text-[#4A342E]">${e.name}</p>
-                            <p class="text-[9px] opacity-30 mt-1 uppercase font-medium">KRW ${e.krw.toLocaleString()}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-bold text-lg serif italic text-[#8B5E3C]">NT$ ${e.twd.toLocaleString()}</p>
-                            <button onclick="delExp(${e.id})" class="text-[9px] text-red-200 uppercase mt-1 font-bold">Delete</button>
-                        </div>
-                    </div>`;
-            });
-            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
-        }
-
-        // 初始渲染
-        render();
-    </script>
-</body>
-</html>
+            <div class="text-right opacity-30 text-[9px] font-bold uppercase">
+                <p>Rate 1:41</
