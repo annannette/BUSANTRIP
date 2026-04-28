@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Busan Travel Pro</title>
+    <title>Busan Trip Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
         .serif { font-family: 'Playfair Display', serif; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
-        .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; }
-        .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         
-        /* 穩定對齊方案：邊框連接法 */
+        /* 五欄式滑動導覽列 */
+        .tab-scroll { display: flex; overflow-x: auto; gap: 24px; padding: 0 32px; border-bottom: 1px solid rgba(209, 205, 199, 0.3); }
+        .tab-scroll::-webkit-scrollbar { display: none; }
+        .sub-tab { flex-shrink: 0; transition: all 0.2s; opacity: 0.4; padding-bottom: 12px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: bold; }
+        .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; }
+
+        /* 穩定對齊方案 */
         .itinerary-row { display: flex; gap: 0; position: relative; }
         .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
         .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
@@ -25,24 +29,27 @@
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         
-        /* 摺疊選單樣式 */
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
         details summary { list-style: none; outline: none; cursor: pointer; }
         details summary::-webkit-details-marker { display: none; }
-        
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; }
+        input { border-bottom: 1px solid #D1CDC7; outline: none; background: transparent; }
     </style>
 </head>
 <body class="max-w-md mx-auto pb-40">
 
     <header class="p-8 pb-4">
-        <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
-        <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
+        <div class="flex justify-between items-end">
+            <div>
+                <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">Busan Trip 2026</p>
+                <h1 class="serif text-4xl italic font-semibold">Dashboard</h1>
+            </div>
+        </div>
     </header>
 
-    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-4 sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
+    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-6 sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
         <button onclick="setDay(1)" id="d1" class="date-btn active flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">13</p></button>
         <button onclick="setDay(2)" id="d2" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">14</p></button>
         <button onclick="setDay(3)" id="d3" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">15</p></button>
@@ -51,10 +58,12 @@
         <button onclick="setDay(6)" id="d6" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Tue</p><p class="text-lg font-bold">18</p></button>
     </nav>
 
-    <div class="flex px-8 mb-6 gap-8 border-b border-[#D1CDC7]/30">
+    <div class="tab-scroll mb-8">
         <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
         <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
-        <button onclick="showSection('info')" id="tab-info" class="sub-tab">攻略清單</button>
+        <button onclick="showSection('flight')" id="tab-flight" class="sub-tab">航班住宿</button>
+        <button onclick="showSection('rate')" id="tab-rate" class="sub-tab">匯率換算</button>
+        <button onclick="showSection('guide')" id="tab-guide" class="sub-tab">攻略清單</button>
     </div>
 
     <main>
@@ -66,209 +75,58 @@
             <div class="card p-6 mb-6">
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <input type="text" id="exp-name" placeholder="項目名稱" class="text-sm">
-                    <select id="exp-cat" class="text-sm">
+                    <select id="exp-cat" class="text-sm bg-transparent outline-none">
                         <option value="飲食">🍔 飲食</option>
                         <option value="交通">🚌 交通</option>
                         <option value="美妝">💄 美妝</option>
-                        <option value="門票">🎟️ 門票</option>
                         <option value="購物">🛍️ 購物</option>
                     </select>
                 </div>
                 <input type="number" id="exp-krw" placeholder="輸入韓幣 KRW" class="w-full text-sm mb-4">
-                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs">RECORD</button>
+                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs uppercase">Record</button>
             </div>
-            <div id="expense-list-area" class="space-y-3"></div>
+            <div id="expense-list-area" class="space-y-3 pb-20"></div>
         </div>
 
-        <div id="view-info" class="view-section px-6 space-y-6 pb-20">
-            <div class="card p-6">
-                <h3 class="serif italic font-bold mb-4 border-b pb-2 text-lg">Exchange Rate</h3>
-                <div class="flex items-center gap-4">
-                    <input type="number" id="calc-krw" placeholder="韓幣 KRW" class="flex-1 text-center font-bold" oninput="calcExchange()">
-                    <span class="text-xl">⇄</span>
-                    <div class="flex-1 text-center font-bold text-[#E67E22]" id="calc-twd">台幣 TWD 0</div>
+        <div id="view-flight" class="view-section px-6 space-y-6">
+            <div class="card p-6 border-l-4 border-l-[#8E9775] shadow-sm">
+                <h3 class="serif italic font-bold text-lg mb-4">Flight Info</h3>
+                <div class="text-sm space-y-2">
+                    <p class="flex justify-between"><span>去程 BX 794 (5/13)</span><b>13:20 TPE</b></p>
+                    <p class="flex justify-between"><span>回程 BX 793 (5/18)</span><b>11:05 PUS</b></p>
                 </div>
-                <p class="text-[9px] opacity-30 mt-3 text-center uppercase tracking-widest">Today's Rate 1 : 41</p>
             </div>
+            <div class="card p-6 border-l-4 border-l-[#4A342E] shadow-sm">
+                <h3 class="serif italic font-bold text-lg mb-4">Accommodation</h3>
+                <p class="font-bold text-sm">南浦洞優雅酒店 (Elegant Hotel)</p>
+                <p class="text-[10px] opacity-50 mt-1 italic italic">Booking ID: #ANN-2026-BUSAN</p>
+            </div>
+        </div>
 
+        <div id="view-rate" class="view-section px-6">
+            <div class="card p-8 text-center">
+                <h3 class="serif italic font-bold text-xl mb-6">Currency Converter</h3>
+                <input type="number" id="calc-krw" placeholder="KRW 韓幣" class="text-3xl font-bold text-center w-full mb-4" oninput="calcExchange()">
+                <div class="text-2xl font-bold text-[#E67E22] serif" id="calc-twd">NT$ 0</div>
+                <p class="text-[10px] opacity-30 mt-6 uppercase tracking-widest">Exchange Rate 1 : 41</p>
+            </div>
+        </div>
+
+        <div id="view-guide" class="view-section px-6 space-y-6 pb-20">
             <div class="card p-5">
-                <h3 class="serif italic font-bold mb-4 border-b pb-2 text-lg">Card Strategy</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-[10px] text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 uppercase opacity-50">
-                                <th class="p-2 border">信用卡種類</th>
-                                <th class="p-2 border text-center">回饋%</th>
-                                <th class="p-2 border">適用商家/備註</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-2 border font-bold text-[#4A342E]">國泰 CUBE</td>
-                                <td class="p-2 border text-center font-bold text-red-500">3%</td>
-                                <td class="p-2 border opacity-70">切換「趣旅行」、一般實體店</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 border font-bold text-[#4A342E]">聯邦 吉鶴</td>
-                                <td class="p-2 border text-center font-bold text-red-500">4.5%</td>
-                                <td class="p-2 border opacity-70">Apple Pay 支援商家</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 border font-bold text-[#4A342E]">富邦 J卡</td>
-                                <td class="p-2 border text-center font-bold text-red-500">10%</td>
-                                <td class="p-2 border opacity-70">韓國便利商店、指定藥妝</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <h3 class="serif italic font-bold mb-4 border-b pb-2">Card Strategy</h3>
+                <div class="text-[10px] space-y-2">
+                    <div class="flex justify-between p-2 bg-gray-50 rounded"><span>國泰 CUBE (趣旅行)</span><span class="font-bold text-red-500">3%</span></div>
+                    <div class="flex justify-between p-2 bg-gray-50 rounded"><span>聯邦吉鶴卡 (Apple Pay)</span><span class="font-bold text-red-500">4.5%</span></div>
+                    <div class="flex justify-between p-2 bg-gray-50 rounded"><span>富邦 J卡 (便利店/藥妝)</span><span class="font-bold text-red-500">10%</span></div>
                 </div>
             </div>
-
-            <div class="card p-6">
-                <h3 class="serif italic font-bold mb-4 border-b pb-2 text-lg">Shopping Wishlist</h3>
-                <div class="space-y-4">
+            <div class="card p-5">
+                <h3 class="serif italic font-bold mb-4 border-b pb-2">Shopping Wishlist</h3>
+                <div class="space-y-3">
                     <details class="group">
-                        <summary class="flex justify-between items-center font-bold text-sm bg-gray-50 p-3 rounded-xl">
-                            <span>💄 OLIVE YOUNG</span>
-                            <span class="transition group-open:rotate-180">↓</span>
-                        </summary>
-                        <div class="p-3 text-xs leading-loose opacity-70">
-                            □ Torriden 導入精華 (激推!)<br>
-                            □ Round Lab 獨島防曬霜<br>
-                            □ UNOVE 髮質護理組<br>
-                            □ Rejuran 小白瓶
-                        </div>
+                        <summary class="flex justify-between p-3 bg-[#F9F7F4] rounded-xl text-sm font-bold">💄 OLIVE YOUNG <span>↓</span></summary>
+                        <p class="p-3 text-xs leading-loose opacity-60">□ Torriden 精華<br>□ Round Lab 防曬<br>□ UNOVE 髮膜</p>
                     </details>
-
                     <details class="group">
-                        <summary class="flex justify-between items-center font-bold text-sm bg-gray-50 p-3 rounded-xl">
-                            <span>💊 韓國藥局</span>
-                            <span class="transition group-open:rotate-180">↓</span>
-                        </summary>
-                        <div class="p-3 text-xs leading-loose opacity-70">
-                            □ 蜈蚣草飲 (消水腫)<br>
-                            □ 諾斯七 (鼻炎噴霧)<br>
-                            □ 維他命 C 錠片
-                        </div>
-                    </details>
-
-                    <details class="group">
-                        <summary class="flex justify-between items-center font-bold text-sm bg-gray-50 p-3 rounded-xl">
-                            <span>🎁 零食與伴手禮</span>
-                            <span class="transition group-open:rotate-180">↓</span>
-                        </summary>
-                        <div class="p-3 text-xs leading-loose opacity-70">
-                            □ HBAF 杏仁果 (大蒜口味)<br>
-                            □ 樂天 零糖巧克力餅乾<br>
-                            □ 釜山限定 海鷗造型點心
-                        </div>
-                    </details>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED]/95 backdrop-blur-md border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-40">
-        <div class="flex justify-between items-end">
-            <div>
-                <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="day-label">1</span> Spending</p>
-                <h2 id="total-amount" class="serif text-4xl italic font-bold">NT$ 0</h2>
-            </div>
-            <div class="text-right opacity-30 text-[9px] font-bold">RATE 1:41</div>
-        </div>
-    </footer>
-
-    <script>
-        const rate = 41;
-        const plans = {
-            1: [
-                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794", type:"spot", map:"https://naver.me/xxx"},
-                {t:"17:00", n:"南浦洞優雅酒店", s:"Check-in 放行李", type:"spot", map:"https://naver.me/hotel"},
-                {t:"19:00", n:"扎嘎其市場", s:"晚餐: 烤腸、生魚片", type:"food", must:true, map:"https://naver.me/market"}
-            ],
-            2: [
-                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", must:true, map:"https://naver.me/beach"}
-            ]
-        };
-
-        let currentDay = 1;
-        let expenses = JSON.parse(localStorage.getItem('busan_v_pro')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
-
-        function showSection(id) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
-            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + id).classList.add('active');
-        }
-
-        function setDay(d) {
-            currentDay = d;
-            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('d' + d).classList.add('active');
-            document.getElementById('day-label').innerText = d;
-            render();
-        }
-
-        function calcExchange() {
-            const krw = document.getElementById('calc-krw').value;
-            document.getElementById('calc-twd').innerText = '台幣 TWD ' + Math.round(krw / rate).toLocaleString();
-        }
-
-        function addExpense() {
-            const name = document.getElementById('exp-name').value;
-            const krw = document.getElementById('exp-krw').value;
-            const cat = document.getElementById('exp-cat').value;
-            if(!krw) return;
-            expenses[currentDay].unshift({ id:Date.now(), name: name || '未命名', krw: Number(krw), twd: Math.round(krw/rate), cat });
-            localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
-            document.getElementById('exp-name').value = '';
-            document.getElementById('exp-krw').value = '';
-            render();
-        }
-
-        function delExp(id) {
-            expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
-            localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
-            render();
-        }
-
-        function render() {
-            const itList = document.getElementById('itinerary-list');
-            itList.innerHTML = '';
-            (plans[currentDay] || []).forEach(p => {
-                itList.innerHTML += `
-                    <div class="itinerary-row">
-                        <div class="time-label">${p.t}</div>
-                        <div class="axis-box"><div class="timeline-dot ${p.type==='food'?'dot-food':'dot-spot'}"></div></div>
-                        <div class="card-col">
-                            <div class="card p-5">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="font-bold text-sm">${p.n}</h3>
-                                    <a href="${p.map}" target="_blank" class="text-[9px] bg-gray-100 px-2 py-1 rounded">MAP</a>
-                                </div>
-                                <p class="text-[10px] opacity-50 mt-1">${p.s}</p>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-
-            const exArea = document.getElementById('expense-list-area');
-            exArea.innerHTML = '';
-            let total = 0;
-            expenses[currentDay].forEach(e => {
-                total += e.twd;
-                exArea.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]">
-                        <div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p></div>
-                        <div class="text-right">
-                            <p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd}</p>
-                            <button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DEL</button>
-                        </div>
-                    </div>`;
-            });
-            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
-        }
-
-        window.onload = render;
-    </script>
-</body>
-</html>
+                        <summary class="flex justify-between p-3 bg-[#F9F7F
