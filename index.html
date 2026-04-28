@@ -75,7 +75,6 @@
     <header class="p-8 pb-4 text-center">
         <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
         <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
-        <div id="weather" class="text-[10px] opacity-50 mt-1 uppercase tracking-widest">Loading Weather...</div>
     </header>
 
     <nav id="date-nav" class="sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
@@ -181,7 +180,7 @@
                 {t:"20:30", n:"廣安里遊艇體驗", s:"從海上看廣安大橋夜景", type:"spot", map:"https://naver.me/GBF7x95e"}
             ],
             3: [
-                {t:"09:30", n:"萊恩酒店 (라이온 호텔)", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
+                {t:"09:30", n:"萊恩酒店 (라이オン 호텔)", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
                 {t:"10:00", n:"hash table", s:"田園風早午餐", type:"food", map:"https://naver.me/IxsqysmJ"},
                 {t:"11:00", n:"電影殿堂", s:"解構主義建築景點", type:"spot", map:"https://naver.me/GG7tPu8w"},
                 {t:"11:30", n:"釜山新世界百貨", s:"逛街與汗蒸幕體驗", type:"spot", map:"https://naver.me/5pwdTlhS"},
@@ -269,18 +268,6 @@
             render();
         }
 
-        // --- 新增：天氣 API 函數 (請將 YOUR_API_KEY 換成你申請的密鑰) ---
-        async function fetchWeather() {
-            const API_KEY = 'YOUR_API_KEY'; 
-            try {
-                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Busan&appid=${API_KEY}&units=metric&lang=zh_tw`);
-                const data = await res.json();
-                document.getElementById('weather').innerText = `${data.weather[0].description} ${Math.round(data.main.temp)}°C`;
-            } catch (e) {
-                document.getElementById('weather').innerText = "Weather N/A";
-            }
-        }
-
         function render() {
             const itList = document.getElementById('itinerary-list');
             if (!itList) return;
@@ -321,10 +308,31 @@
             const totalEl = document.getElementById('total-amount');
             if (totalEl) totalEl.innerText = 'NT$ ' + total.toLocaleString();
 
-            /* --- 新增：總花費統計邏輯 --- */
+            // 總花費統計邏輯
             let grandTotal = 0;
             let catTotals = { "飲食": 0, "交通": 0, "美妝": 0, "門票": 0, "購物": 0 };
             Object.values(expenses).forEach(dayExps => {
                 dayExps.forEach(e => {
                     grandTotal += e.twd;
-                    if (catTotals
+                    if (catTotals.hasOwnProperty(e.cat)) catTotals[e.cat] += e.twd;
+                });
+            });
+            const gTotalEl = document.getElementById('summary-grand-total');
+            if (gTotalEl) gTotalEl.innerText = 'NT$ ' + grandTotal.toLocaleString();
+            const catArea = document.getElementById('category-breakdown');
+            if (catArea) {
+                catArea.innerHTML = Object.entries(catTotals).map(([cat, amt]) => `
+                    <div class="bg-white p-4 rounded-xl flex justify-between items-center border border-[#D1CDC7]/30">
+                        <span class="text-xs font-bold opacity-70">${cat}</span>
+                        <span class="serif italic font-bold text-[#E67E22]">NT$ ${amt.toLocaleString()}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.onload = function() {
+            render();
+        };
+    </script>
+</body>
+</html>
