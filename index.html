@@ -16,10 +16,59 @@
             padding-bottom: calc(140px + var(--safe-bottom)); 
         }
         .serif { font-family: 'Playfair Display', serif; line-height: 1.2; }
-        nav#date-nav { display: flex !important; flex-direction: row !important; justify-content: space-between; gap: 4px; padding: 8px 16px 16px 16px; width: 100%; }
+        
+        /* 日期導覽列保持 16px padding */
+        nav#date-nav { 
+            display: flex !important; 
+            flex-direction: row !important; 
+            justify-content: space-between; 
+            gap: 4px; 
+            padding: 8px 16px 16px 16px; 
+            width: 100%; 
+        }
         .date-btn { flex: 1; flex-shrink: 0; min-width: 0; padding: 10px 0; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; z-index: 50; }
         .date-btn p.text-lg { font-size: 16px; line-height: 1; margin-top: 2px; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
+
+        /* 調整五欄按鈕容器：對齊左右 16px 邊界 */
+        .tab-container {
+            display: flex;
+            justify-content: space-between; /* 左右撐滿 */
+            padding: 0 16px; /* 與日期導覽列對齊 */
+            margin-top: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(209, 205, 199, 0.3);
+        }
+
+        .sub-tab { 
+            transition: all 0.2s; 
+            opacity: 0.4; 
+            padding-bottom: 8px; 
+            border-bottom: 2px solid transparent; 
+            font-size: 12px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            white-space: nowrap;
+            flex: 0 1 auto; /* 讓寬度根據文字調整但維持對齊 */
+            text-align: center;
+        }
+        .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
+        
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; border-radius: 0; }
+        footer { padding-bottom: calc(1.5rem + var(--safe-bottom)) !important; }
+        .currency-toggle { display: flex; background: #E8E1D4; border-radius: 8px; padding: 2px; margin-bottom: 12px; }
+        .currency-toggle button { flex: 1; padding: 4px 0; font-size: 10px; font-weight: bold; border-radius: 6px; transition: all 0.2s; }
+        .currency-toggle button.active { background: white; color: #4A342E; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .shopping-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .shopping-table th { background: #F9F7F4; text-align: left; padding: 8px; border-bottom: 2px solid #E8E1D4; opacity: 0.6; }
+        .shopping-table td { padding: 10px 8px; border-bottom: 1px solid #F0EDE8; }
+        .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .accordion-content { display: none; padding: 0 16px 16px 16px; font-size: 12px; color: #6B5D59; }
+        .accordion-content.active { display: block; }
+        
         .itinerary-row { display: flex; gap: 0; position: relative; }
         .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
         .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
@@ -30,23 +79,6 @@
         .dot-spot { background: #4A342E; }
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 11px; font-weight: 500; cursor: pointer; white-space: nowrap; }
-        .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; border-radius: 0; }
-        footer { padding-bottom: calc(1.5rem + var(--safe-bottom)) !important; }
-        .currency-toggle { display: flex; background: #E8E1D4; border-radius: 8px; padding: 2px; margin-bottom: 12px; }
-        .currency-toggle button { flex: 1; padding: 4px 0; font-size: 10px; font-weight: bold; border-radius: 6px; transition: all 0.2s; }
-        .currency-toggle button.active { background: white; color: #4A342E; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-
-        /* 購物攻略專用樣式 */
-        .shopping-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        .shopping-table th { background: #F9F7F4; text-align: left; padding: 8px; border-bottom: 2px solid #E8E1D4; opacity: 0.6; }
-        .shopping-table td { padding: 10px 8px; border-bottom: 1px solid #F0EDE8; }
-        .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .accordion-content { display: none; padding: 0 16px 16px 16px; font-size: 12px; color: #6B5D59; }
-        .accordion-content.active { display: block; }
     </style>
 </head>
 <body class="max-w-md mx-auto">
@@ -65,7 +97,7 @@
         <button onclick="setDay(6)" id="d6" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">18</p></button>
     </nav>
 
-    <div class="flex px-4 mt-4 mb-6 gap-4 border-b border-[#D1CDC7]/30 overflow-x-auto no-scrollbar">
+    <div class="tab-container">
         <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
         <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
         <button onclick="showSection('info')" id="tab-info" class="sub-tab">匯率換算</button>
@@ -159,7 +191,6 @@
 
             <div class="space-y-3">
                 <p class="text-[10px] opacity-40 uppercase tracking-[0.2em] ml-1">Wishlist & Souvenirs</p>
-                
                 <div class="card overflow-hidden">
                     <div class="accordion-header border-b border-[#F0EDE8]" onclick="toggleAccordion('list-olive')">
                         <span>✨ Olive Young 必買</span>
@@ -174,7 +205,6 @@
                             <li>Rejuran 麗珠蘭修護精華</li>
                         </ul>
                     </div>
-
                     <div class="accordion-header border-b border-[#F0EDE8]" onclick="toggleAccordion('list-pharmacy')">
                         <span>💊 韓國藥局推薦</span>
                         <span id="list-pharmacy-icon">＋</span>
@@ -187,7 +217,6 @@
                             <li>解酒液 (必備戰備物資)</li>
                         </ul>
                     </div>
-
                     <div class="accordion-header" onclick="toggleAccordion('list-souvenir')">
                         <span>🎁 伴手禮及零食</span>
                         <span id="list-souvenir-icon">＋</span>
@@ -262,141 +291,4 @@
             4: [
                 {t:"09:30", n:"白淺灘文化村", s:"釜山的聖托里尼", type:"spot", map:"https://naver.me/Fpx54Crx"},
                 {t:"13:30", n:"Arte Museum", s:"沉浸式媒體藝術館", type:"spot", map:"https://naver.me/FIfsvnna"},
-                {t:"15:30", n:"P.ARK BREAD FACTORY", s:"大型海景咖啡館", type:"spot", map:"https://naver.me/xSFW9Pvo"},
-                {t:"16:30", n:"Miffy cafe", s:"米飛兔主題咖啡廳", type:"food", map:"https://naver.me/5MVzw55A"},
-                {t:"18:00", n:"田浦洞散策", s:"設計雜貨與特色小店", type:"spot", map:"https://naver.me/FtThMsc6"},
-                {t:"20:00", n:"山莊1988", s:"馬鈴薯排骨湯", type:"food", map:"https://naver.me/G4WomBmy"}
-            ], 
-            5: [
-                {t:"09:30", n:"甘川文化村", s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/5iTdxyDV"},
-                {t:"11:30", n:"BIFF廣場", s:"電影街與街邊小吃", type:"food", map:"https://naver.me/5GpYyjNN"},
-                {t:"14:30", n:"五六島天空步道", s:"透明玻璃步道", type:"spot", map:"https://naver.me/F1rxAW4r"},
-                {t:"16:30", n:"베이커리카페 가원", s:"清水模咖啡廳", type:"food", map:"https://naver.me/F9NjyjmK"},
-                {t:"19:00", n:"이재모披薩", s:"釜山人氣披薩", type:"food", map:"https://naver.me/F5D1xjeN"},
-                {t:"21:00", n:"荒嶺山觀景台", s:"釜山百萬夜景", type:"spot", map:"https://naver.me/Fbq9QkVy"}
-            ], 
-            6: [{t:"09:00", n:"金海國際機場", s:"航班 KE2085", type:"spot"},
-                {t:"10:30", n:"桃園國際機場T1", s:"航班 KE2085", type:"spot"}
-               ]
-        };
-
-        let currentDay = 1;
-        let expenses = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
-        
-        try {
-            const savedExpenses = localStorage.getItem('busan_v_pro');
-            if (savedExpenses) expenses = JSON.parse(savedExpenses);
-        } catch (e) { console.error("LocalStorage讀取錯誤", e); }
-
-        function showSection(id) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
-            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + id).classList.add('active');
-        }
-
-        function setDay(d) {
-            currentDay = d;
-            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('d' + d);
-            if (activeBtn) activeBtn.classList.add('active');
-            const label = document.getElementById('day-label');
-            if (label) label.innerText = d;
-            render();
-        }
-
-        function setCurrency(cur) {
-            currentCurrency = cur;
-            document.getElementById('btn-krw').classList.toggle('active', cur === 'KRW');
-            document.getElementById('btn-twd').classList.toggle('active', cur === 'TWD');
-            document.getElementById('exp-amount').placeholder = `輸入${cur === 'KRW' ? '韓幣' : '台幣'}`;
-        }
-
-        function calcExchange(source) {
-            const krwInput = document.getElementById('calc-krw');
-            const twdInput = document.getElementById('calc-twd-input');
-            if (source === 'krw') {
-                const krw = krwInput.value;
-                twdInput.value = krw ? Math.round(krw / rate) : '';
-            } else if (source === 'twd') {
-                const twd = twdInput.value;
-                krwInput.value = twd ? Math.round(twd * rate) : '';
-            }
-        }
-
-        function addExpense() {
-            const nameEl = document.getElementById('exp-name');
-            const amountEl = document.getElementById('exp-amount');
-            const cat = document.getElementById('exp-cat').value;
-            if(!amountEl.value) return;
-            let val = Number(amountEl.value);
-            let twd = (currentCurrency === 'TWD') ? val : Math.round(val / rate);
-            
-            const entry = { id: Date.now(), name: nameEl.value || '未命名', twd: twd, cat: cat, inputCur: currentCurrency, origVal: val };
-            if (!expenses[currentDay]) expenses[currentDay] = [];
-            expenses[currentDay].unshift(entry);
-            localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
-            nameEl.value = ''; amountEl.value = '';
-            render();
-        }
-
-        function delExp(id) {
-            expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
-            localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
-            render();
-        }
-
-        function toggleAccordion(id) {
-            const content = document.getElementById(id);
-            const icon = document.getElementById(id + '-icon');
-            const isActive = content.classList.contains('active');
-            
-            // 關閉其他
-            // document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('active'));
-            // document.querySelectorAll('.accordion-header span:last-child').forEach(i => i.innerText = '＋');
-
-            if (!isActive) {
-                content.classList.add('active');
-                icon.innerText = '－';
-            } else {
-                content.classList.remove('active');
-                icon.innerText = '＋';
-            }
-        }
-
-        function render() {
-            // 行程渲染
-            const itList = document.getElementById('itinerary-list');
-            if (itList) {
-                itList.innerHTML = '';
-                const dayPlans = plans[currentDay] || [];
-                dayPlans.forEach(p => {
-                    const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded">MAP</a>` : '';
-                    itList.innerHTML += `<div class="itinerary-row"><div class="time-label">${p.t}</div><div class="axis-box"><div class="timeline-dot ${p.type==='food'?'dot-food':'dot-spot'}"></div></div><div class="card-col"><div class="card p-5"><div class="flex justify-between items-start"><h3 class="font-bold text-sm">${p.n}</h3>${mapBtn}</div><p class="text-[10px] opacity-50 mt-1">${p.s || ''}</p></div></div></div>`;
-                });
-            }
-
-            // 記帳渲染
-            const exArea = document.getElementById('expense-list-area');
-            if (exArea) {
-                exArea.innerHTML = '';
-                let total = 0;
-                (expenses[currentDay] || []).forEach(e => {
-                    total += e.twd;
-                    exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p><p class="text-[8px] opacity-30">紀錄: ${e.origVal.toLocaleString()} ${e.inputCur}</p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd.toLocaleString()}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold cursor-pointer">DEL</button></div></div>`;
-                });
-                document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
-            }
-
-            // 總額渲染
-            let grandTotal = 0;
-            let catTotals = { "飲食": 0, "交通": 0, "美妝": 0, "門票": 0, "購物": 0 };
-            Object.values(expenses).forEach(dayExps => { dayExps.forEach(e => { grandTotal += e.twd; if (catTotals.hasOwnProperty(e.cat)) catTotals[e.cat] += e.twd; }); });
-            document.getElementById('summary-grand-total').innerText = 'NT$ ' + grandTotal.toLocaleString();
-            document.getElementById('category-breakdown').innerHTML = Object.entries(catTotals).map(([cat, amt]) => `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-[#D1CDC7]/30"><span class="text-xs font-bold opacity-70">${cat}</span><span class="serif italic font-bold text-[#E67E22]">NT$ ${amt.toLocaleString()}</span></div>`).join('');
-        }
-
-        window.onload = function() { render(); };
-    </script>
-</body>
-</html>
+                {t:"15:30", n:"P.ARK BREAD FACTORY", s:"大型海景咖啡館", type:"spot", map:"
