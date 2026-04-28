@@ -3,188 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUSAN TRIP 2026</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Busan Trip Helper</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
-        .serif { font-family: 'Playfair Display', serif; }
-        /* 日期按鈕樣式 */
-        .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; border-radius: 14px; }
-        .date-btn { transition: all 0.3s ease; border: 1px solid #D1CDC7; }
-        /* 時間軸線 */
-        .timeline-line::before { content: ''; position: absolute; left: 2.25rem; top: 0; bottom: 0; width: 1px; background-color: #D1CDC7; z-index: 0; }
+        :root { --main-dark: #4A342E; --bg-cream: #F5F2ED; --accent: #8E9775; }
+        body { background-color: var(--bg-cream); font-family: 'Noto Sans TC', sans-serif; color: var(--main-dark); -webkit-tap-highlight-color: transparent; }
+        .serif { font-family: 'Noto Serif TC', serif; }
+        .date-btn.active { background-color: var(--main-dark); color: white; border-radius: 12px; }
+        .tab-btn.active { color: var(--main-dark); border-bottom: 2px solid var(--main-dark); font-weight: bold; }
+        .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(74,52,46,0.03); }
+        .tag-eat { background: #FFEDD5; color: #D97706; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
+        .tag-must { background: #FEE2E2; color: #EF4444; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
+        .tag-buy { background: #ECFDF5; color: #10B981; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
+        .section-view { display: none; }
+        .section-view.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        /* 標籤樣式 */
-        .tag { font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: bold; margin-right: 4px; }
-        .tag-eat { background: #FEE2E2; color: #EF4444; }
-        .tag-info { background: #DBEAFE; color: #2563EB; }
-        .tag-buy { background: #FEF3C7; color: #D97706; }
     </style>
 </head>
-<body class="max-w-md mx-auto pb-40">
+<body class="max-w-md mx-auto pb-32">
 
-    <header class="p-8 pb-4">
-        <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase mb-1">May 2026 / Busan</p>
-        <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
+    <header class="p-6 sticky top-0 bg-[#F5F2ED]/90 backdrop-blur-md z-50">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="serif text-2xl tracking-tighter italic">Busan Journal</h1>
+            <div class="text-right">
+                <p class="text-[10px] opacity-40 uppercase tracking-widest">Weather</p>
+                <p id="weather" class="text-xs font-bold">釜山 21°C 🌤️</p>
+            </div>
+        </div>
+        
+        <nav class="flex border-b border-gray-200">
+            <button onclick="showTab('itinerary')" id="tab-itinerary" class="tab-btn active flex-1 pb-2 text-sm">行程</button>
+            <button onclick="showTab('money')" id="tab-money" class="tab-btn flex-1 pb-2 text-sm">記帳</button>
+            <button onclick="showTab('tools')" id="tab-tools" class="tab-btn flex-1 pb-2 text-sm">工具</button>
+        </nav>
     </header>
 
-    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-6 sticky top-0 bg-[#F5F2ED]/90 backdrop-blur-md z-30">
-        <button onclick="setDay(1)" id="d1" class="date-btn active flex-shrink-0 w-14 py-3 text-center rounded-xl">
-            <p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">13</p>
-        </button>
-        <button onclick="setDay(2)" id="d2" class="date-btn flex-shrink-0 w-14 py-3 text-center rounded-xl bg-white">
-            <p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">14</p>
-        </button>
-        <button onclick="setDay(3)" id="d3" class="date-btn flex-shrink-0 w-14 py-3 text-center rounded-xl bg-white">
-            <p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">15</p>
-        </button>
-        <button onclick="setDay(4)" id="d4" class="date-btn flex-shrink-0 w-14 py-3 text-center rounded-xl bg-white">
-            <p class="text-[9px] uppercase opacity-50">Sun</p><p class="text-lg font-bold">16</p>
-        </button>
-        <button onclick="setDay(5)" id="d5" class="date-btn flex-shrink-0 w-14 py-3 text-center rounded-xl bg-white">
-            <p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">17</p>
-        </button>
-        <button onclick="setDay(6)" id="d6" class="date-btn flex-shrink-0 w-14 py-3 text-center rounded-xl bg-white">
-            <p class="text-[9px] uppercase opacity-50">Tue</p><p class="text-lg font-bold">18</p>
-        </button>
-    </nav>
-
-    <main class="px-6 relative timeline-line min-h-[400px]" id="content-area">
-        </main>
-
-    <footer class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED] border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-40">
-        <div class="flex justify-between items-end">
-            <div>
-                <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Daily Spend</p>
-                <h2 id="day-total" class="serif text-4xl italic font-bold">NT$ 0</h2>
-            </div>
-            <button onclick="openModal()" class="bg-[#4A342E] text-[#F5F2ED] w-12 h-12 rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-transform">
-                <span class="text-2xl">＋</span>
-            </button>
+    <div id="view-itinerary" class="section-view active p-6">
+        <div class="flex gap-3 overflow-x-auto no-scrollbar pb-6">
+            <button onclick="setDay(1)" id="d1" class="date-btn active flex-shrink-0 w-14 py-3 text-center border border-gray-200 bg-white">
+                <p class="text-[9px] opacity-40 uppercase">Thu</p><p class="font-bold">13</p></button>
+            <button onclick="setDay(2)" id="d2" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-gray-200 bg-white">
+                <p class="text-[9px] opacity-40 uppercase">Fri</p><p class="font-bold">14</p></button>
+            <button onclick="setDay(3)" id="d3" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-gray-200 bg-white">
+                <p class="text-[9px] opacity-40 uppercase">Sat</p><p class="font-bold">15</p></button>
+            <button onclick="setDay(4)" id="d4" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-gray-200 bg-white">
+                <p class="text-[9px] opacity-40 uppercase">Sun</p><p class="font-bold">16</p></button>
+            <button onclick="setDay(5)" id="d5" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-gray-200 bg-white">
+                <p class="text-[9px] opacity-40 uppercase">Mon</p><p class="font-bold">17</p></button>
         </div>
-    </footer>
+        <div id="itinerary-list" class="space-y-6"></div>
+    </div>
 
-    <div id="modal" class="hidden fixed inset-0 bg-[#4A342E]/20 backdrop-blur-sm z-50 flex items-end">
-        <div class="w-full bg-white rounded-t-[2.5rem] p-8 max-w-md mx-auto shadow-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="serif text-2xl italic">New Record</h2>
-                <button onclick="closeModal()" class="text-gray-300 text-xl">✕</button>
+    <div id="view-money" class="section-view p-6">
+        <div class="bg-[#4A342E] text-[#F5F2ED] p-8 rounded-[2rem] shadow-xl mb-8">
+            <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="money-day">1</span> Spending</p>
+            <div class="flex justify-between items-end">
+                <h2 id="day-sum" class="serif text-4xl italic">NT$ 0</h2>
+                <p class="text-[10px] opacity-30">Rate 1:41</p>
             </div>
-            <div class="space-y-6">
-                <input id="in-name" type="text" placeholder="項目名稱 (如：烤腸)" class="w-full border-b border-gray-100 pb-2 outline-none text-lg">
-                <div class="grid grid-cols-2 gap-4">
-                    <select id="in-cat" class="border-b border-gray-100 pb-2 outline-none bg-transparent text-sm">
-                        <option>🍔 飲食</option><option>🚌 交通</option><option>💄 美妝</option><option>🎟️ 門票</option><option>🎁 伴手禮</option>
-                    </select>
-                    <input id="in-krw" type="number" placeholder="韓幣 KRW" class="border-b border-gray-100 pb-2 outline-none text-sm">
-                </div>
-                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-4 rounded-2xl font-bold tracking-widest mt-4">SAVE</button>
+        </div>
+        
+        <div class="card p-6 mb-8 space-y-4">
+            <input id="exp-name" type="text" placeholder="項目名稱" class="w-full border-b border-gray-100 pb-2 outline-none text-sm">
+            <div class="grid grid-cols-2 gap-4">
+                <input id="exp-krw" type="number" placeholder="韓幣 KRW" class="border-b border-gray-100 pb-2 outline-none text-sm">
+                <select id="exp-cat" class="border-b border-gray-100 pb-2 outline-none text-sm bg-transparent">
+                    <option>🍔 飲食</option><option>🚌 交通</option><option>💄 美妝</option><option>🎟️ 門票</option><option>🎁 伴手禮</option>
+                </select>
             </div>
+            <button onclick="addExp()" class="w-full bg-[#4A342E] text-white py-4 rounded-2xl font-bold text-xs tracking-widest">RECORD</button>
+        </div>
+        <div id="exp-list" class="space-y-3"></div>
+    </div>
+
+    <div id="view-tools" class="section-view p-6 space-y-6">
+        <div class="card p-6">
+            <h3 class="serif mb-4 text-[#8E9775]">航班 & 住宿</h3>
+            <div class="space-y-4 text-xs">
+                <div class="flex justify-between border-b border-dashed pb-2"><span>去程 BX794</span><span class="font-bold">13:20 TPE</span></div>
+                <div class="flex justify-between border-b border-dashed pb-2"><span>住宿 南浦洞</span><span class="font-bold">代號 #ANN-2026</span></div>
+            </div>
+        </div>
+        <div class="card p-6 bg-red-50 border-red-100 text-red-700">
+            <h3 class="serif mb-2">緊急聯絡</h3>
+            <p class="text-xs">代表部：+82-2-399-2800</p>
+            <p class="text-xs">救援中心：119 / 112</p>
         </div>
     </div>
 
     <script>
         let currentDay = 1;
         const rate = 41;
-
-        // 行程資料 (根據你的 PDF 預設)
-        const itinerary = {
-            1: [{t:"13:20", n:"抵達金海機場", s:"Take BX 794"}, {t:"17:00", n:"Hotel Check-in", s:"南浦洞優雅酒店"}, {t:"19:00", n:"札嘎其市場", s:"必吃：生魚片", tags:["tag-eat"]}],
-            2: [{t:"11:00", n:"廣安里海灘", s:"藍色大海與大橋"}, {t:"20:00", n:"無人機表演", s:"週六限定", tags:["tag-info"]}],
-            3: [{t:"10:30", n:"F1963 工廠改造", s:"建築美學與咖啡"}, {t:"15:00", n:"新世界百貨", s:"Centum City", tags:["tag-buy"]}]
+        
+        const itineraryData = {
+            1: [
+                { t: "13:20", title: "桃園機場起飛", cat: "交通", loc: "Taoyuan Airport" },
+                { t: "17:00", title: "南浦洞 Check-in", cat: "住宿", loc: "Nampodong", info: "重要預約代號: #ANN-2026", tags: ['tag-must'] },
+                { t: "19:00", title: "扎嘎其市場", cat: "餐廳", loc: "Jagalchi Market", info: "必點菜單: 烤腸、生魚片", tags: ['tag-eat'] }
+            ],
+            2: [
+                { t: "11:00", title: "廣安里海灘", cat: "景點", loc: "Gwangalli Beach", info: "必吃美食: 民樂洞生魚片", tags: ['tag-eat'] },
+                { t: "20:00", title: "無人機秀", cat: "景點", loc: "Gwangalli Drone Show", info: "週六限定表演" }
+            ],
+            3: [
+                { t: "10:30", title: "F1963 工廠改造", cat: "景點", loc: "F1963", info: "必買伴手禮: Yes24 書店文具", tags: ['tag-buy'] },
+                { t: "15:00", title: "新世界百貨", cat: "景點", loc: "Shinsegae Centum City", info: "必逛：全球最大百貨" }
+            ],
+            4: [
+                { t: "09:30", title: "海雲台藍線公園", cat: "交通", loc: "Blueline Park", info: "必點菜單: 尾浦站咖啡", tags: ['tag-eat'] },
+                { t: "15:00", title: "白淺灘文化村", cat: "景點", loc: "Huinnyeoul Culture Village", info: "海邊咖啡廳推薦" }
+            ],
+            5: [
+                { t: "10:00", title: "甘川洞文化村", cat: "景點", loc: "Gamcheon Culture Village", info: "必拍：小王子雕像" },
+                { t: "18:00", title: "荒嶺山夜景", cat: "景點", loc: "Hwangnyeongsan", info: "必買伴手禮: 釜山紀念塔" }
+            ]
         };
 
-        // 記帳資料管理
-        let expenses = JSON.parse(localStorage.getItem('busan_final_v1')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
+        let expenses = JSON.parse(localStorage.getItem('busan_final_v5')) || {1:[], 2:[], 3:[], 4:[], 5:[]};
 
-        function setDay(d) {
-            currentDay = d;
-            document.querySelectorAll('.date-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('d' + d).classList.add('active');
+        function showTab(id) {
+            document.querySelectorAll('.section-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab-' + id).classList.add('tab-active');
             render();
         }
 
-        function openModal() { document.getElementById('modal').classList.remove('hidden'); }
-        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+        function setDay(d) {
+            currentDay = d;
+            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('d' + d).classList.add('active');
+            document.getElementById('money-day').innerText = d;
+            render();
+        }
 
-        function addExpense() {
-            const name = document.getElementById('in-name').value;
-            const krw = document.getElementById('in-krw').value;
-            const cat = document.getElementById('in-cat').value;
-            if(!name || !krw) return alert("請輸入資訊");
-
-            expenses[currentDay].unshift({
-                id: Date.now(), name, cat, krw: Number(krw), twd: Math.round(krw/rate)
-            });
-            
-            localStorage.setItem('busan_final_v1', JSON.stringify(expenses));
-            document.getElementById('in-name').value = '';
-            document.getElementById('in-krw').value = '';
-            closeModal();
+        function addExp() {
+            const name = document.getElementById('exp-name').value;
+            const krw = Number(document.getElementById('exp-krw').value);
+            const cat = document.getElementById('exp-cat').value;
+            if(!name || !krw) return;
+            expenses[currentDay].unshift({ id: Date.now(), name, krw, cat, twd: Math.round(krw/rate) });
+            localStorage.setItem('busan_final_v5', JSON.stringify(expenses));
+            document.getElementById('exp-name').value = '';
+            document.getElementById('exp-krw').value = '';
             render();
         }
 
         function delExp(id) {
-            if(confirm('確定刪除這筆紀錄？')) {
-                expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
-                localStorage.setItem('busan_final_v1', JSON.stringify(expenses));
-                render();
-            }
+            expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
+            localStorage.setItem('busan_final_v5', JSON.stringify(expenses));
+            render();
         }
 
         function render() {
-            const area = document.getElementById('content-area');
-            area.innerHTML = '';
-            let total = 0;
-
-            // 1. 渲染行程
-            (itinerary[currentDay] || []).forEach(p => {
-                let tagHtml = p.tags ? p.tags.map(t => `<span class="tag ${t}">${t==='tag-eat'?'MUST EAT':t==='tag-info'?'INFO':'MUST BUY'}</span>`).join('') : '';
-                area.innerHTML += `
-                <div class="flex gap-6 mb-8 relative z-10">
-                    <div class="w-10 text-right text-[10px] font-bold opacity-30 pt-1">${p.t}</div>
-                    <div class="flex-1 bg-white p-5 rounded-[1.5rem] shadow-sm border border-[#E8E1D4]">
-                        <div class="mb-2">${tagHtml}</div>
-                        <h3 class="font-bold text-sm">${p.n}</h3>
-                        <p class="text-[10px] opacity-40 mt-1">${p.s}</p>
-                        <div class="mt-4 flex justify-end">
-                            <a href="https://map.naver.com/v5/search/${encodeURIComponent(p.n)}" target="_blank" class="text-[9px] font-bold border-b border-gray-400">NAVER MAP →</a>
+            const itArea = document.getElementById('itinerary-list');
+            itArea.innerHTML = '';
+            (itineraryData[currentDay] || []).forEach(item => {
+                const nav = `https://map.naver.com/v5/search/${encodeURIComponent(item.loc)}`;
+                itArea.innerHTML += `
+                    <div class="flex gap-4">
+                        <div class="w-10 text-right text-[10px] opacity-30 font-bold pt-1">${item.t}</div>
+                        <div class="card flex-1 p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] opacity-40 font-bold uppercase">${item.cat}</span>
+                                <a href="${nav}" target="_blank" class="text-[9px] bg-black text-white px-3 py-1 rounded-full font-bold">NAVER MAP</a>
+                            </div>
+                            <h4 class="font-bold text-sm mb-1">${item.title}</h4>
+                            ${item.info ? `<p class="text-[11px] leading-relaxed mb-2">${item.info.replace(/(必吃美食|必點菜單|必買伴手禮|重要預約代號)/g, '<b class="text-[#8E9775]">$1</b>')}</p>` : ''}
+                            <div class="flex gap-1">${(item.tags || []).map(t => `<span class="${t}">${t==='tag-eat'?'MUST EAT':t==='tag-buy'?'MUST BUY':'IMPORTANT'}</span>`).join('')}</div>
                         </div>
-                    </div>
-                </div>`;
+                    </div>`;
             });
 
-            // 2. 渲染花費
+            const exArea = document.getElementById('exp-list');
+            exArea.innerHTML = '';
+            let total = 0;
             expenses[currentDay].forEach(e => {
                 total += e.twd;
-                area.innerHTML += `
-                <div class="flex gap-6 mb-4 relative z-10 animate-fadeIn">
-                    <div class="w-10 text-right text-[10px] text-[#8B5E3C] pt-1 font-bold">$$</div>
-                    <div class="flex-1 bg-[#FDFCFB] p-4 rounded-2xl border border-[#D1CDC7] border-dashed">
-                        <div class="flex justify-between text-[9px] opacity-40 mb-1">
-                            <span>${e.cat}</span>
-                            <button onclick="delExp(${e.id})" class="text-red-300 uppercase tracking-tighter">Delete</button>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold">${e.name}</span>
-                            <div class="text-right">
-                                <p class="text-sm font-bold text-[#4A342E] serif italic">NT$ ${e.twd.toLocaleString()}</p>
-                                <p class="text-[8px] opacity-30">₩ ${e.krw.toLocaleString()}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
+                exArea.innerHTML += `
+                    <div class="card p-4 flex justify-between items-center text-xs">
+                        <div><p class="font-bold">${e.name}</p><p class="opacity-40 text-[9px] uppercase">${e.cat} · ₩${e.krw.toLocaleString()}</p></div>
+                        <div class="text-right"><p class="font-bold serif">NT$ ${e.twd}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300">DELETE</button></div>
+                    </div>`;
             });
-
-            document.getElementById('day-total').innerText = 'NT$ ' + total.toLocaleString();
+            document.getElementById('day-sum').innerText = `NT$ ${total.toLocaleString()}`;
         }
-
         render();
     </script>
-    <style>
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
-    </style>
 </body>
 </html>
