@@ -10,21 +10,28 @@
         body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
         .serif { font-family: 'Playfair Display', serif; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
-        .sub-tab { transition: all 0.3s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; letter-spacing: 0.1em; }
+        
+        /* 三欄式標籤樣式 */
+        .sub-tab { transition: all 0.3s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; letter-spacing: 0.1em; font-weight: 500; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
+        
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; position: relative; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* 內容區塊切換 */
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* 時間軸線條 */
+        /* 垂直時間軸設計 */
+        .timeline-container { position: relative; }
         .timeline-line { position: absolute; left: 45px; top: 0; bottom: 0; width: 1px; background-color: #D1CDC7; z-index: 0; }
-        .timeline-item { position: relative; z-index: 1; display: flex; gap: 20px; align-items: flex-start; }
-        /* 時間軸圓點 */
-        .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: #4A342E; margin-top: 18px; border: 2px solid #F5F2ED; position: relative; z-index: 2; }
-        .dot-food { background: #E67E22; } /* 用餐顏色 */
-        .dot-spot { background: #4A342E; } /* 景點顏色 */
+        .timeline-item { position: relative; z-index: 1; display: flex; gap: 20px; margin-bottom: 2rem; }
+        
+        /* 時間軸圓點與顏色區分 */
+        .timeline-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 20px; border: 2px solid #F5F2ED; position: relative; z-index: 2; flex-shrink: 0; }
+        .dot-food { background: #E67E22; box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2); } /* 用餐：橘色 */
+        .dot-spot { background: #4A342E; box-shadow: 0 0 0 2px rgba(74, 52, 46, 0.2); }  /* 景點：深棕色 */
         
         .tag-must { background: #FEE2E2; color: #EF4444; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
     </style>
@@ -38,192 +45,64 @@
                 <h1 class="serif text-4xl italic font-semibold text-[#4A342E]">Travelogue</h1>
             </div>
             <div class="text-right pb-1">
-                <p class="text-[9px] font-bold opacity-30 uppercase">Weather</p>
-                <p class="text-xs font-bold">釜山 22°C 🌤️</p>
+                <p class="text-xs font-bold text-[#4A342E]">釜山 22°C 🌤️</p>
             </div>
         </div>
     </header>
 
-    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-4 sticky top-0 bg-[#F5F2ED]/90 backdrop-blur-md z-30">
-        <button onclick="setDay(1)" id="d1" class="date-btn active flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-4 sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
+        <button onclick="setDay(1)" id="d1" class="date-btn active flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm">
             <p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">13</p>
         </button>
-        <button onclick="setDay(2)" id="d2" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+        <button onclick="setDay(2)" id="d2" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm">
             <p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">14</p>
         </button>
-        <button onclick="setDay(3)" id="d3" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+        <button onclick="setDay(3)" id="d3" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm">
             <p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">15</p>
         </button>
-        <button onclick="setDay(4)" id="d4" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+        <button onclick="setDay(4)" id="d4" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm">
             <p class="text-[9px] uppercase opacity-50">Sun</p><p class="text-lg font-bold">16</p>
         </button>
-        <button onclick="setDay(5)" id="d5" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+        <button onclick="setDay(5)" id="d5" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm">
             <p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">17</p>
         </button>
-        <button onclick="setDay(6)" id="d6" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white">
+        <button onclick="setDay(6)" id="d6" class="date-btn flex-shrink-0 w-14 py-3 text-center border border-[#D1CDC7] rounded-xl bg-white shadow-sm">
             <p class="text-[9px] uppercase opacity-50">Tue</p><p class="text-lg font-bold">18</p>
         </button>
     </nav>
 
-    <div class="flex px-6 mb-6 gap-6 border-b border-[#D1CDC7]/30">
+    <div class="flex px-8 mb-6 gap-8 border-b border-[#D1CDC7]/30">
         <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
         <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
         <button onclick="showSection('info')" id="tab-info" class="sub-tab">航班住宿</button>
     </div>
 
-    <main class="relative">
-        <div id="view-itinerary" class="view-section active px-6 space-y-8">
+    <main class="min-h-[400px]">
+        <div id="view-itinerary" class="view-section active px-6 timeline-container">
             <div class="timeline-line"></div>
-            </div>
+            <div id="itinerary-content"></div>
+        </div>
 
         <div id="view-expenses" class="view-section px-6 space-y-6">
-            <div class="card p-6 space-y-4">
-                <input id="in-name" type="text" placeholder="項目名稱" class="w-full border-b border-gray-100 pb-2 outline-none text-sm">
+            <div class="card p-6 space-y-4 shadow-sm">
+                <input id="in-name" type="text" placeholder="項目名稱" class="w-full border-b border-gray-100 pb-2 outline-none text-sm bg-transparent">
                 <div class="grid grid-cols-2 gap-4">
-                    <input id="in-krw" type="number" placeholder="韓幣 KRW" class="border-b border-gray-100 pb-2 outline-none text-sm">
+                    <input id="in-krw" type="number" placeholder="韓幣 KRW" class="border-b border-gray-100 pb-2 outline-none text-sm bg-transparent">
                     <select id="in-cat" class="border-b border-gray-100 pb-2 outline-none text-sm bg-transparent">
-                        <option>🍔 飲食</option><option>🚌 交通</option><option>💄 美妝</option><option>🎟️ 門票</option><option>🎁 伴手禮</option>
+                        <option>🍔 飲食</option><option>🚌 交通</option><option>💄 美妝</option><option>🎟️ 門票</option><option>🎁 伴手禮</option><option>👕 衣服</option>
                     </select>
                 </div>
-                <button onclick="addExp()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-[10px] tracking-widest uppercase">Add Record</button>
+                <button onclick="addExp()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-[10px] tracking-widest uppercase shadow-md">Add Record</button>
             </div>
             <div id="exp-list" class="space-y-3 pb-20"></div>
         </div>
 
         <div id="view-info" class="view-section px-6 space-y-6">
-            <div class="card p-6 border-l-4 border-l-[#8E9775]">
+            <div class="card p-6 border-l-4 border-l-[#8E9775] shadow-sm">
                 <h3 class="serif text-lg italic mb-4">Flight Info</h3>
-                <div class="space-y-2 text-sm">
-                    <p class="flex justify-between"><span>去程 BX 794 (5/13)</span><b>13:20 TPE</b></p>
-                    <p class="flex justify-between"><span>回程 BX 793 (5/18)</span><b>11:05 PUS</b></p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED] border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-40">
-        <div class="flex justify-between items-end">
-            <div>
-                <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="day-label">1</span> Total</p>
-                <h2 id="total-amount" class="serif text-4xl italic font-bold">NT$ 0</h2>
-            </div>
-            <div class="text-right opacity-30 text-[9px] font-bold uppercase"><p>Rate 1:41</p></div>
-        </div>
-    </footer>
-
-    <script>
-        let currentDay = 1;
-        const rate = 41;
-
-        // 行程資料：加入了 type 欄位來區分圓點顏色 (spot 為景點, food 為用餐)
-        const plans = {
-            1: [
-                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794", type:"spot", mapUrl: "#"},
-                {t:"17:00", n:"南浦洞 Check-in", s:"放行李與周邊散策", type:"spot", mapUrl: "#"},
-                {t:"19:00", n:"扎嘎其市場", s:"必吃烤腸、生魚片", must:true, type:"food", mapUrl: "#"}
-            ],
-            2: [
-                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", must:true, type:"spot", mapUrl: "#"},
-                {t:"13:00", n:"民樂生魚片中心", s:"景觀午餐", type:"food", mapUrl: "#"},
-                {t:"20:00", n:"無人機秀", s:"週六限定表演", type:"spot", mapUrl: "#"}
-            ],
-            3: [
-                {t:"10:30", n:"F1963 工廠改造", s:"必買文具", must:true, type:"spot", mapUrl: "#"},
-                {t:"12:30", n:"福順都家", s:"手製馬格利與午餐", type:"food", mapUrl: "#"},
-                {t:"15:00", n:"新世界百貨", s:"Centum City", type:"spot", mapUrl: "#"}
-            ]
-            // ...以此類推
-        };
-
-        let expenses = JSON.parse(localStorage.getItem('busan_v19')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
-
-        function showSection(id) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
-            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + id).classList.add('active');
-        }
-
-        function setDay(d) {
-            currentDay = d;
-            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('d' + d).classList.add('active');
-            document.getElementById('day-label').innerText = d;
-            render();
-        }
-
-        function render() {
-            const itArea = document.getElementById('view-itinerary');
-            if(!itArea) return;
-            
-            // 先放線條
-            itArea.innerHTML = '<div class="timeline-line"></div>';
-            
-            (plans[currentDay] || []).forEach(p => {
-                const dotClass = p.type === 'food' ? 'dot-food' : 'dot-spot';
-                itArea.innerHTML += `
-                    <div class="timeline-item">
-                        <div class="w-8 text-right text-[10px] font-bold opacity-30 pt-4">${p.t}</div>
-                        <div class="timeline-dot ${dotClass}"></div>
-                        <div class="card flex-1 p-5 shadow-sm">
-                            ${p.must ? '<span class="tag-must uppercase tracking-tighter">RECOMMEND</span>' : ''}
-                            <h3 class="font-bold text-sm mt-1 text-[#4A342E]">${p.n}</h3>
-                            <p class="text-[10px] opacity-50 mt-1">${p.s}</p>
-                            <div class="mt-4 flex justify-end">
-                                <a href="${p.mapUrl}" target="_blank" class="text-[9px] font-bold border-b border-[#4A342E] uppercase">Map →</a>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-            updateExpList();
-        }
-
-        function addExp() {
-            const name = document.getElementById('in-name').value;
-            const krw = document.getElementById('in-krw').value;
-            const cat = document.getElementById('in-cat').value;
-            if(!name || !krw) return;
-            expenses[currentDay].unshift({ id: Date.now(), name, krw: Number(krw), twd: Math.round(krw/rate), cat });
-            localStorage.setItem('busan_v19', JSON.stringify(expenses));
-            document.getElementById('in-name').value = '';
-            document.getElementById('in-krw').value = '';
-            updateExpList();
-        }
-
-        function delExp(id) {
-            if(confirm('確定刪除？')) {
-                expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
-                localStorage.setItem('busan_v19', JSON.stringify(expenses));
-                updateExpList();
-            }
-        }
-
-        function updateExpList() {
-            const exArea = document.getElementById('exp-list');
-            if(!exArea) return;
-            exArea.innerHTML = '';
-            let total = 0;
-            expenses[currentDay].forEach(e => {
-                total += e.twd;
-                exArea.innerHTML += `
-                    <div class="bg-white p-5 rounded-[1.5rem] flex justify-between items-center border border-[#E8E1D4] border-dashed mb-3">
-                        <div>
-                            <p class="text-[9px] opacity-40 font-bold uppercase mb-1">${e.cat}</p>
-                            <p class="font-bold text-sm text-[#4A342E]">${e.name}</p>
-                            <p class="text-[9px] opacity-30 mt-1">KRW ${e.krw.toLocaleString()}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-bold text-lg serif italic text-[#8B5E3C]">NT$ ${e.twd.toLocaleString()}</p>
-                            <button onclick="delExp(${e.id})" class="text-[9px] text-red-200 uppercase font-bold">Del</button>
-                        </div>
-                    </div>`;
-            });
-            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
-        }
-
-        window.onload = function() {
-            render();
-        };
-    </script>
-</body>
-</html>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between border-b border-dashed border-[#D1CDC7]/50 pb-2">
+                        <span class="opacity-50">去程 BX 794</span><span class="font-bold uppercase">13:20 TPE</span>
+                    </div>
+                    <div class="flex justify-between border-b border-dashed border-[#D1CDC7]/50 pb-2">
+                        <span class="opacity-50">回程 BX 793</span><span class="font-bold uppercase">11:05 PUS</span>
