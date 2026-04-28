@@ -2,18 +2,31 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Busan Travel Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
-        .serif { font-family: 'Playfair Display', serif; }
+        :root {
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+        body { 
+            background-color: #F5F2ED; 
+            font-family: 'Noto Sans TC', sans-serif; 
+            color: #4A342E; 
+            -webkit-tap-highlight-color: transparent;
+            /* 預留空間給固定在底部的 footer，並考慮 iPhone 安全區 */
+            padding-bottom: calc(140px + var(--safe-bottom)); 
+        }
+        .serif { 
+            font-family: 'Playfair Display', serif; 
+            line-height: 1.2; /* 防止英文字體下緣裁切 */
+        }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
         .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 500; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         
-        /* 穩定對齊方案：邊框連接法 */
+        /* 軸線對齊優化 */
         .itinerary-row { display: flex; gap: 0; position: relative; }
         .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
         .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
@@ -25,17 +38,20 @@
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         
-        /* 摺疊選單樣式 */
         details summary { list-style: none; outline: none; cursor: pointer; }
         details summary::-webkit-details-marker { display: none; }
         
         .view-section { display: none; }
         .view-section.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; }
+        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; border-radius: 0; }
+        
+        footer {
+            padding-bottom: calc(2rem + var(--safe-bottom)) !important;
+        }
     </style>
 </head>
-<body class="max-w-md mx-auto pb-40">
+<body class="max-w-md mx-auto">
 
     <header class="p-8 pb-4">
         <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
@@ -75,20 +91,20 @@
                     </select>
                 </div>
                 <input type="number" id="exp-krw" placeholder="輸入韓幣 KRW" class="w-full text-sm mb-4">
-                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs">RECORD</button>
+                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Record</button>
             </div>
             <div id="expense-list-area" class="space-y-3"></div>
         </div>
 
-        <div id="view-info" class="view-section px-6 space-y-6 pb-20">
+        <div id="view-info" class="view-section px-6 space-y-6">
             <div class="card p-6">
                 <h3 class="serif italic font-bold mb-4 border-b pb-2 text-lg">Exchange Rate</h3>
                 <div class="flex items-center gap-4">
                     <input type="number" id="calc-krw" placeholder="韓幣 KRW" class="flex-1 text-center font-bold" oninput="calcExchange()">
-                    <span class="text-xl">⇄</span>
-                    <div class="flex-1 text-center font-bold text-[#E67E22]" id="calc-twd">台幣 TWD 0</div>
+                    <span class="text-xl opacity-30">⇄</span>
+                    <div class="flex-1 text-center font-bold text-[#E67E22]" id="calc-twd">TWD 0</div>
                 </div>
-                <p class="text-[9px] opacity-30 mt-3 text-center uppercase tracking-widest">Today's Rate 1 : 41</p>
+                <p class="text-[9px] opacity-30 mt-3 text-center uppercase tracking-widest">Rate 1 : 41</p>
             </div>
 
             <div class="card p-5">
@@ -97,34 +113,22 @@
                     <table class="w-full text-[10px] text-left border-collapse">
                         <thead>
                             <tr class="bg-gray-50 uppercase opacity-50">
-                                <th class="p-2 border">信用卡種類</th>
+                                <th class="p-2 border">信用卡</th>
                                 <th class="p-2 border text-center">回饋%</th>
-                                <th class="p-2 border">適用商家/備註</th>
+                                <th class="p-2 border">備註</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-2 border font-bold text-[#4A342E]">國泰 CUBE</td>
-                                <td class="p-2 border text-center font-bold text-red-500">3%</td>
-                                <td class="p-2 border opacity-70">切換「趣旅行」、一般實體店</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 border font-bold text-[#4A342E]">聯邦 吉鶴</td>
-                                <td class="p-2 border text-center font-bold text-red-500">4.5%</td>
-                                <td class="p-2 border opacity-70">Apple Pay 支援商家</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 border font-bold text-[#4A342E]">富邦 J卡</td>
-                                <td class="p-2 border text-center font-bold text-red-500">10%</td>
-                                <td class="p-2 border opacity-70">韓國便利商店、指定藥妝</td>
-                            </tr>
+                        <tbody class="opacity-80">
+                            <tr><td class="p-2 border font-bold">國泰 CUBE</td><td class="p-2 border text-center text-red-500 font-bold">3%</td><td class="p-2 border">趣旅行</td></tr>
+                            <tr><td class="p-2 border font-bold">聯邦 吉鶴</td><td class="p-2 border text-center text-red-500 font-bold">4.5%</td><td class="p-2 border">Apple Pay</td></tr>
+                            <tr><td class="p-2 border font-bold">富邦 J卡</td><td class="p-2 border text-center text-red-500 font-bold">10%</td><td class="p-2 border">超商/藥妝</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
             <div class="card p-6">
-                <h3 class="serif italic font-bold mb-4 border-b pb-2 text-lg">Shopping Wishlist</h3>
+                <h3 class="serif italic font-bold mb-4 border-b pb-2 text-lg">Wishlist</h3>
                 <div class="space-y-4">
                     <details class="group">
                         <summary class="flex justify-between items-center font-bold text-sm bg-gray-50 p-3 rounded-xl">
@@ -132,34 +136,7 @@
                             <span class="transition group-open:rotate-180">↓</span>
                         </summary>
                         <div class="p-3 text-xs leading-loose opacity-70">
-                            □ Torriden 導入精華 (激推!)<br>
-                            □ Round Lab 獨島防曬霜<br>
-                            □ UNOVE 髮質護理組<br>
-                            □ Rejuran 小白瓶
-                        </div>
-                    </details>
-
-                    <details class="group">
-                        <summary class="flex justify-between items-center font-bold text-sm bg-gray-50 p-3 rounded-xl">
-                            <span>💊 韓國藥局</span>
-                            <span class="transition group-open:rotate-180">↓</span>
-                        </summary>
-                        <div class="p-3 text-xs leading-loose opacity-70">
-                            □ 蜈蚣草飲 (消水腫)<br>
-                            □ 諾斯七 (鼻炎噴霧)<br>
-                            □ 維他命 C 錠片
-                        </div>
-                    </details>
-
-                    <details class="group">
-                        <summary class="flex justify-between items-center font-bold text-sm bg-gray-50 p-3 rounded-xl">
-                            <span>🎁 零食與伴手禮</span>
-                            <span class="transition group-open:rotate-180">↓</span>
-                        </summary>
-                        <div class="p-3 text-xs leading-loose opacity-70">
-                            □ HBAF 杏仁果 (大蒜口味)<br>
-                            □ 樂天 零糖巧克力餅乾<br>
-                            □ 釜山限定 海鷗造型點心
+                            □ Torriden 導入精華<br>□ Round Lab 防曬霜<br>□ UNOVE 髮質護理<br>□ Rejuran 小白瓶
                         </div>
                     </details>
                 </div>
@@ -173,7 +150,7 @@
                 <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="day-label">1</span> Spending</p>
                 <h2 id="total-amount" class="serif text-4xl italic font-bold">NT$ 0</h2>
             </div>
-            <div class="text-right opacity-30 text-[9px] font-bold">RATE 1:41</div>
+            <div class="text-right opacity-30 text-[9px] font-bold uppercase tracking-tighter">Rate 1:41</div>
         </div>
     </footer>
 
@@ -181,16 +158,18 @@
         const rate = 41;
         const plans = {
             1: [
-                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794", type:"spot", map:"https://naver.me/xxx"},
-                {t:"17:00", n:"南浦洞優雅酒店", s:"Check-in 放行李", type:"spot", map:"https://naver.me/hotel"},
-                {t:"19:00", n:"扎嘎其市場", s:"晚餐: 烤腸、生魚片", type:"food", must:true, map:"https://naver.me/market"}
+                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794", type:"spot", map:"#"},
+                {t:"17:00", n:"南浦洞優雅酒店", s:"Check-in 放行李", type:"spot", map:"#"},
+                {t:"19:00", n:"扎嘎其市場", s:"晚餐: 烤腸、生魚片", type:"food", map:"#"}
             ],
             2: [
-                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", must:true, map:"https://naver.me/beach"}
-            ]
+                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", map:"#"}
+            ],
+            3: [], 4: [], 5: [], 6: []
         };
 
         let currentDay = 1;
+        // 初始化：從 LocalStorage 讀取，若無則建立結構
         let expenses = JSON.parse(localStorage.getItem('busan_v_pro')) || {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
 
         function showSection(id) {
@@ -210,18 +189,32 @@
 
         function calcExchange() {
             const krw = document.getElementById('calc-krw').value;
-            document.getElementById('calc-twd').innerText = '台幣 TWD ' + Math.round(krw / rate).toLocaleString();
+            document.getElementById('calc-twd').innerText = 'TWD ' + Math.round(krw / rate).toLocaleString();
         }
 
         function addExpense() {
-            const name = document.getElementById('exp-name').value;
-            const krw = document.getElementById('exp-krw').value;
+            const nameEl = document.getElementById('exp-name');
+            const krwEl = document.getElementById('exp-krw');
             const cat = document.getElementById('exp-cat').value;
-            if(!krw) return;
-            expenses[currentDay].unshift({ id:Date.now(), name: name || '未命名', krw: Number(krw), twd: Math.round(krw/rate), cat });
+            
+            if(!krwEl.value) return;
+
+            const entry = {
+                id: Date.now(),
+                name: nameEl.value || '未命名',
+                krw: Number(krwEl.value),
+                twd: Math.round(krwEl.value / rate),
+                cat: cat
+            };
+
+            if(!expenses[currentDay]) expenses[currentDay] = [];
+            expenses[currentDay].unshift(entry);
+            
+            // 儲存至手機 LocalStorage
             localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
-            document.getElementById('exp-name').value = '';
-            document.getElementById('exp-krw').value = '';
+            
+            nameEl.value = '';
+            krwEl.value = '';
             render();
         }
 
@@ -232,6 +225,7 @@
         }
 
         function render() {
+            // 渲染行程
             const itList = document.getElementById('itinerary-list');
             itList.innerHTML = '';
             (plans[currentDay] || []).forEach(p => {
@@ -243,7 +237,7 @@
                             <div class="card p-5">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-sm">${p.n}</h3>
-                                    <a href="${p.map}" target="_blank" class="text-[9px] bg-gray-100 px-2 py-1 rounded">MAP</a>
+                                    <a href="${p.map}" class="text-[9px] bg-gray-100 px-2 py-1 rounded">MAP</a>
                                 </div>
                                 <p class="text-[10px] opacity-50 mt-1">${p.s}</p>
                             </div>
@@ -251,17 +245,19 @@
                     </div>`;
             });
 
+            // 渲染帳單
             const exArea = document.getElementById('expense-list-area');
             exArea.innerHTML = '';
             let total = 0;
-            expenses[currentDay].forEach(e => {
+            const currentExpenses = expenses[currentDay] || [];
+            currentExpenses.forEach(e => {
                 total += e.twd;
                 exArea.innerHTML += `
                     <div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]">
                         <div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p></div>
                         <div class="text-right">
                             <p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd}</p>
-                            <button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DEL</button>
+                            <button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DELETE</button>
                         </div>
                     </div>`;
             });
