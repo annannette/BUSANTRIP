@@ -2,176 +2,57 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busan Travel App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Busan Trip</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; }
+        body { background-color: #F5F2ED; font-family: 'Noto Sans TC', sans-serif; color: #4A342E; -webkit-tap-highlight-color: transparent; }
         .serif { font-family: 'Playfair Display', serif; }
-        .date-btn.active { background-color: #4A342E; color: #F5F2ED; border-radius: 12px; }
-        .category-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: #E8E1D4; font-weight: bold; color: #8B5E3C; }
-        .timeline-line::before { content: ''; position: absolute; left: 3.25rem; top: 0; bottom: 0; width: 1px; background-color: #D1CDC7; z-index: 0; }
+        .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
+        .timeline-line::before { content: ''; position: absolute; left: 2.25rem; top: 0; bottom: 0; width: 1px; background-color: #D1CDC7; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .day-content { display: none; }
-        .day-content.active { display: block; }
     </style>
 </head>
 <body class="max-w-md mx-auto pb-40">
 
-    <header class="p-8 flex justify-between items-end">
-        <div>
-            <p class="text-[10px] tracking-[0.2em] opacity-50 uppercase">Busan 2026</p>
-            <h1 class="serif text-4xl italic mt-1">Itinerary</h1>
-        </div>
-        <button onclick="toggleExpenseModal()" class="bg-[#4A342E] text-white p-3 rounded-full shadow-lg">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-        </button>
+    <header class="p-6 flex justify-between items-center">
+        <h1 class="serif text-3xl italic">Busan Trip</h1>
+        <button onclick="openModal()" class="bg-[#4A342E] text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg">＋</button>
     </header>
 
-    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-6 sticky top-0 bg-[#F5F2ED] z-10">
-        <button onclick="switchDay(1)" id="btn-1" class="date-btn active flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 1</button>
-        <button onclick="switchDay(2)" id="btn-2" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 2</button>
-        <button onclick="switchDay(3)" id="btn-3" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 3</button>
-        <button onclick="switchDay(4)" id="btn-4" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 4</button>
-        <button onclick="switchDay(5)" id="btn-5" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 5</button>
-        <button onclick="switchDay(6)" id="btn-6" class="date-btn flex-shrink-0 w-16 py-3 border border-[#D1CDC7] rounded-xl text-sm">Day 6</button>
+    <nav class="flex gap-3 px-6 overflow-x-auto no-scrollbar pb-6 sticky top-0 bg-[#F5F2ED] z-20">
+        <button onclick="changeDay(1)" id="b1" class="date-btn active flex-shrink-0 w-14 py-3 border border-[#D1CDC7] rounded-xl text-sm transition-colors">D1</button>
+        <button onclick="changeDay(2)" id="b2" class="date-btn flex-shrink-0 w-14 py-3 border border-[#D1CDC7] rounded-xl text-sm transition-colors">D2</button>
+        <button onclick="changeDay(3)" id="b3" class="date-btn flex-shrink-0 w-14 py-3 border border-[#D1CDC7] rounded-xl text-sm transition-colors">D3</button>
+        <button onclick="changeDay(4)" id="b4" class="date-btn flex-shrink-0 w-14 py-3 border border-[#D1CDC7] rounded-xl text-sm transition-colors">D4</button>
+        <button onclick="changeDay(5)" id="b5" class="date-btn flex-shrink-0 w-14 py-3 border border-[#D1CDC7] rounded-xl text-sm transition-colors">D5</button>
+        <button onclick="changeDay(6)" id="b6" class="date-btn flex-shrink-0 w-14 py-3 border border-[#D1CDC7] rounded-xl text-sm transition-colors">D6</button>
     </nav>
 
-    <main class="px-6 relative timeline-line min-h-[300px]">
-        <div id="itinerary-list">
-            </div>
-    </main>
+    <main class="px-6 relative timeline-line" id="main-content">
+        </main>
 
-    <div id="expense-modal" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end">
-        <div class="w-full bg-white rounded-t-[2.5rem] p-8 max-w-md mx-auto shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="serif text-2xl italic font-bold">New Expense</h2>
-                <button onclick="toggleExpenseModal()" class="text-gray-400">✕</button>
-            </div>
-            <div class="space-y-4">
-                <input id="item-name" type="text" placeholder="項目名稱..." class="w-full border-b border-[#D1CDC7] p-2 outline-none text-lg">
-                <select id="item-category" class="w-full border-b border-[#D1CDC7] p-2 outline-none bg-transparent">
-                    <option value="飲食">🍔 飲食</option>
-                    <option value="交通">🚌 交通</option>
-                    <option value="美妝">💄 美妝</option>
-                    <option value="門票">🎟️ 門票</option>
-                    <option value="伴手禮">🎁 伴手禮</option>
-                    <option value="衣服">👕 衣服</option>
-                    <option value="紀念品">🧸 紀念品</option>
-                </select>
-                <div class="flex items-center">
-                    <span class="mr-2 opacity-40 text-sm">KRW</span>
-                    <input id="item-krw" type="number" placeholder="金額..." class="w-full border-b border-[#D1CDC7] p-2 outline-none">
-                </div>
-                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-[#F5F2ED] py-4 rounded-2xl font-bold mt-4">RECORD</button>
-            </div>
-        </div>
-    </div>
+    <footer class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED] border-t border-[#D1CDC7] p-6 max-w-md mx-auto flex justify-between items-center z-30">
+        <span class="text-xs opacity-40 font-bold uppercase">Total Spend</span>
+        <span id="day-total" class="serif text-2xl italic font-bold">NT$ 0</span>
+    </footer>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED] border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-10">
-        <div class="flex justify-between items-center">
-            <p class="text-xs font-medium opacity-40 uppercase tracking-widest">Day Total</p>
-            <p id="total-twd" class="serif text-3xl italic font-bold">NT$ 0</p>
+    <div id="modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end">
+        <div class="w-full bg-white rounded-t-3xl p-8 max-w-md mx-auto">
+            <div class="flex justify-between mb-6"><h2 class="serif text-xl italic">Add Expense</h2><button onclick="closeModal()">✕</button></div>
+            <input id="in-name" type="text" placeholder="項目 (如: 炸雞)" class="w-full border-b mb-4 p-2 outline-none">
+            <select id="in-cat" class="w-full border-b mb-4 p-2 outline-none">
+                <option>飲食</option><option>交通</option><option>美妝</option><option>門票</option><option>伴手禮</option><option>衣服</option><option>紀念品</option>
+            </select>
+            <input id="in-krw" type="number" placeholder="韓幣 KRW" class="w-full border-b mb-6 p-2 outline-none">
+            <button onclick="saveExpense()" class="w-full bg-[#4A342E] text-white py-4 rounded-xl font-bold">SAVE</button>
         </div>
     </div>
 
     <script>
         let currentDay = 1;
         const rate = 41;
-
-        // 行程資料 (你可以隨時修改這裡的預設行程)
-        const defaultPlans = {
-            1: [{ time: "14:00", title: "飯店 Check-in", note: "南浦洞周邊" }],
-            2: [{ time: "11:00", title: "廣安里海灘", note: "看無人機表演" }],
-            3: [{ time: "10:00", title: "海雲台膠囊列車", note: "尾浦站出發" }]
-        };
-
-        let expenses = JSON.parse(localStorage.getItem('busan_v2_data')) || {
-            1: [], 2: [], 3: [], 4: [], 5: [], 6: []
-        };
-
-        function switchDay(day) {
-            currentDay = day;
-            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + day).classList.add('active');
-            renderAll();
-        }
-
-        function toggleExpenseModal() {
-            const modal = document.getElementById('expense-modal');
-            modal.classList.toggle('hidden');
-        }
-
-        function addExpense() {
-            const name = document.getElementById('item-name').value;
-            const category = document.getElementById('item-category').value;
-            const krw = parseFloat(document.getElementById('item-krw').value);
-
-            if (!name || isNaN(krw)) return alert("請填寫內容");
-
-            expenses[currentDay].push({
-                id: Date.now(),
-                name, category, krw, twd: Math.round(krw / rate)
-            });
-
-            localStorage.setItem('busan_v2_data', JSON.stringify(expenses));
-            document.getElementById('item-name').value = '';
-            document.getElementById('item-krw').value = '';
-            toggleExpenseModal();
-            renderAll();
-        }
-
-        function deleteExpense(id) {
-            expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
-            localStorage.setItem('busan_v2_data', JSON.stringify(expenses));
-            renderAll();
-        }
-
-        function renderAll() {
-            const listEl = document.getElementById('itinerary-list');
-            listEl.innerHTML = '';
-            let total = 0;
-
-            // 1. 渲染行程 (Plans)
-            const plans = defaultPlans[currentDay] || [];
-            plans.forEach(plan => {
-                listEl.innerHTML += `
-                    <div class="flex gap-8 mb-8 relative z-10">
-                        <div class="w-10 text-right pt-1"><span class="text-[10px] font-bold opacity-40">${plan.time}</span></div>
-                        <div class="flex-1 bg-white p-4 rounded-2xl border border-[#E8E1D4] shadow-sm">
-                            <h4 class="font-bold text-sm">${plan.title}</h4>
-                            <p class="text-[10px] opacity-50 mt-1">${plan.note}</p>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // 2. 渲染花費 (Expenses)
-            expenses[currentDay].forEach(exp => {
-                total += exp.twd;
-                listEl.innerHTML += `
-                    <div class="flex gap-8 mb-6 relative z-10">
-                        <div class="w-10 text-right pt-1"><span class="text-[10px] font-bold text-[#8B5E3C]">$$</span></div>
-                        <div class="flex-1 bg-[#FDFCFB] p-4 rounded-2xl border border-[#D1CDC7] border-dashed">
-                            <div class="flex justify-between items-start">
-                                <span class="category-tag">${exp.category}</span>
-                                <button onclick="deleteExpense(${exp.id})" class="text-[10px] text-red-200 uppercase">Delete</button>
-                            </div>
-                            <h4 class="font-bold text-sm mt-2">${exp.name}</h4>
-                            <div class="flex justify-between items-end mt-2">
-                                <span class="text-[10px] opacity-30">KRW ${exp.krw.toLocaleString()}</span>
-                                <span class="font-bold text-[#8B5E3C] serif italic">NT$ ${exp.twd}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('total-twd').innerText = 'NT$ ' + total.toLocaleString();
-        }
-
-        renderAll();
-    </script>
-</body>
-</html>
+        
+        // 預設行程資料
+        const plans = {
