@@ -89,7 +89,7 @@
     <div class="flex px-8 mt-4 mb-6 gap-8 border-b border-[#D1CDC7]/30">
         <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
         <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
-        <button onclick="showSection('info')" id="tab-info" class="sub-tab">攻略清單</button>
+        <button onclick="showSection('info')" id="tab-info" class="sub-tab">匯率換算</button>
     </div>
 
     <main>
@@ -152,14 +152,52 @@
         // 這裡填寫你給的 Naver Map 網址
         const plans = {
             1: [
-                {t:"13:20", n:"桃園國際機場", s:"航班 BX 794", type:"spot", map:"https://naver.me/5Yw4vE7J"},
-                {t:"17:00", n:"南浦洞酒店", s:"Check-in 放行李", type:"spot", map:"https://naver.me/F0w8wY7f"},
-                {t:"19:00", n:"扎嘎其市場", s:"晚餐: 烤腸、生魚片", type:"food", map:"https://naver.me/xXPDm6vU"}
+                {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot", map:"https://naver.me/5Yw4vE7J"},
+                {t:"15:30", n:"金海國際機場", s:"航班 KE2086", type:"spot", map:"https://naver.me/5Yw4vE7J"},
+                {t:"17:30", n:"廣安里海景民宿", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FsohC39V"},
+                {t:"18:00", n:"Millac the Market 밀락더마켓", s:"複合式新潮商場，餐廳咖啡廳、服飾配件、表演空間、文化藝術聚集地", type:"spot", map:"https://naver.me/Fuz5ZqYEU"},
+                {t:"18:30", n:"廣安里散策", s:"Check-in 放行李", type:"spot"},
+                {t:"20:00", n:"83獬豸83해치", s:"釜山必吃熱門排隊烤肉店", type:"food", map:"https://naver.me/FsohC39V"},
+                {t:"21:30", n:"The Bay 101 더베이101", s:"釜山版的維多利亞港", type:"spot", map:"https://naver.me/59vo1yZU"}
             ],
             2: [
-                {t:"11:00", n:"廣安里海灘", s:"釜山藍—廣安大橋", type:"spot", map:"https://naver.me/G87A5N2p"}
+                {t:"09:30", n:"Working Holiday", s:"早午餐： 08:00 - 19:00", type:"food", map:"https://naver.me/G87A5N2p"},
+                {t:"11:00", n:"海東龍宮寺", s:"釜山藍—廣安大橋", type:"spot", map:"https://naver.me/58NdWaSm"},
+                {t:"13:00", n:"용궁해물야채쟁반짜장", s:"海東龍宮海鮮蔬菜炸醬麵", type:"food", map:"https://naver.me/FA2xQgVw"},
+                {t:"15:00", n:"清沙浦散策", s:"釜山小鎌倉", type:"spot", map:"https://naver.me/IItGsmtd"},
+                {t:"16:00", n:"Diart coffee", s:"咖啡廳： 09:00 - 17:00", type:"food", map:"https://naver.me/Gxk1OJez"},
+                {t:"17:00", n:"清沙浦搭乘膠囊列車", s:"入場時間： 17:00 - 17:30", type:"spot", map:"https://naver.me/xq3aEIjM"},
+                {t:"18:30", n:"海雲台傳統市場", s:"海雲台餃子、糖餅： 09:00 - 17:00", type:"food", map:"https://naver.me/FSwbcVYO"},
+                {t:"20:30", n:"廣安里遊艇體驗", s:"入場時間： 21:30", type:"spot", map:"https://naver.me/GBF7x95e"}
             ],
-            3: [], 4: [], 5: [], 6: []
+            3: [
+                {t:"09:30", n:"라이온 호텔", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
+                {t:"10:00", n:"hash table해쉬테이블", s:"田園風早午餐： 09:00 - 19:00", type:"food", map:"https://naver.me/IxsqysmJ"},
+                {t:"11:00", n:"電影殿堂", s:"藍天組建築師事務所所設計的解構主義建築,", type:"spot", map:"https://naver.me/GG7tPu8w"},
+                {t:"11:30", n:"釜山新世界百貨", s:"世界最大的百貨公司", type:"spot", map:"https://naver.me/5pwdTlhS"},
+                {t:"15:00", n:"F1963", s:"釜山近郊文青景點： 09:00 - 21:00", type:"spot", map:"https://naver.me/GNWk51tl"},
+                {t:"16:00", n:"KISWIRE Museum 고려제강기념관", s:"預約時間： 16:00", type:"spot", map:"https://naver.me/GWe2Ecxt"},
+                {t:"19:00", n:"西面晚餐", s:"豬肉湯飯", type:"food", map:""}
+            ], 
+            4: [
+                {t:"09:30", n:"白淺灘文化村흰 여울문화마을, s:"釜山的聖托里尼", type:"spot", map:"https://naver.me/Fpx54Crx"},
+                {t:"13:30", n:"Arte Museum", s:"沉浸式媒體藝術館", type:"spot", map:"https://naver.me/FIfsvnna"},
+                {t:"15:30", n:"P.ARK BREAD FACTORY", s:"釜山影島大型海景咖啡館", type:"spot", map:"https://naver.me/xSFW9Pvo"},
+                {t:"16:30", n:"Miffy cafe", s:"米飛兔咖啡廳： 11:00 - 22:00", type:"food", map:"https://naver.me/5MVzw55A"},
+                {t:"16:00", n:"田浦洞散策", type:"spot", map:"https://naver.me/FtThMsc6"},
+                {t:"16:00", n:"KISWIRE Museum 고려제강기념관", s:"預約時間： 16:00", type:"spot", map:""},
+                {t:"20:00", n:"山莊1988 산장1988", s:"馬鈴薯排骨湯： 11:30 - 01:00", type:"food", map:"https://naver.me/G4WomBmy"}
+            ], 
+            5: [
+                {t:"09:30", n:"甘川文化村 부산감천문화마을, s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/Fpx54Crx"},
+                {t:"11:30", n:"Arte Museum", s:"沉浸式媒體藝術館", type:"spot", map:"https://naver.me/FIfsvnna"},
+                {t:"15:30", n:"P.ARK BREAD FACTORY", s:"釜山影島大型海景咖啡館", type:"spot", map:"https://naver.me/xSFW9Pvo"},
+                {t:"16:30", n:"Miffy cafe", s:"米飛兔咖啡廳： 11:00 - 22:00", type:"food", map:"https://naver.me/5MVzw55A"},
+                {t:"16:00", n:"田浦洞散策", type:"spot", map:"https://naver.me/FtThMsc6"},
+                {t:"16:00", n:"KISWIRE Museum 고려제강기념관", s:"預約時間： 16:00", type:"spot", map:""},
+                {t:"20:00", n:"이재모披薩", type:"food", map:"https://naver.me/F5D1xjeN"}
+            ], 
+            6: []
         };
 
         let currentDay = 1;
