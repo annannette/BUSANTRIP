@@ -43,4 +43,135 @@
             </div>
     </main>
 
-    <div id="expense-modal" class="hidden
+    <div id="expense-modal" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end">
+        <div class="w-full bg-white rounded-t-[2.5rem] p-8 max-w-md mx-auto shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="serif text-2xl italic font-bold">New Expense</h2>
+                <button onclick="toggleExpenseModal()" class="text-gray-400">✕</button>
+            </div>
+            <div class="space-y-4">
+                <input id="item-name" type="text" placeholder="項目名稱..." class="w-full border-b border-[#D1CDC7] p-2 outline-none text-lg">
+                <select id="item-category" class="w-full border-b border-[#D1CDC7] p-2 outline-none bg-transparent">
+                    <option value="飲食">🍔 飲食</option>
+                    <option value="交通">🚌 交通</option>
+                    <option value="美妝">💄 美妝</option>
+                    <option value="門票">🎟️ 門票</option>
+                    <option value="伴手禮">🎁 伴手禮</option>
+                    <option value="衣服">👕 衣服</option>
+                    <option value="紀念品">🧸 紀念品</option>
+                </select>
+                <div class="flex items-center">
+                    <span class="mr-2 opacity-40 text-sm">KRW</span>
+                    <input id="item-krw" type="number" placeholder="金額..." class="w-full border-b border-[#D1CDC7] p-2 outline-none">
+                </div>
+                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-[#F5F2ED] py-4 rounded-2xl font-bold mt-4">RECORD</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED] border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-10">
+        <div class="flex justify-between items-center">
+            <p class="text-xs font-medium opacity-40 uppercase tracking-widest">Day Total</p>
+            <p id="total-twd" class="serif text-3xl italic font-bold">NT$ 0</p>
+        </div>
+    </div>
+
+    <script>
+        let currentDay = 1;
+        const rate = 41;
+
+        // 行程資料 (你可以隨時修改這裡的預設行程)
+        const defaultPlans = {
+            1: [{ time: "14:00", title: "飯店 Check-in", note: "南浦洞周邊" }],
+            2: [{ time: "11:00", title: "廣安里海灘", note: "看無人機表演" }],
+            3: [{ time: "10:00", title: "海雲台膠囊列車", note: "尾浦站出發" }]
+        };
+
+        let expenses = JSON.parse(localStorage.getItem('busan_v2_data')) || {
+            1: [], 2: [], 3: [], 4: [], 5: [], 6: []
+        };
+
+        function switchDay(day) {
+            currentDay = day;
+            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + day).classList.add('active');
+            renderAll();
+        }
+
+        function toggleExpenseModal() {
+            const modal = document.getElementById('expense-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function addExpense() {
+            const name = document.getElementById('item-name').value;
+            const category = document.getElementById('item-category').value;
+            const krw = parseFloat(document.getElementById('item-krw').value);
+
+            if (!name || isNaN(krw)) return alert("請填寫內容");
+
+            expenses[currentDay].push({
+                id: Date.now(),
+                name, category, krw, twd: Math.round(krw / rate)
+            });
+
+            localStorage.setItem('busan_v2_data', JSON.stringify(expenses));
+            document.getElementById('item-name').value = '';
+            document.getElementById('item-krw').value = '';
+            toggleExpenseModal();
+            renderAll();
+        }
+
+        function deleteExpense(id) {
+            expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id);
+            localStorage.setItem('busan_v2_data', JSON.stringify(expenses));
+            renderAll();
+        }
+
+        function renderAll() {
+            const listEl = document.getElementById('itinerary-list');
+            listEl.innerHTML = '';
+            let total = 0;
+
+            // 1. 渲染行程 (Plans)
+            const plans = defaultPlans[currentDay] || [];
+            plans.forEach(plan => {
+                listEl.innerHTML += `
+                    <div class="flex gap-8 mb-8 relative z-10">
+                        <div class="w-10 text-right pt-1"><span class="text-[10px] font-bold opacity-40">${plan.time}</span></div>
+                        <div class="flex-1 bg-white p-4 rounded-2xl border border-[#E8E1D4] shadow-sm">
+                            <h4 class="font-bold text-sm">${plan.title}</h4>
+                            <p class="text-[10px] opacity-50 mt-1">${plan.note}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // 2. 渲染花費 (Expenses)
+            expenses[currentDay].forEach(exp => {
+                total += exp.twd;
+                listEl.innerHTML += `
+                    <div class="flex gap-8 mb-6 relative z-10">
+                        <div class="w-10 text-right pt-1"><span class="text-[10px] font-bold text-[#8B5E3C]">$$</span></div>
+                        <div class="flex-1 bg-[#FDFCFB] p-4 rounded-2xl border border-[#D1CDC7] border-dashed">
+                            <div class="flex justify-between items-start">
+                                <span class="category-tag">${exp.category}</span>
+                                <button onclick="deleteExpense(${exp.id})" class="text-[10px] text-red-200 uppercase">Delete</button>
+                            </div>
+                            <h4 class="font-bold text-sm mt-2">${exp.name}</h4>
+                            <div class="flex justify-between items-end mt-2">
+                                <span class="text-[10px] opacity-30">KRW ${exp.krw.toLocaleString()}</span>
+                                <span class="font-bold text-[#8B5E3C] serif italic">NT$ ${exp.twd}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('total-twd').innerText = 'NT$ ' + total.toLocaleString();
+        }
+
+        renderAll();
+    </script>
+</body>
+</html>
