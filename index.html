@@ -22,7 +22,6 @@
             line-height: 1.2; 
         }
 
-        /* 導覽列優化：確保 6 個按鈕平分且可點擊 */
         nav#date-nav {
             display: flex !important;
             flex-direction: row !important;
@@ -42,12 +41,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 50; /* 確保按鈕在最上層 */
+            z-index: 50;
         }
         .date-btn p.text-lg { font-size: 16px; line-height: 1; margin-top: 2px; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
 
-        /* 行程軸線 */
         .itinerary-row { display: flex; gap: 0; position: relative; }
         .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
         .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
@@ -123,12 +121,12 @@
                 <div class="flex flex-col items-center gap-2">
                     <div class="w-full">
                         <p class="text-[10px] opacity-40 uppercase mb-1 ml-1 text-left">Korean Won (KRW)</p>
-                        <input type="number" id="calc-krw" placeholder="請輸入韓幣" class="w-full text-2xl font-bold text-center py-2" oninput="calcExchange()">
+                        <input type="number" id="calc-krw" placeholder="請輸入韓幣" class="w-full text-2xl font-bold text-center py-2" oninput="calcExchange('krw')">
                     </div>
                     <div class="py-2 opacity-20 text-2xl">⇅</div>
                     <div class="w-full">
                         <p class="text-[10px] opacity-40 uppercase mb-1 ml-1 text-left">Taiwan Dollar (TWD)</p>
-                        <div class="w-full text-3xl font-bold text-center py-2 text-[#E67E22]" id="calc-twd">0</div>
+                        <input type="number" id="calc-twd-input" placeholder="請輸入台幣" class="w-full text-3xl font-bold text-center py-2 text-[#E67E22]" oninput="calcExchange('twd')">
                     </div>
                 </div>
                 <p class="text-[9px] opacity-30 mt-6 text-center uppercase tracking-[0.2em]">Current Rate 1 : 41</p>
@@ -189,9 +187,9 @@
             5: [
                 {t:"09:30", n:"甘川文化村", s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/5iTdxyDV"},
                 {t:"11:30", n:"BIFF廣場", s:"電影街與街邊小吃", type:"food", map:"https://naver.me/5GpYyjNN"},
-                {t:"14:30", n:"五六島天空步道 (오륙도 스카이워크)", s:"漫步海天之際的透明玻璃步道", type:"spot", map:"https://naver.me/F1rxAW4r"},
-                {t:"16:30", n:"베이커리카페 가원", s:"清水模咖啡廳： 10:00 - 21:00", type:"food", map:"https://naver.me/F9NjyjmK"},
-                {t:"19:00", n:"이재모披薩", s:"釜山超人氣排隊披薩", type:"food", map:"https://naver.me/F5D1xjeN"},
+                {t:"14:30", n:"五六島天空步道", s:"透明玻璃步道", type:"spot", map:"https://naver.me/F1rxAW4r"},
+                {t:"16:30", n:"베이커리카페 가원", s:"清水模咖啡廳", type:"food", map:"https://naver.me/F9NjyjmK"},
+                {t:"19:00", n:"이재모披薩", s:"釜山人氣披薩", type:"food", map:"https://naver.me/F5D1xjeN"},
                 {t:"21:00", n:"荒嶺山觀景台", s:"釜山百萬夜景", type:"spot", map:"https://naver.me/Fbq9QkVy"}
             ], 
             6: [{t:"09:00", n:"金海國際機場", s:"航班 KE2085", type:"spot"},
@@ -225,10 +223,20 @@
             render();
         }
 
-        function calcExchange() {
-            const krw = document.getElementById('calc-krw').value;
-            const twdResult = krw ? Math.round(krw / rate).toLocaleString() : '0';
-            document.getElementById('calc-twd').innerText = twdResult;
+        // 修改後的匯率計算函數
+        function calcExchange(source) {
+            const krwInput = document.getElementById('calc-krw');
+            const twdInput = document.getElementById('calc-twd-input');
+            
+            if (source === 'krw') {
+                // 輸入韓幣，計算台幣
+                const krw = krwInput.value;
+                twdInput.value = krw ? Math.round(krw / rate) : '';
+            } else if (source === 'twd') {
+                // 輸入台幣，計算韓幣
+                const twd = twdInput.value;
+                krwInput.value = twd ? Math.round(twd * rate) : '';
+            }
         }
 
         function addExpense() {
