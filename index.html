@@ -16,21 +16,42 @@
            padding-bottom: calc(140px + var(--safe-bottom)); 
        }
        .serif { font-family: 'Playfair Display', serif; line-height: 1.2; }
-       nav#date-nav { display: flex !important; flex-direction: row !important; justify-content: space-between; gap: 4px; padding: 8px 16px 16px 16px; width: 100%; }
+       
+       /* 日期導覽列佈局 */
+       nav#date-nav { 
+           display: flex !important; 
+           flex-direction: row !important; 
+           justify-content: space-between; 
+           gap: 4px; 
+           padding: 8px 16px 16px 16px; 
+           width: 100%; 
+       }
        .date-btn { flex: 1; flex-shrink: 0; min-width: 0; padding: 10px 0; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; z-index: 50; }
        .date-btn p.text-lg { font-size: 16px; line-height: 1; margin-top: 2px; }
        .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
        
+       /* 修正的功能按鈕容器：確保邊界與日期列嚴格對齊 */
        .tab-container { 
            display: flex; 
            justify-content: space-between; 
            padding: 0 16px; 
-           margin-top: 1rem; 
+           margin-top: 0.5rem; 
            margin-bottom: 1.5rem; 
            border-bottom: 1px solid rgba(209, 205, 199, 0.3); 
+           width: 100%;
        }
 
-       .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 11px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+       /* 功能按鈕樣式優化：字體放大至 13px */
+       .sub-tab { 
+           transition: all 0.2s; 
+           opacity: 0.4; 
+           padding-bottom: 10px;
+           border-bottom: 2px solid transparent; 
+           font-size: 13px; 
+           font-weight: 500;
+           cursor: pointer; 
+           white-space: nowrap; 
+       }
        .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
        
        .itinerary-row { display: flex; gap: 0; position: relative; }
@@ -45,7 +66,7 @@
        .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); overflow: hidden; transition: all 0.3s ease; }
        
        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fafafa; }
-       .details-content.open { max-height: 1500px; border-top: 1px solid #f0f0f0; }
+       .details-content.open { max-height: 1800px; border-top: 1px solid #f0f0f0; }
        .arrow-icon { transition: transform 0.3s ease; display: inline-block; font-size: 8px; margin-right: 8px; opacity: 0.3; }
        .card.expanded .arrow-icon { transform: rotate(180deg); opacity: 0.8; }
 
@@ -228,17 +249,36 @@
                 detail: `
                     <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
                         <img src="https://cdn.phototourl.com/free/2026-04-29-fc37427b-0db4-4e06-bed1-91bc520e1424.jpg" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
-                        <p class="font-bold">LJL Architects + 2K1 Architecture</p>
-                        <p class="opacity-80">廣安里最夯的複合式文化空間，結合了藝術、時尚與美食。其最著名的建築特色是面向大海的巨型階梯式座位區。</p>
-                        <div class="space-y-2 border-l-2 border-[#E8E1D4] pl-3 py-1">
-                            <p><b>階梯休息區</b>：遊客可以隨意坐在階梯上，透過整片的落地窗眺望廣安大橋海景。</p>
-                            <p><b>選物商場</b>：進駐了許多韓國設計師品牌、潮流配件與文創選物店。</p>
-                            <p><b>美食進駐</b>：包含著名的炸魚薯條、精釀啤酒以及各式異國特色料理小吃。</p>
+                        <p class="font-bold text-lg">Millac the Market</p>
+                        <p class="opacity-80">這座位於釜山廣安里的複合式文化空間，透過精確的量體控制與材料語彙，展現了對都市脈絡與在地文化的尊重。</p>
+                        <div class="space-y-3 border-l-2 border-[#E8E1D4] pl-3 py-1">
+                            <p><b>視覺留白與低量體</b>：建築刻意壓低高度以避免遮蔽後方住宅區的視線，與周邊高層建築形成對比，創造出獨特的城市地景。</p>
+                            <p><b>場域記憶的轉化</b>：空間配置融入了昔日魚市場與路邊攤販的活動模式，成功捕捉並轉化在地的文化記憶。</p>
+                            <p><b>海陸連結的過渡空間</b>：南側大廳利用大階梯、玻璃帷幕牆與共享空間，在視覺上連結城市與海洋。</p>
+                            <p><b>立面節奏與都市對話</b>：西側立面透過密集的開口韻律，為市中心步行空間創造了富有動感的地景。</p>
                         </div>
                     </div>
                 `
                },
-               {t:"18:30", n:"廣安里散策", s:"沙灘漫步", type:"spot"},
+               {t:"18:30", n:"廣安里散策", s:"沙灘漫步", type:"spot", map: "https://naver.me/GvWX0fgO",
+                detail: `
+                    <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
+                        <img src="https://cdn.phototourl.com/free/2026-04-29-4d33c0cc-432f-4d1c-9015-618def340ecf.png" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
+                        <p class="font-bold text-lg">廣安里必逛選物店</p>
+                        <div class="space-y-2 border-l-2 border-[#E8E1D4] pl-3 py-1">
+                            <p><b>Giving heart bear</b>：小熊周邊 (11:30-21:00)</p>
+                            <p><b>고래서이뻐</b>：釜山在地明信片 (11:00-20:00)</p>
+                            <p><b>粉紅家(분홍이네)</b>：生活雜物 (11:00-21:00)</p>
+                            <p><b>LOYBE store(로이베)</b>：三麗鷗專賣 (13:00-19:00)</p>
+                            <p><b>Love is giving</b>：韓系清新選物 (12:00-20:00)</p>
+                            <p><b>Things of note</b>：質感文具 (12:00-19:00)</p>
+                            <p><b>Cosymosy</b>：生活家居美學 (11:00-19:00)</p>
+                            <p><b>Ador</b>：特色香水 (12:00-19:00)</p>
+                            <p><b>Breeze archiev</b>：生活家居設計 (11:00-19:00)</p>
+                        </div>
+                    </div>
+                `
+               },
                {t:"20:00", n:"83獬豸", s:"釜山必吃熱門排隊烤肉店", type:"food", map:"https://naver.me/FsohC39V"},
                {t:"21:30", n:"The Bay 101", s:"看摩天大樓夜景", type:"spot", map:"https://naver.me/59vo1yZU"}
            ],
@@ -261,10 +301,10 @@
                 detail: `
                     <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
                         <img src="https://cdn.phototourl.com/free/2026-04-29-6e2addff-b8ef-4c5a-9a2f-ae9bb9e480fa.jpg" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
-                        <p class="font-bold">BCHO ARCHITECTS</p>
-                        <p class="opacity-80">F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型設計。採取「低度干預」策略，保留鋼絲廠骨架，並將工廠中間部分挖開成為中庭，透過中庭獲得通風和採光。</p>
+                        <p class="font-bold">趙炳秀 (Cho Byoung-soo)</p>
+                        <p class="opacity-80">F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型設計。採取「低度干預」策略，保留鋼絲廠骨架。</p>
                         <div class="space-y-2 border-l-2 border-[#E8E1D4] pl-3 py-1">
-                            <p><b>藍色擴張網</b>：標誌性外觀，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
+                            <p><b>藍色擴張網</b>：標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
                             <p><b>中央中庭</b>：將工廠中間部分挖開成為中庭，透過中庭獲得通風與採光。</p>
                             <p><b>桁架保留</b>：YES24 書店與咖啡廳內刻意保留原本鋼絲廠的型態與骨架基礎。</p>
                             <p><b>景觀融合</b>：將舊工廠樣貌重新置入使用功能，使荒廢空間充滿書香與藝術氣息。</p>
@@ -383,7 +423,7 @@
            exArea.innerHTML = ''; let total = 0;
            (expenses[currentDay] || []).forEach(e => {
                total += e.twd;
-               exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p><p class="text-[10px] opacity-30">紀錄: ${e.origVal.toLocaleString()} ${e.inputCur}</p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd.toLocaleString()}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DEL</button></div></div>`;
+               exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal text-[10px]">${e.cat}</span></p><p class="text-[10px] opacity-30">紀錄: ${e.origVal.toLocaleString()} ${e.inputCur}</p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd.toLocaleString()}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DEL</button></div></div>`;
            });
            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
 
@@ -391,7 +431,7 @@
            Object.values(expenses).forEach(dayExps => { dayExps.forEach(e => { grandTotal += e.twd; if (catTotals.hasOwnProperty(e.cat)) catTotals[e.cat] += e.twd; }); });
            document.getElementById('summary-grand-total').innerText = 'NT$ ' + grandTotal.toLocaleString();
            const summaryBreakdown = document.getElementById('category-breakdown');
-           if(summaryBreakdown) summaryBreakdown.innerHTML = Object.entries(catTotals).map(([cat, amt]) => `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-[#D1CDC7]/30"><span class="text-xs font-bold opacity-70">${cat}</span><span class="serif italic font-bold text-[#E67E22]">NT$ ${amt.toLocaleString()}</span></div>`).join('');
+           if(summaryBreakdown) summaryBreakdown.innerHTML = Object.entries(catTotals).map(([cat, amt]) => `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-[#D1CDC7]/30"><span class="text-sm font-bold opacity-70">${cat}</span><span class="serif italic font-bold text-[#E67E22] text-xs">NT$ ${amt.toLocaleString()}</span></div>`).join('');
        }
 
        window.onload = function() { render(); };
