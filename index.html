@@ -61,4 +61,269 @@
             border-top: 1px dashed #E8E1D4;
         }
         .detail-img { width: 100%; border-radius: 12px; margin-bottom: 12px; object-fit: cover; }
-        .expand-icon { transition:
+        .expand-icon { transition: transform 0.3s ease; display: inline-block; }
+        .card.expanded .expand-icon { transform: rotate(180deg); }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; border-radius: 0; }
+        footer { padding-bottom: calc(1.5rem + var(--safe-bottom)) !important; }
+        
+        .currency-toggle { display: flex; background: #E8E1D4; border-radius: 8px; padding: 2px; margin-bottom: 12px; }
+        .currency-toggle button { flex: 1; padding: 4px 0; font-size: 10px; font-weight: bold; border-radius: 6px; transition: all 0.2s; }
+        .currency-toggle button.active { background: white; color: #4A342E; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .shopping-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .shopping-table th { background: #F9F7F4; text-align: left; padding: 8px; border-bottom: 2px solid #E8E1D4; opacity: 0.6; }
+        .shopping-table td { padding: 10px 8px; border-bottom: 1px solid #F0EDE8; }
+    </style>
+</head>
+<body class="max-w-md mx-auto">
+
+    <header class="p-8 pb-4 text-center">
+        <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">May 2026 / Busan</p>
+        <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
+    </header>
+
+    <nav id="date-nav" class="sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
+        <button onclick="setDay(1)" id="d1" class="date-btn active border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Wed</p><p class="text-lg font-bold">13</p></button>
+        <button onclick="setDay(2)" id="d2" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">14</p></button>
+        <button onclick="setDay(3)" id="d3" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Fri</p><p class="text-lg font-bold">15</p></button>
+        <button onclick="setDay(4)" id="d4" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Sat</p><p class="text-lg font-bold">16</p></button>
+        <button onclick="setDay(5)" id="d5" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Sun</p><p class="text-lg font-bold">17</p></button>
+        <button onclick="setDay(6)" id="d6" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">18</p></button>
+    </nav>
+
+    <div class="tab-container">
+        <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
+        <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
+        <button onclick="showSection('info')" id="tab-info" class="sub-tab">匯率換算</button>
+        <button onclick="showSection('guide')" id="tab-guide" class="sub-tab">購物攻略</button>
+        <button onclick="showSection('summary')" id="tab-summary" class="sub-tab">行旅支出</button>
+    </div>
+
+    <main>
+        <div id="view-itinerary" class="view-section active px-4">
+            <div id="itinerary-list"></div>
+        </div>
+
+        <div id="view-expenses" class="view-section px-6">
+            <div class="card p-6 mb-6">
+                <div class="currency-toggle">
+                    <button id="btn-krw" onclick="setCurrency('KRW')" class="active">KRW 韓幣</button>
+                    <button id="btn-twd" onclick="setCurrency('TWD')">TWD 台幣</button>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="exp-name" placeholder="項目名稱" class="text-sm">
+                    <select id="exp-cat" class="text-sm">
+                        <option value="飲食">🍔 飲食</option>
+                        <option value="交通">🚌 交通</option>
+                        <option value="美妝">💄 美妝</option>
+                        <option value="門票">🎟️ 門票</option>
+                        <option value="購物">🛍️ 購物</option>
+                    </select>
+                </div>
+                <input type="number" id="exp-amount" placeholder="輸入金額" class="w-full text-sm mb-4">
+                <button onclick="addExpense()" class="w-full bg-[#4A342E] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Record</button>
+            </div>
+            <div id="expense-list-area" class="space-y-3"></div>
+        </div>
+
+        <div id="view-info" class="view-section px-6 space-y-6 text-center">
+            <div class="card p-6">
+                <h3 class="serif italic font-bold mb-6 border-b pb-2 text-lg">Exchange Rate</h3>
+                <input type="number" id="calc-krw" placeholder="韓幣 (KRW)" class="w-full text-2xl font-bold text-center py-2 mb-4" oninput="calcExchange('krw')">
+                <p class="opacity-20 text-2xl">⇅</p>
+                <input type="number" id="calc-twd-input" placeholder="台幣 (TWD)" class="w-full text-2xl font-bold text-center py-2 text-[#E67E22]" oninput="calcExchange('twd')">
+            </div>
+        </div>
+
+        <div id="view-guide" class="view-section px-6">
+            <div class="card overflow-hidden">
+                <div class="bg-[#4A342E] p-4"><h3 class="text-white text-sm font-bold">刷卡回饋</h3></div>
+                <div class="p-2 overflow-x-auto">
+                    <table class="shopping-table">
+                        <thead><tr><th>信用卡</th><th>回饋%</th><th>上限</th><th>商家</th></tr></thead>
+                        <tbody>
+                            <tr><td class="font-bold">富邦 J-Card</td><td class="text-[#E67E22] font-bold">10%</td><td>1,000</td><td>日韓實體</td></tr>
+                            <tr><td class="font-bold">玉山 Unicard</td><td class="text-[#E67E22] font-bold">5%</td><td>無</td><td>實體消費</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-summary" class="view-section px-6">
+            <div class="card p-6 bg-[#4A342E] text-[#F5F2ED] mb-6 text-center">
+                <p class="text-[10px] opacity-60 uppercase tracking-widest mb-1">Total Spending</p>
+                <h2 id="summary-grand-total" class="serif text-4xl italic font-bold text-white">NT$ 0</h2>
+            </div>
+        </div>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED]/95 backdrop-blur-md border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-40">
+        <div class="flex justify-between items-end">
+            <div>
+                <p class="text-[10px] opacity-40 uppercase tracking-widest mb-1">Day <span id="day-label">1</span> Spending</p>
+                <h2 id="total-amount" class="serif text-4xl italic font-bold">NT$ 0</h2>
+            </div>
+            <div class="text-right opacity-30 text-[9px] font-bold">RATE 1:41</div>
+        </div>
+    </footer>
+
+    <script>
+        const rate = 41;
+        let currentDay = 1;
+        let expenses = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
+
+        const plans = {
+            1: [
+                {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot"},
+                {t:"15:30", n:"金海國際機場", s:"航班 KE2086", type:"spot"},
+                {t:"17:30", n:"廣安里民宿", s:"Check-in", type:"spot", map:"https://naver.me/FsohC39V"},
+                {t:"20:00", n:"83獬豸", s:"釜山必吃烤肉", type:"food", map:"https://naver.me/FsohC39V"}
+            ],
+            2: [
+                {t:"09:30", n:"Working Holiday", s:"早午餐", type:"food", map:"https://naver.me/G87A5N2p"},
+                {t:"17:00", n:"清沙浦膠囊列車", s:"欣賞日落", type:"spot", map:"https://naver.me/xq3aEIjM"}
+            ],
+            3: [
+                {t:"11:00", n:"電影殿堂", s:"解構主義建築", type:"spot", map:"https://naver.me/GG7tPu8w"},
+                {
+                    t:"15:00", n:"F1963 (水營工廠)", s:"鐵絲線工廠改建的藝文空間", 
+                    d: `<div class='space-y-4'>
+                            <p class='font-bold text-[#4A342E]'>建築師：趙炳秀 (BCHO Architects)</p>
+                            <p>F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型。設計師採取「低度干預」策略，保留鋼絲廠骨架。</p>
+                            <div class='grid grid-cols-1 gap-3'>
+                                <p><b>● 藍色擴張網：</b>標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
+                                <p><b>● 中央中庭：</b>將工廠中間部分挖開成為中庭，透過中庭獲得通風與採光。</p>
+                                <p><b>● 桁架保留：</b>YES24 書店與咖啡廳內刻意保留原本鋼絲廠的型態與骨架基礎。</p>
+                                <p><b>● 景觀融合：</b>將舊工廠樣貌重新置入使用功能，使荒廢空間充滿書香與藝術氣息。</p>
+                            </div>
+                        </div>`,
+                    // 已替換為穩定顯示的 CDN URL
+                    img: "https://cdn.phototourl.com/free/2026-04-29-6e2addff-b8ef-4c5a-9a2f-ae9bb9e480fa.jpg", 
+                    type:"spot", map:"https://naver.me/GNWk51tl"
+                },
+                {t:"19:00", n:"西面晚餐", s:"傳統豬肉湯飯", type:"food"}
+            ],
+            4: [
+                {t:"09:30", n:"白淺灘文化村", s:"釜山聖托里尼", type:"spot", map:"https://naver.me/Fpx54Crx"},
+                {t:"15:30", n:"P.ARK BREAD", s:"大型海景咖啡館", type:"spot", map:"https://naver.me/xSFW9Pvo"}
+            ],
+            5: [
+                {t:"09:30", n:"甘川文化村", s:"彩色階梯小村", type:"spot", map:"https://naver.me/5iTdxyDV"},
+                {t:"19:00", n:"이재모披薩", s:"釜山超人氣披薩", type:"food", map:"https://naver.me/F5D1xjeN"}
+            ],
+            6: [{t:"09:00", n:"金海機場", s:"返程 KE2085", type:"spot"}]
+        };
+
+        function toggleCard(event, el) {
+            if (event.target.tagName === 'A') {
+                event.stopPropagation();
+                return;
+            }
+            el.classList.toggle('expanded');
+        }
+
+        function setDay(d) {
+            currentDay = d;
+            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('d' + d).classList.add('active');
+            document.getElementById('day-label').innerText = d;
+            render();
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+        }
+
+        function render() {
+            const itList = document.getElementById('itinerary-list');
+            if (itList) {
+                itList.innerHTML = '';
+                const dayPlans = plans[currentDay] || [];
+                dayPlans.forEach(p => {
+                    const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded relative z-50">MAP</a>` : '';
+                    const hasDetail = (p.d || p.img);
+                    const expandIcon = hasDetail ? `<span class="expand-icon opacity-30 text-[10px] mr-2">▼</span>` : '';
+                    
+                    itList.innerHTML += `
+                        <div class="itinerary-row">
+                            <div class="time-label">${p.t}</div>
+                            <div class="axis-box">
+                                <div class="timeline-dot ${p.type==='food'?'dot-food':'dot-spot'}"></div>
+                            </div>
+                            <div class="card-col">
+                                <div class="card p-5" onclick="toggleCard(event, this)">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between">
+                                                <h3 class="font-bold text-sm">${p.n}</h3>
+                                                <div class="flex items-center">
+                                                    ${expandIcon}
+                                                    ${mapBtn}
+                                                </div>
+                                            </div>
+                                            <p class="text-[10px] opacity-50 mt-1">${p.s || ''}</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-detail">
+                                        ${p.img ? `<img src="${p.img}" class="detail-img shadow-sm border border-black/5">` : ''}
+                                        ${p.d ? `<div class="mt-2 text-xs">${p.d}</div>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let grandTotal = 0;
+            Object.values(expenses).forEach(dayExps => { 
+                dayExps.forEach(e => { grandTotal += e.twd; }); 
+            });
+            const st = document.getElementById('summary-grand-total');
+            if(st) st.innerText = 'NT$ ' + grandTotal.toLocaleString();
+            
+            const exArea = document.getElementById('expense-list-area');
+            if (exArea) {
+                exArea.innerHTML = '';
+                let total = 0;
+                (expenses[currentDay] || []).forEach(e => {
+                    total += e.twd;
+                    exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div class="text-xs font-bold">${e.name}</div><div class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd.toLocaleString()}</div></div>`;
+                });
+                document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
+            }
+        }
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const amt = Number(document.getElementById('exp-amount').value);
+            if(!amt) return;
+            expenses[currentDay].push({name: name || '支出', twd: Math.round(amt/rate)});
+            localStorage.setItem('busan_v_pro', JSON.stringify(expenses));
+            render();
+        }
+
+        function calcExchange(source) {
+            const k = document.getElementById('calc-krw');
+            const t = document.getElementById('calc-twd-input');
+            if(source === 'krw') t.value = k.value ? Math.round(k.value/rate) : '';
+            else k.value = t.value ? Math.round(t.value*rate) : '';
+        }
+
+        window.onload = function() {
+            const saved = localStorage.getItem('busan_v_pro');
+            if (saved) expenses = JSON.parse(saved);
+            render();
+        };
+    </script>
+</body>
+</html>
