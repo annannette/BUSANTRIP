@@ -44,7 +44,6 @@
        .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
        .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); overflow: hidden; transition: all 0.3s ease; }
        
-       /* 抽屜式細節樣式 */
        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fafafa; }
        .details-content.open { max-height: 1500px; border-top: 1px solid #f0f0f0; }
        .arrow-icon { transition: transform 0.3s ease; display: inline-block; font-size: 8px; margin-right: 8px; opacity: 0.3; }
@@ -61,6 +60,7 @@
        .shopping-table { width: 100%; border-collapse: collapse; font-size: 11px; }
        .shopping-table th { background: #F9F7F4; text-align: left; padding: 8px; border-bottom: 2px solid #E8E1D4; opacity: 0.6; }
        .shopping-table td { padding: 10px 8px; border-bottom: 1px solid #F0EDE8; }
+       
        .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; cursor: pointer; font-weight: bold; font-size: 13px; }
        .accordion-content { display: none; padding: 0 16px 16px 16px; font-size: 12px; color: #6B5D59; }
        .accordion-content.active { display: block; }
@@ -73,7 +73,6 @@
        <h1 class="serif text-4xl italic font-semibold">Travelogue</h1>
    </header>
 
-   <!-- 日期切換導覽 -->
    <nav id="date-nav" class="sticky top-0 bg-[#F5F2ED]/95 backdrop-blur-md z-30">
        <button onclick="setDay(1)" id="d1" class="date-btn active border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Wed</p><p class="text-lg font-bold">13</p></button>
        <button onclick="setDay(2)" id="d2" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Thu</p><p class="text-lg font-bold">14</p></button>
@@ -83,7 +82,6 @@
        <button onclick="setDay(6)" id="d6" class="date-btn border border-[#D1CDC7] rounded-xl bg-white"><p class="text-[9px] uppercase opacity-50">Mon</p><p class="text-lg font-bold">18</p></button>
    </nav>
 
-   <!-- 五大功能分頁切換 -->
    <div class="tab-container">
        <button onclick="showSection('itinerary')" id="tab-itinerary" class="sub-tab active">今日行程</button>
        <button onclick="showSection('expenses')" id="tab-expenses" class="sub-tab">記帳明細</button>
@@ -93,12 +91,10 @@
    </div>
 
    <main>
-       <!-- 1. 今日行程 -->
        <div id="view-itinerary" class="view-section active px-4">
            <div id="itinerary-list"></div>
        </div>
 
-       <!-- 2. 記帳明細 -->
        <div id="view-expenses" class="view-section px-6">
            <div class="card p-6 mb-6">
                 <div class="currency-toggle">
@@ -121,7 +117,6 @@
            <div id="expense-list-area" class="space-y-3"></div>
        </div>
 
-       <!-- 3. 匯率換算 -->
        <div id="view-info" class="view-section px-6 space-y-6">
            <div class="card p-6">
                 <h3 class="serif italic font-bold mb-6 border-b pb-2 text-lg">Exchange Rate</h3>
@@ -140,7 +135,6 @@
            </div>
        </div>
 
-       <!-- 4. 購物攻略 (包含完整願望清單) -->
        <div id="view-guide" class="view-section px-6 space-y-6">
            <div class="card overflow-hidden">
                 <div class="bg-[#4A342E] p-4">
@@ -153,14 +147,13 @@
                         </thead>
                         <tbody>
                             <tr><td class="font-bold">富邦 J-Card</td><td class="text-[#E67E22] font-bold">10%</td><td class="opacity-60">1,000/月</td><td>實體、超商</td></tr>
-                            <tr><td class="font-bold">玉山 Unicard</td><td class="text-[#E67E22] font-bold">5%</td><td class="opacity-60">無</td><td>需訂閱方案</td></tr>
-                            <tr><td class="font-bold">國泰 CUBE</td><td class="text-[#E67E22] font-bold">3%</td><td class="opacity-60">無</td><td>趣旅行方案</td></tr>
+                            <tr><td class="font-bold">玉山 Unicard</td><td class="text-[#E67E22] font-bold">5%</td><td class="opacity-60">無</td><td>需方案</td></tr>
+                            <tr><td class="font-bold">國泰 CUBE</td><td class="text-[#E67E22] font-bold">3%</td><td class="opacity-60">無</td><td>趣旅行</td></tr>
                         </tbody>
                     </table>
                 </div>
            </div>
 
-           <!-- 必買願望清單區塊 -->
            <div class="space-y-3">
                 <p class="text-[10px] opacity-40 uppercase tracking-[0.2em] ml-1">Wishlist & Souvenirs</p>
                 <div class="card overflow-hidden">
@@ -181,7 +174,7 @@
                     </div>
                     <div id="list-pharmacy" class="accordion-content">
                         <ul class="list-disc ml-4 space-y-2">
-                            <li>A-ret 退燒貼/美白藥膏</li>
+                            <li>A-ret 退燒貼/美白藥告</li>
                             <li>Sika Care 疤痕凝膠</li>
                             <li>高劑量維他命C發泡錠</li>
                             <li>解酒液 (必備戰備物資)</li>
@@ -203,20 +196,15 @@
            </div>
        </div>
 
-       <!-- 5. 行旅支出統計 -->
        <div id="view-summary" class="view-section px-6">
            <div class="card p-6 bg-[#4A342E] text-[#F5F2ED] mb-6 text-center">
                 <p class="text-[10px] opacity-60 uppercase tracking-widest mb-1">Total Trip Spending</p>
                 <h2 id="summary-grand-total" class="serif text-4xl italic font-bold text-white">NT$ 0</h2>
            </div>
-           <div class="space-y-1">
-                <p class="text-[10px] opacity-40 uppercase tracking-[0.2em] mb-4 ml-1">Category Breakdown</p>
-                <div id="category-breakdown" class="space-y-3"></div>
-           </div>
+           <div id="category-breakdown" class="space-y-3"></div>
        </div>
    </main>
 
-   <!-- 底部常駐資訊欄 -->
    <footer class="fixed bottom-0 left-0 right-0 bg-[#F5F2ED]/95 backdrop-blur-md border-t border-[#D1CDC7] p-8 max-w-md mx-auto z-40">
        <div class="flex justify-between items-end">
            <div>
@@ -231,16 +219,28 @@
        const rate = 41;
        let currentCurrency = 'KRW';
        
-       // 核心行程數據 (保留原始數據，並在 F1963 植入專業深度內容)
        const plans = {
            1: [
                {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot"},
                {t:"15:30", n:"金海國際機場", s:"航班 KE2086", type:"spot"},
                {t:"17:30", n:"廣安里海景民宿", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FsohC39V"},
-               {t:"18:00", n:"Millac the Market", s:"複合式新潮商場", type:"spot", map:"https://naver.me/Fuz5ZqYEU"},
+               {t:"18:00", n:"Millac the Market", s:"複合式新潮商場", type:"spot", map:"https://naver.me/Fuz5ZqYEU",
+                detail: `
+                    <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
+                        <img src="https://cdn.phototourl.com/free/2026-04-29-fc37427b-0db4-4e06-bed1-91bc520e1424.jpg" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
+                        <p class="font-bold text-lg">Millac the Market</p>
+                        <p class="opacity-80">廣安里最夯的複合式文化空間，結合了藝術、時尚與美食。其最著名的建築特色是面向大海的巨型階梯式座位區。</p>
+                        <div class="space-y-2 border-l-2 border-[#E8E1D4] pl-3 py-1">
+                            <p><b>階梯休息區</b>：遊客可以隨意坐在階梯上，透過整片的落地窗眺望廣安大橋海景。</p>
+                            <p><b>選物商場</b>：進駐了許多韓國設計師品牌、潮流配件與文創選物店。</p>
+                            <p><b>美食進駐</b>：包含著名的炸魚薯條、精釀啤酒以及各式異國特色料理小吃。</p>
+                        </div>
+                    </div>
+                `
+               },
                {t:"18:30", n:"廣安里散策", s:"沙灘漫步", type:"spot"},
                {t:"20:00", n:"83獬豸", s:"釜山必吃熱門排隊烤肉店", type:"food", map:"https://naver.me/FsohC39V"},
-               {t:"21:30", n:"The Bay 101", s:"看摩天大樓倒影夜景", type:"spot", map:"https://naver.me/59vo1yZU"}
+               {t:"21:30", n:"The Bay 101", s:"看摩天大樓夜景", type:"spot", map:"https://naver.me/59vo1yZU"}
            ],
            2: [
                {t:"09:30", n:"Working Holiday", s:"早午餐： 08:00 - 19:00", type:"food", map:"https://naver.me/G87A5N2p"},
@@ -250,7 +250,7 @@
                {t:"16:00", n:"Diart coffee", s:"下午茶咖啡廳", type:"food", map:"https://naver.me/Gxk1OJez"},
                {t:"17:00", n:"清沙浦膠囊列車", s:"欣賞日落海景", type:"spot", map:"https://naver.me/xq3aEIjM"},
                {t:"18:30", n:"海雲台傳統市場", s:"辣炒年糕、糖餅", type:"food", map:"https://naver.me/FSwbcVYO"},
-               {t:"20:30", n:"廣安里遊艇體驗", s:"海上看廣安大橋夜景", type:"spot", map:"https://naver.me/GBF7x95e"}
+               {t:"20:30", n:"廣安里遊艇體驗", s:"海上看大橋夜景", type:"spot", map:"https://naver.me/GBF7x95e"}
            ],
            3: [
                {t:"09:30", n:"萊恩酒店", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
@@ -261,16 +261,13 @@
                 detail: `
                     <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
                         <img src="https://cdn.phototourl.com/free/2026-04-29-6e2addff-b8ef-4c5a-9a2f-ae9bb9e480fa.jpg" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
-                        <div class="flex items-center gap-2">
-                           <span class="bg-[#E67E22] text-white px-2 py-0.5 rounded text-[9px]">建築師</span>
-                           <p class="font-bold">趙炳秀 (Cho Byoung-soo)</p>
-                        </div>
-                        <p class="opacity-80 font-medium text-gray-700">F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型。設計師採取「低度干預」策略，保留鋼絲廠骨架。</p>
+                        <p class="font-bold">趙炳秀 (Cho Byoung-soo)</p>
+                        <p class="opacity-80">F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型設計。採取「低度干預」策略，保留鋼絲廠骨架。</p>
                         <div class="space-y-2 border-l-2 border-[#E8E1D4] pl-3 py-1">
-                            <p><b>● 藍色擴張網</b>：標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
-                            <p><b>● 中央中庭</b>：將工廠中間部分挖開成為中庭，透過中庭獲得通風與採光。</p>
-                            <p><b>● 桁架保留</b>：YES24 書店與咖啡廳內刻意保留原本鋼絲廠的型態與骨架基礎。</p>
-                            <p><b>● 景觀融合</b>：將舊工廠樣貌重新置入使用功能，使荒廢空間充滿書香與藝術氣息。</p>
+                            <p><b>藍色擴張網</b>：標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
+                            <p><b>中央中庭</b>：將工廠中間部分挖開成為中庭，透過中庭獲得通風與採光。</p>
+                            <p><b>桁架保留</b>：YES24 書店與咖啡廳內刻意保留原本鋼絲廠的型態與骨架基礎。</p>
+                            <p><b>景觀融合</b>：將舊工廠樣貌重新置入使用功能，使荒廢空間充滿書香與藝術氣息。</p>
                         </div>
                     </div>
                 `
@@ -288,11 +285,11 @@
            ], 
            5: [
                {t:"09:30", n:"甘川文化村", s:"韓國的馬丘比丘", type:"spot", map:"https://naver.me/5iTdxyDV"},
-               {t:"11:30", n:"BIFF廣場", s:"電影街與街邊小吃", type:"food", map:"https://naver.me/5GpYyjNN"},
+               {t:"11:30", n:"BIFF廣場", s:"街邊小吃", type:"food", map:"https://naver.me/5GpYyjNN"},
                {t:"14:30", n:"五六島天空步道", s:"透明玻璃步道", type:"spot", map:"https://naver.me/F1rxAW4r"},
-               {t:"16:30", n:"베이커리카페 가원", s:"清水模咖啡廳", type:"food", map:"https://naver.me/F9NjyjmK"},
+               {t:"16:30", n:"베이客裡卡排 加願", s:"清水模咖啡廳", type:"food", map:"https://naver.me/F9NjyjmK"},
                {t:"19:00", n:"이재모披薩", s:"釜山人氣披薩", type:"food", map:"https://naver.me/F5D1xjeN"},
-               {t:"21:00", n:"荒嶺山觀景台", s:"釜山百萬夜景", type:"spot", map:"https://naver.me/Fbq9QkVy"}
+               {t:"21:00", n:"荒嶺山觀景台", s:"百萬夜景", type:"spot", map:"https://naver.me/Fbq9QkVy"}
            ], 
            6: [
                {t:"09:00", n:"金海國際機場", s:"航班 KE2085", type:"spot"},
@@ -303,13 +300,11 @@
        let currentDay = 1;
        let expenses = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
        
-       // 初始化資料：從本地存儲讀取記帳明細
        try {
            const saved = localStorage.getItem('busan_v_pro');
            if (saved) expenses = JSON.parse(saved);
-       } catch (e) { console.error("LocalStorage讀取錯誤", e); }
+       } catch (e) { console.error(e); }
 
-       // 功能分頁切換
        function showSection(id) {
            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
            document.getElementById('view-' + id).classList.add('active');
@@ -317,7 +312,6 @@
            document.getElementById('tab-' + id).classList.add('active');
        }
 
-       // 日期切換
        function setDay(d) {
            currentDay = d;
            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
@@ -327,7 +321,6 @@
            render();
        }
 
-       // 卡片摺疊切換
        function toggleDetails(cardId) {
            const card = document.getElementById(`card-${cardId}`);
            const content = document.getElementById(`details-${cardId}`);
@@ -337,7 +330,6 @@
            }
        }
 
-       // 渲染主功能列表
        function render() {
            const itList = document.getElementById('itinerary-list');
            if (itList) {
@@ -370,45 +362,14 @@
                     </div>`;
                });
            }
-           renderExpensesUI();
+           renderExpUI();
        }
 
-       // --- 記帳與匯率功能 (保持原始邏輯) ---
-       function setCurrency(cur) { 
-           currentCurrency = cur; 
-           document.getElementById('btn-krw').classList.toggle('active', cur === 'KRW'); 
-           document.getElementById('btn-twd').classList.toggle('active', cur === 'TWD'); 
-           document.getElementById('exp-amount').placeholder = `輸入${cur === 'KRW' ? '韓幣' : '台幣'}`; 
-       }
+       function setCurrency(cur) { currentCurrency = cur; document.getElementById('btn-krw').classList.toggle('active', cur === 'KRW'); document.getElementById('btn-twd').classList.toggle('active', cur === 'TWD'); document.getElementById('exp-amount').placeholder = `輸入${cur === 'KRW' ? '韓幣' : '台幣'}`; }
+       function calcExchange(source) { const krwIn = document.getElementById('calc-krw'); const twdIn = document.getElementById('calc-twd-input'); if(source==='krw'){ twdIn.value = krwIn.value ? Math.round(krwIn.value / rate) : ''; } else { krwIn.value = twdIn.value ? Math.round(twdIn.value * rate) : ''; } }
+       function addExpense() { const nameEl = document.getElementById('exp-name'); const amountEl = document.getElementById('exp-amount'); const cat = document.getElementById('exp-cat').value; if(!amountEl.value) return; let val = Number(amountEl.value); let twd = (currentCurrency === 'TWD') ? val : Math.round(val / rate); const entry = { id: Date.now(), name: nameEl.value || '未命名', twd: twd, cat: cat, inputCur: currentCurrency, origVal: val }; if(!expenses[currentDay]) expenses[currentDay] = []; expenses[currentDay].unshift(entry); localStorage.setItem('busan_v_pro', JSON.stringify(expenses)); nameEl.value = ''; amountEl.value = ''; render(); }
+       function delExp(id) { expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id); localStorage.setItem('busan_v_pro', JSON.stringify(expenses)); render(); }
        
-       function calcExchange(source) { 
-           const krwIn = document.getElementById('calc-krw'); 
-           const twdIn = document.getElementById('calc-twd-input'); 
-           if(source==='krw'){ twdIn.value = krwIn.value ? Math.round(krwIn.value / rate) : ''; } 
-           else { krwIn.value = twdIn.value ? Math.round(twdIn.value * rate) : ''; } 
-       }
-
-       function addExpense() { 
-           const nameEl = document.getElementById('exp-name'); 
-           const amountEl = document.getElementById('exp-amount'); 
-           const cat = document.getElementById('exp-cat').value; 
-           if(!amountEl.value) return; 
-           let val = Number(amountEl.value); 
-           let twd = (currentCurrency === 'TWD') ? val : Math.round(val / rate); 
-           const entry = { id: Date.now(), name: nameEl.value || '未命名', twd: twd, cat: cat, inputCur: currentCurrency, origVal: val }; 
-           if(!expenses[currentDay]) expenses[currentDay] = [];
-           expenses[currentDay].unshift(entry); 
-           localStorage.setItem('busan_v_pro', JSON.stringify(expenses)); 
-           nameEl.value = ''; amountEl.value = ''; 
-           render(); 
-       }
-
-       function delExp(id) { 
-           expenses[currentDay] = expenses[currentDay].filter(e => e.id !== id); 
-           localStorage.setItem('busan_v_pro', JSON.stringify(expenses)); 
-           render(); 
-       }
-
        function toggleAccordion(id) { 
            const content = document.getElementById(id); 
            const icon = document.getElementById(id + '-icon'); 
@@ -416,13 +377,13 @@
            icon.innerText = content.classList.contains('active') ? '－' : '＋'; 
        }
 
-       function renderExpensesUI() {
+       function renderExpUI() {
            const exArea = document.getElementById('expense-list-area');
            if (!exArea) return;
            exArea.innerHTML = ''; let total = 0;
            (expenses[currentDay] || []).forEach(e => {
                total += e.twd;
-               exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p><p class="text-[8px] opacity-30">紀錄: ${e.origVal.toLocaleString()} ${e.inputCur}</p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd.toLocaleString()}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DEL</button></div></div>`;
+               exArea.innerHTML += `<div class="bg-white p-4 rounded-xl flex justify-between items-center border border-dashed border-[#D1CDC7]"><div><p class="text-xs font-bold">${e.name} <span class="opacity-30 ml-2 font-normal">${e.cat}</span></p><p class="text-[10px] opacity-30">紀錄: ${e.origVal.toLocaleString()} ${e.inputCur}</p></div><div class="text-right"><p class="text-xs serif italic font-bold text-[#E67E22]">NT$ ${e.twd.toLocaleString()}</p><button onclick="delExp(${e.id})" class="text-[9px] text-red-300 font-bold">DEL</button></div></div>`;
            });
            document.getElementById('total-amount').innerText = 'NT$ ' + total.toLocaleString();
 
