@@ -33,7 +33,6 @@
         .sub-tab { transition: all 0.2s; opacity: 0.4; padding-bottom: 8px; border-bottom: 2px solid transparent; font-size: 11px; font-weight: 500; cursor: pointer; white-space: nowrap; }
         .sub-tab.active { opacity: 1; border-bottom: 2px solid #4A342E; font-weight: bold; }
         
-        /* 行程流線 */
         .itinerary-row { display: flex; gap: 0; position: relative; }
         .time-label { width: 50px; text-align: right; font-size: 10px; font-weight: 700; opacity: 0.3; margin-top: 26px; padding-right: 12px; flex-shrink: 0; }
         .axis-box { width: 28px; display: flex; justify-content: center; flex-shrink: 0; position: relative; }
@@ -44,7 +43,6 @@
         .dot-spot { background: #4A342E; }
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
         
-        /* 卡片與展開動畫 */
         .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: all 0.2s ease; cursor: pointer; overflow: hidden; }
         .card:active { transform: scale(0.98); }
         .card-detail { 
@@ -63,7 +61,7 @@
             border-top: 1px dashed #E8E1D4;
         }
         .detail-img { width: 100%; border-radius: 12px; margin-bottom: 12px; object-fit: cover; }
-        .expand-icon { transition: transform 0.3s ease; }
+        .expand-icon { transition: transform 0.3s ease; display: inline-block; }
         .card.expanded .expand-icon { transform: rotate(180deg); }
 
         .view-section { display: none; }
@@ -154,16 +152,10 @@
 
         <div id="view-guide" class="view-section px-6 space-y-6">
             <div class="card overflow-hidden">
-                <div class="bg-[#4A342E] p-4">
-                    <h3 class="text-white text-sm font-bold">刷卡回饋</h3>
-                </div>
+                <div class="bg-[#4A342E] p-4"><h3 class="text-white text-sm font-bold">刷卡回饋</h3></div>
                 <div class="p-2 overflow-x-auto">
                     <table class="shopping-table">
-                        <thead>
-                            <tr>
-                                <th>信用卡</th><th>回饋%</th><th>上限</th><th>商家</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>信用卡</th><th>回饋%</th><th>上限</th><th>商家</th></tr></thead>
                         <tbody>
                             <tr><td class="font-bold">富邦 J-Card</td><td class="text-[#E67E22] font-bold">10%</td><td>1,000</td><td>日韓實體</td></tr>
                             <tr><td class="font-bold">玉山 Unicard</td><td class="text-[#E67E22] font-bold">5%</td><td>無</td><td>實體消費</td></tr>
@@ -198,7 +190,6 @@
         let currentDay = 1;
         let expenses = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[]};
 
-        // 核心行程數據：已整合 PDF 建築筆記 
         const plans = {
             1: [
                 {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot"},
@@ -213,19 +204,18 @@
             3: [
                 {t:"11:00", n:"電影殿堂", s:"解構主義建築", type:"spot", map:"https://naver.me/GG7tPu8w"},
                 {
-                    t:"15:00", n:"F1963 (水營工廠)", s:"鐵絲線工廠改建的藝文空間", 
+                    t:"15:00", n:"F1963 (수영공장 레노베이션)", s:"工廠改建的藝文空間", 
                     d: `<div class='space-y-4'>
-                            <p class='font-bold text-[#4A342E]'>建築師：趙炳秀 (BCHO Architects)</p>
-                            <p>F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型。設計師採取「低度干預」策略，保留鋼絲廠骨架。</p>
+                            <p class='font-bold text-[#4A342E]'>BCHO Architects</p>
+                            <p>F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型。設計師採取「低度干預」策略，保留鋼絲廠骨架，將工廠中間部分挖開成為中庭，透過中庭獲得通風和採光。 [cite: 3, 5, 6, 62]。</p>
                             <div class='grid grid-cols-1 gap-3'>
-                                <p><b>● 藍色擴張網：</b>標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
-                                <p><b>● 中央中庭：</b>拆除原化工廠中心屋頂，將自然光與空氣引入，打破封閉格局。</p>
-                                <p><b>● 桁架保留：</b>YES24 書店與咖啡廳內刻意裸露支撐廠房的木製與鋼製桁架。</p>
-                                <p><b>● 景觀融合：</b>穿插竹林步道與月光花園，將廢棄混凝土碎塊轉化為景觀造景。</p>
+                                <p><b>● 藍色擴張網：</b>標誌性外觀，隨白天光影律動，夜晚則透過燈光展現朦朧美感 [cite: 45, 46, 48]。</p>
+                                <p><b>● 中庭廣場：</b>拆除屋頂設計成開放中庭，引入光與空氣，成為人們聚集的核心 [cite: 50, 52]。</p>
+                                <p><b>● 桁架保留：</b>YES24 書店與咖啡廳內刻意裸露支撐廠房的木製與鋼製桁架 [cite: 54, 55, 56]。</p>
+                                <p><b>● 景觀融合：</b>穿插竹林步道與月光花園，將廢棄混凝土碎塊轉化為景觀造景 [cite: 57, 59, 61]。</p>
                             </div>
-                            <p class='italic opacity-60 text-[10px]'>"建築師並未抹除過去鋼鐵與汗水的歲月，讓歷史的厚重與現代靈動在此交織。"</p>
                         </div>`,
-                    img: "https://images.unsplash.com/photo-1518005020250-675f0f0fd172?auto=format&fit=crop&q=80&w=800", // 建築示意圖
+                    img: "https://cdn.phototourl.com/free/2026-04-29-6e2addff-b8ef-4c5a-9a2f-ae9bb9e480fa.jpg",
                     type:"spot", map:"https://naver.me/GNWk51tl"
                 },
                 {t:"19:00", n:"西面晚餐", s:"傳統豬肉湯飯", type:"food"}
@@ -241,9 +231,7 @@
             6: [{t:"09:00", n:"金海機場", s:"返程 KE2085", type:"spot"}]
         };
 
-        // 核心邏輯：點擊卡片展開
         function toggleCard(event, el) {
-            // 防止點擊 MAP 連結時誤觸展開
             if (event.target.tagName === 'A') {
                 event.stopPropagation();
                 return;
@@ -272,9 +260,10 @@
                 itList.innerHTML = '';
                 const dayPlans = plans[currentDay] || [];
                 dayPlans.forEach(p => {
-                    const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded ml-2 relative z-50">MAP</a>` : '';
+                    const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded relative z-50">MAP</a>` : '';
                     const hasDetail = (p.d || p.img);
-                    const expandIcon = hasDetail ? `<span class="expand-icon opacity-30 text-[10px] ml-2">▼</span>` : '';
+                    // 修改：箭頭 icon 改到 MAP 按鈕左邊，並加了 mr-2
+                    const expandIcon = hasDetail ? `<span class="expand-icon opacity-30 text-[10px] mr-2">▼</span>` : '';
                     
                     itList.innerHTML += `
                         <div class="itinerary-row">
@@ -288,7 +277,10 @@
                                         <div class="flex-1">
                                             <div class="flex items-center justify-between">
                                                 <h3 class="font-bold text-sm">${p.n}</h3>
-                                                <div class="flex items-center">${mapBtn} ${expandIcon}</div>
+                                                <div class="flex items-center">
+                                                    ${expandIcon}
+                                                    ${mapBtn}
+                                                </div>
                                             </div>
                                             <p class="text-[10px] opacity-50 mt-1">${p.s || ''}</p>
                                         </div>
@@ -305,7 +297,6 @@
             updateSummary();
         }
 
-        // 記帳與 summary 邏輯 (保持原有功能)
         function updateSummary() {
             let grandTotal = 0;
             let catTotals = { "飲食": 0, "交通": 0, "美妝": 0, "門票": 0, "購物": 0 };
