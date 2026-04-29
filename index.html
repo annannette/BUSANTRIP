@@ -21,7 +21,6 @@
         .date-btn p.text-lg { font-size: 16px; line-height: 1; margin-top: 2px; }
         .date-btn.active { background-color: #4A342E !important; color: #F5F2ED !important; }
         
-        /* 修正的功能按鈕容器：確保左右邊距與日期列一致並撐開對齊 */
         .tab-container { 
             display: flex; 
             justify-content: space-between; 
@@ -43,7 +42,29 @@
         .dot-food { background: #E67E22; }
         .dot-spot { background: #4A342E; }
         .card-col { flex: 1; padding-left: 12px; padding-bottom: 24px; }
-        .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        
+        /* 展開功能相關 CSS */
+        .card { background: white; border-radius: 20px; border: 1px solid #E8E1D4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: transform 0.2s ease; cursor: pointer; overflow: hidden; }
+        .card:active { transform: scale(0.98); }
+        .card-detail { 
+            max-height: 0; 
+            opacity: 0; 
+            overflow: hidden; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            font-size: 11px;
+            color: #6B5D59;
+        }
+        .card.expanded .card-detail { 
+            max-height: 1500px; 
+            opacity: 1; 
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #E8E1D4;
+        }
+        .detail-img { width: 100%; border-radius: 12px; margin-bottom: 12px; object-fit: cover; }
+        .expand-icon { transition: transform 0.3s ease; }
+        .card.expanded .expand-icon { transform: rotate(180deg); }
+
         .view-section { display: none; }
         .view-section.active { display: block; }
         input, select { background: transparent; border-bottom: 1px solid #D1CDC7; outline: none; border-radius: 0; }
@@ -238,6 +259,8 @@
     <script>
         const rate = 41;
         let currentCurrency = 'KRW';
+        
+        // 核心行程數據 (已加入 F1963 建築筆記) [cite: 3, 5, 6, 45, 49, 53, 57, 62]
         const plans = {
             1: [
                 {t:"12:00", n:"桃園國際機場T1", s:"航班 KE2086", type:"spot"},
@@ -259,11 +282,26 @@
                 {t:"20:30", n:"廣安里遊艇體驗", s:"從海上看廣安大橋夜景", type:"spot", map:"https://naver.me/GBF7x95e"}
             ],
             3: [
-                {t:"09:30", n:"萊恩酒店 (라이オン 호텔)", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
+                {t:"09:30", n:"萊恩酒店 (라이온 호텔)", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
                 {t:"10:00", n:"hash table", s:"田園風早午餐", type:"food", map:"https://naver.me/IxsqysmJ"},
                 {t:"11:00", n:"電影殿堂", s:"解構主義建築景點", type:"spot", map:"https://naver.me/GG7tPu8w"},
                 {t:"11:30", n:"釜山新世界百貨", s:"逛街與汗蒸幕體驗", type:"spot", map:"https://naver.me/5pwdTlhS"},
-                {t:"15:00", n:"F1963", s:"廢棄鋼鐵廠改建的藝文空間", type:"spot", map:"https://naver.me/GNWk51tl"},
+                {
+                    t:"15:00", n:"F1963", s:"廢棄鋼鐵廠改建的藝文空間", 
+                    d: `<div class='space-y-3'>
+                            <p class='font-bold text-[#4A342E]'>建築師：趙炳秀 (BCHO Architects)</p>
+                            <p>1963為工廠創立時間，F代表Factory。設計核心在於保留鋼絲廠骨架，將中庭挖開以獲得通風採光。</p>
+                            <p><b>設計重點：</b></p>
+                            <ul class='list-disc ml-4 space-y-1'>
+                                <li><b>藍色擴張網：</b>白天隨光影律動呈現半透明感，夜晚展現工業美感。</li>
+                                <li><b>桁架保留：</b>室內裸露當年支撐廠房的木製與鋼製桁架。</li>
+                                <li><b>景觀融合：</b>穿插竹林步道，利用混凝土碎塊重新堆砌為景觀。</li>
+                            </ul>
+                            <p class='italic opacity-70'>「當遊客穿梭其中，腳下曾生產鋼索的土地，現在生產的是美學與思緒。」</p>
+                        </div>`,
+                    img: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800", // 示意圖
+                    type:"spot", map:"https://naver.me/GNWk51tl"
+                },
                 {t:"16:00", n:"KISWIRE Museum", s:"預約制建築導覽", type:"spot", map:"https://naver.me/GWe2Ecxt"},
                 {t:"19:00", n:"西面晚餐", s:"傳統豬肉湯飯", type:"food", map:""}
             ], 
@@ -313,6 +351,12 @@
             render();
         }
 
+        function toggleCard(el) {
+            // 防止點擊 MAP 按鈕時也觸發展開
+            if (event.target.tagName === 'A') return;
+            el.classList.toggle('expanded');
+        }
+
         function setCurrency(cur) {
             currentCurrency = cur;
             document.getElementById('btn-krw').classList.toggle('active', cur === 'KRW');
@@ -358,7 +402,6 @@
             const content = document.getElementById(id);
             const icon = document.getElementById(id + '-icon');
             const isActive = content.classList.contains('active');
-            
             if (!isActive) {
                 content.classList.add('active');
                 icon.innerText = '－';
@@ -374,8 +417,38 @@
                 itList.innerHTML = '';
                 const dayPlans = plans[currentDay] || [];
                 dayPlans.forEach(p => {
-                    const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded">MAP</a>` : '';
-                    itList.innerHTML += `<div class="itinerary-row"><div class="time-label">${p.t}</div><div class="axis-box"><div class="timeline-dot ${p.type==='food'?'dot-food':'dot-spot'}"></div></div><div class="card-col"><div class="card p-5"><div class="flex justify-between items-start"><h3 class="font-bold text-sm">${p.n}</h3>${mapBtn}</div><p class="text-[10px] opacity-50 mt-1">${p.s || ''}</p></div></div></div>`;
+                    const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded ml-2">MAP</a>` : '';
+                    
+                    // 檢查是否有詳細資訊或圖片
+                    const hasDetail = (p.d || p.img);
+                    const expandIcon = hasDetail ? `<span class="expand-icon opacity-30 text-[10px] ml-2">▼</span>` : '';
+                    const detailArea = hasDetail ? `
+                        <div class="card-detail">
+                            ${p.img ? `<img src="${p.img}" class="detail-img">` : ''}
+                            ${p.d ? `<div class="mt-2">${p.d}</div>` : ''}
+                        </div>` : '';
+
+                    itList.innerHTML += `
+                        <div class="itinerary-row">
+                            <div class="time-label">${p.t}</div>
+                            <div class="axis-box">
+                                <div class="timeline-dot ${p.type==='food'?'dot-food':'dot-spot'}"></div>
+                            </div>
+                            <div class="card-col">
+                                <div class="card p-5" onclick="toggleCard(this)">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between">
+                                                <h3 class="font-bold text-sm">${p.n}</h3>
+                                                <div class="flex items-center">${mapBtn} ${expandIcon}</div>
+                                            </div>
+                                            <p class="text-[10px] opacity-50 mt-1">${p.s || ''}</p>
+                                        </div>
+                                    </div>
+                                    ${detailArea}
+                                </div>
+                            </div>
+                        </div>`;
                 });
             }
 
