@@ -134,19 +134,10 @@
 
         <div id="view-info" class="view-section px-6 space-y-6">
             <div class="card p-6 text-center">
-                <h3 class="serif italic font-bold mb-6 border-b pb-2 text-lg">Exchange Rate</h3>
-                <div class="flex flex-col items-center gap-2">
-                    <div class="w-full text-left">
-                        <p class="text-[10px] opacity-40 uppercase mb-1 ml-1">Korean Won (KRW)</p>
-                        <input type="number" id="calc-krw" placeholder="請輸入韓幣" class="w-full text-2xl font-bold text-center py-2" oninput="calcExchange('krw')">
-                    </div>
-                    <div class="py-2 opacity-20 text-2xl">⇅</div>
-                    <div class="w-full text-left">
-                        <p class="text-[10px] opacity-40 uppercase mb-1 ml-1">Taiwan Dollar (TWD)</p>
-                        <input type="number" id="calc-twd-input" placeholder="請輸入台幣" class="w-full text-2xl font-bold text-center py-2 text-[#E67E22]" oninput="calcExchange('twd')">
-                    </div>
-                </div>
-                <p class="text-[9px] opacity-30 mt-6 uppercase tracking-[0.2em]">Current Rate 1 : 41</p>
+                <h3 class="serif italic font-bold mb-6 border-b pb-2 text-lg text-center">Exchange Rate</h3>
+                <input type="number" id="calc-krw" placeholder="韓幣 (KRW)" class="w-full text-2xl font-bold text-center py-2 mb-4" oninput="calcExchange('krw')">
+                <p class="text-center opacity-20 text-2xl">⇅</p>
+                <input type="number" id="calc-twd-input" placeholder="台幣 (TWD)" class="w-full text-2xl font-bold text-center py-2 text-[#E67E22]" oninput="calcExchange('twd')">
             </div>
         </div>
 
@@ -204,18 +195,19 @@
             3: [
                 {t:"11:00", n:"電影殿堂", s:"解構主義建築", type:"spot", map:"https://naver.me/GG7tPu8w"},
                 {
-                    t:"15:00", n:"F1963 (수영공장 레노베이션)", s:"工廠改建的藝文空間", 
+                    t:"15:00", n:"F1963 (水營工廠)", s:"鐵絲線工廠改建的藝文空間", 
                     d: `<div class='space-y-4'>
-                            <p class='font-bold text-[#4A342E]'>BCHO Architects</p>
-                            <p>F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型。設計師採取「低度干預」策略，保留鋼絲廠骨架，將工廠中間部分挖開成為中庭，透過中庭獲得通風和採光。 [cite: 3, 5, 6, 62]。</p>
+                            <p class='font-bold text-[#4A342E]'>建築師：趙炳秀 (BCHO Architects)</p>
+                            <p>F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型。設計師採取「低度干預」策略，保留鋼絲廠骨架。</p>
                             <div class='grid grid-cols-1 gap-3'>
-                                <p><b>● 藍色擴張網：</b>標誌性外觀，隨白天光影律動，夜晚則透過燈光展現朦朧美感 [cite: 45, 46, 48]。</p>
-                                <p><b>● 中庭廣場：</b>拆除屋頂設計成開放中庭，引入光與空氣，成為人們聚集的核心 [cite: 50, 52]。</p>
-                                <p><b>● 桁架保留：</b>YES24 書店與咖啡廳內刻意裸露支撐廠房的木製與鋼製桁架 [cite: 54, 55, 56]。</p>
-                                <p><b>● 景觀融合：</b>穿插竹林步道與月光花園，將廢棄混凝土碎塊轉化為景觀造景 [cite: 57, 59, 61]。</p>
+                                <p><b>● 藍色擴張網：</b>標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
+                                <p><b>● 中央中庭：</b>拆除屋頂設計成開放中庭，引入光與空氣，成為人們聚集的核心。</p>
+                                <p><b>● 桁架保留：</b>YES24 書店與咖啡廳內刻意裸露支撐廠房的木製與鋼製桁架。</p>
+                                <p><b>● 景觀融合：</b>穿插竹林步道與月光花園，將廢棄混凝土碎塊轉化為景觀造景。</p>
                             </div>
                         </div>`,
-                    img: "https://cdn.phototourl.com/free/2026-04-29-6e2addff-b8ef-4c5a-9a2f-ae9bb9e480fa.jpg",
+                    // 此處已替換為妳上傳的 Hyundai Motorstudio Busan 實拍照片路徑 [cite: 3, 5, 11]
+                    img: "image_c378fb.jpg", 
                     type:"spot", map:"https://naver.me/GNWk51tl"
                 },
                 {t:"19:00", n:"西面晚餐", s:"傳統豬肉湯飯", type:"food"}
@@ -262,7 +254,6 @@
                 dayPlans.forEach(p => {
                     const mapBtn = p.map ? `<a href="${p.map}" target="_blank" class="text-[9px] bg-[#4A342E] text-white px-2 py-1 rounded relative z-50">MAP</a>` : '';
                     const hasDetail = (p.d || p.img);
-                    // 修改：箭頭 icon 改到 MAP 按鈕左邊，並加了 mr-2
                     const expandIcon = hasDetail ? `<span class="expand-icon opacity-30 text-[10px] mr-2">▼</span>` : '';
                     
                     itList.innerHTML += `
@@ -286,7 +277,7 @@
                                         </div>
                                     </div>
                                     <div class="card-detail">
-                                        ${p.img ? `<img src="${p.img}" class="detail-img">` : ''}
+                                        ${p.img ? `<img src="${p.img}" class="detail-img shadow-sm border border-black/5">` : ''}
                                         ${p.d ? `<div class="mt-2 text-xs">${p.d}</div>` : ''}
                                     </div>
                                 </div>
