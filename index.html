@@ -145,7 +145,6 @@
            <div id="expense-list-area" class="space-y-3"></div>
        </div>
 
-       <!-- 匯率換算功能 - 支援算式 -->
        <div id="view-info" class="view-section px-6 space-y-6">
            <div class="card p-6">
                 <h3 class="serif italic font-bold mb-6 border-b pb-2 text-lg">Exchange Rate</h3>
@@ -190,9 +189,10 @@
                         <span>✨ Olive Young 必買</span><span id="list-olive-icon">＋</span>
                     </div>
                     <div id="list-olive" class="accordion-content">
-                        <div class="shop-item" onclick="openItem('Beplain 綠豆洗面乳', 'https://cdn.phototourl.com/free/2026-05-03-7611943c-c819-4188-b76f-5bc74bd66715.jpg', '不同於市面上大多數的肌護膚品，Be Plain不添加純淨水，而是選用最適合產品本質及功效的基礎水原料，含有32.17%綠豆提取物和細微的綠茶粉，具有超強的皮膚清潔效果，還可以幫助調節皮脂分泌。可以讓肌膚在潔面後保持水潤不乾燥。也非常溫和，可以讓肌膚感到舒適。')"><span>Beplain 綠豆洗面乳</span><span class="view-tag">VIEW</span></div>
-                        <div class="shop-item" onclick="openItem('UNOVE 深層修護髮膜', 'https://image.oliveyoung.co.kr/uploads/images/goods/10/0000/0015/A00000015535508ko.jpg', '神好用的髮膜，洗完頭髮非常柔順且有高級香氣。')"><span>UNOVE 深層修護髮膜 (神好用)</span><span class="view-tag">VIEW</span></div>
-                        <div class="shop-item" onclick="openItem('Mediheal 茶樹舒緩面膜', 'https://image.oliveyoung.co.kr/uploads/images/goods/10/0000/0016/A00000016768310ko.jpg', '經典必敗面膜，適合鎮定肌膚。')"><span>Mediheal 茶樹舒緩面膜</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('Beplain 綠豆洗面乳', 'https://cdn.phototourl.com/free/2026-05-03-7611943c-c819-4188-b76f-5bc74bd66715.jpg', '不同於市面上大多數的肌護膚品，Beplain不添加純淨水，而是選用最適合產品本質及功效的基礎水原料，含有32.17%綠豆提取物和細微的綠茶粉，具有超強的皮膚清潔效果，還可以幫助調節皮脂分泌。')"><span>Beplain 綠豆洗面乳</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('IDEAL男士水乳精華三合一', 'https://cdn.phototourl.com/free/2026-05-04-183a5f7a-e737-4309-a8eb-4351a9779aef.png', '針對保濕與滋養，適合臉部肌膚特別乾燥、脫皮的男士使用。早晚洗臉後直接使用，一瓶搞定補水保養。質地清爽不黏膩，特別針對男性偏油或混合性膚質設計，長效保濕同時抑制多餘油光，是追求簡單又有效保養方式的男士必備。')"><span>IDEAL男士水乳精華三合一</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('TonyMoly Wonder神經醯胺麻糬化妝水', 'https://cdn.phototourl.com/free/2026-05-04-b64d47ea-a334-4bc3-943c-29dd28a7decb.jpg', '這款熱門韓系爽膚水以神經醯胺和玻尿酸修護屏障、補水，500ml大容量非常適合濕敷或層層疊擦，網友多稱其能打造「麻糬般」彈潤肌，是乾肌與缺水肌的平價優質選擇。')"><span>TonyMoly Wonder神經醯胺麻糬化妝水</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('PDRN粉紅胜肽膠原奇肌安瓶', 'https://cdn.phototourl.com/free/2026-05-04-ea2407f7-d82e-4e94-a41f-00dbd218bae5.png', '含有近似皮膚組織的鮭魚DNA成分+粉紅維他命B12+5種胜肽複合物，能夠舒緩肌膚暫時性泛紅、強化肌膚屏障與彈性、並改善肌膚暗沉，標榜14天內強效美白淡斑、打造Q彈緊緻的水光肌。')"><span>PDRN粉紅胜肽膠原奇肌安瓶</span><span class="view-tag">VIEW</span></div>
                     </div>
                     <div class="accordion-header border-b border-[#F0EDE8]" onclick="toggleAccordion('list-pharmacy')">
                         <span>💊 韓國藥局推薦</span><span id="list-pharmacy-icon">＋</span>
@@ -236,7 +236,8 @@
            <img id="modal-img" src="" class="w-full h-64 object-cover">
            <div class="p-6">
                <h3 id="modal-title" class="font-bold text-lg mb-2"></h3>
-               <p id="modal-desc" class="text-xs opacity-70 leading-relaxed"></p>
+               <!-- 加入 text-justify 使文字左右對齊 -->
+               <p id="modal-desc" class="text-xs opacity-70 leading-relaxed text-justify"></p>
                <button onclick="closeModal()" class="mt-6 w-full py-3 bg-[#4A342E] text-white rounded-xl text-[10px] font-bold tracking-widest">CLOSE</button>
            </div>
        </div>
@@ -256,12 +257,12 @@
                     <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
                         <img src="https://cdn.phototourl.com/free/2026-04-29-fc37427b-0db4-4e06-bed1-91bc520e1424.jpg" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
                         <p class="font-bold text-lg">Millac the Market</p>
-                        <p class="opacity-80">這座位於釜山廣安里的複合式文化空間，透過精確的量體控制與材料語彙，展現了對都市脈絡與在地文化的尊重。</p>
+                        <p class="opacity-80 text-justify">這座位於釜山廣安里的複合式文化空間，透過精確的量體控制與材料語彙，展現了對都市脈絡與在地文化的尊重。</p>
                         <div class="space-y-3 border-l-2 border-[#E8E1D4] pl-3 py-1">
-                            <p><b>視覺留白與低量體</b>：建築刻意壓低高度以避免遮蔽後方住宅區的視線，與周邊高層建築形成對比，創造出獨特的城市地景。</p>
-                            <p><b>場域記憶的轉化</b>：空間配置融入了昔日魚市場與路邊攤販的活動模式，成功捕捉並轉化在地的文化記憶。</p>
-                            <p><b>海陸連結的過渡空間</b>：南側大廳利用大階梯、玻璃帷幕牆與共享空間，在視覺上連結城市與海洋。</p>
-                            <p><b>立面節奏與都市對話</b>：西側立面透過密集的開口韻律，為市中心步行空間創造了富有動感的地景。</p>
+                            <p class="text-justify"><b>視覺留白與低量體</b>：建築刻意壓低高度以避免遮蔽後方住宅區的視線，與周邊高層建築形成對比，創造出獨特的城市地景。</p>
+                            <p class="text-justify"><b>場域記憶的轉化</b>：空間配置融入了昔日魚市場與路邊攤販的活動模式，成功捕捉並轉化在地的文化記憶。</p>
+                            <p class="text-justify"><b>海陸連結的過渡空間</b>：南側大廳利用大階梯、玻璃帷幕牆與共享空間，在視覺上連結城市與海洋。</p>
+                            <p class="text-justify"><b>立面節奏與都市對話</b>：西側立面透過密集的開口韻律，為市中心步行空間創造了富有動感的地景。</p>
                         </div>
                     </div>
                 `
@@ -308,12 +309,12 @@
                     <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
                         <img src="https://cdn.phototourl.com/free/2026-04-29-6e2addff-b8ef-4c5a-9a2f-ae9bb9e480fa.jpg" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
                         <p class="font-bold">趙炳秀 (Cho Byoung-soo)</p>
-                        <p class="opacity-80">F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型設計。採取「低度干預」策略，保留鋼絲廠骨架。</p>
+                        <p class="opacity-80 text-justify">F 代表 Factory，1963 為工廠創立年份。2008年停產後轉型設計。採取「低度干預」策略，保留鋼絲廠骨架。</p>
                         <div class="space-y-2 border-l-2 border-[#E8E1D4] pl-3 py-1">
-                            <p><b>藍色擴張網</b>：標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
-                            <p><b>中央中庭</b>：將工廠中間部分挖開成為中庭，透過中庭獲得通風與採光。</p>
-                            <p><b>桁架保留</b>：YES24 書店與咖啡廳內刻意保留原本鋼絲廠的型態與骨架基礎。</p>
-                            <p><b>景觀融合</b>：將舊工廠樣貌重新置入使用功能，使荒廢空間充滿書香與藝術氣息。</p>
+                            <p class="text-justify"><b>藍色擴張網</b>：標誌性外殼，隨白天光影律動，夜晚則透過燈光展現朦朧美感。</p>
+                            <p class="text-justify"><b>中央中庭</b>：將工廠中間部分挖開成為中庭，透過中庭獲得通風與採光。</p>
+                            <p class="text-justify"><b>桁架保留</b>：YES24 書店與咖啡廳內刻意保留原本鋼絲廠的型態與骨架基礎。</p>
+                            <p class="text-justify"><b>景觀融合</b>：將舊工廠樣貌重新置入使用功能，使荒廢空間充滿書香與藝術氣息。</p>
                         </div>
                     </div>
                 `
@@ -450,7 +451,6 @@
 
        function setCurrency(cur) { currentCurrency = cur; document.getElementById('btn-krw').classList.toggle('active', cur === 'KRW'); document.getElementById('btn-twd').classList.toggle('active', cur === 'TWD'); document.getElementById('exp-amount').placeholder = `輸入${cur === 'KRW' ? '韓幣' : '台幣'}`; }
        
-       // 改進匯率換算邏輯：支援算式輸入
        function calcExchange(source) {
            const krwIn = document.getElementById('calc-krw');
            const twdIn = document.getElementById('calc-twd-input');
@@ -458,7 +458,6 @@
 
            let calculatedVal = null;
            try {
-               // 只允許數字、點、括號與基本運算符，並防止尾端有符號時出錯
                const cleanExpr = mathExpr.replace(/[^-+*/().0-9]/g, '');
                if (cleanExpr && !/[+\-*/.]$/.test(cleanExpr)) {
                    calculatedVal = new Function('return ' + cleanExpr)();
