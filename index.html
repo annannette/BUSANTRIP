@@ -4,8 +4,19 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
    <title>Busan Travel Pro</title>
+   
+   <!-- iOS App Icon 設定：請將 href 中的網址替換成您設計的圖示 URL (建議 180x180px) -->
+   <link rel="apple-touch-icon" href="https://placehold.co/180x180/4A342E/F5F2ED?text=Busan">
+   <!-- 設定主畫面 App 名稱 -->
+   <meta name="apple-mobile-web-app-title" content="Busan Pro">
+   <!-- 開啟全螢幕 Standalone 模式 (隱藏網址列) -->
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <!-- 設定 iOS 狀態列顏色 (與背景色融合) -->
+   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
    <script src="https://cdn.tailwindcss.com"></script>
    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+   
    <style>
        :root { --safe-bottom: env(safe-area-inset-bottom); }
        body { 
@@ -237,7 +248,7 @@
                         <div class="shop-item" onclick="openItem('Aclean Gel 애크린겔 水楊酸凝膠', 'https://cdn.phototourl.com/member/2026-05-07-47aa268a-4d82-4b11-9017-f3d5289f31f1.jpg', '2%水楊酸添加與茶樹精油成分，主要針對粉刺、肌膚粗糙等問題調理，並且幫助舒緩肌膚，預防粉刺、平滑肌膚都適用。')"><span>Aclean Gel 애크린겔 水楊酸凝膠</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('Noscarna 노스카나 去疤修復膏', 'https://cdn.phototourl.com/member/2026-05-07-adc7fdd2-4789-4a4d-8116-b45f7bd89faa.jpg', '針對痘印與各類肌膚瑕疵，長期使用後膚況看起來更均勻細緻。主打溫和配方，適合多數膚質日常保養使用，也因此成為許多人到韓國藥局會順手補貨的熱門選擇之一。')"><span>Noscarna 노斯카나 去疤修復膏</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('프렌즈 아이드롭 葡萄糖眼藥水', 'https://cdn.phototourl.com/member/2026-05-07-c4729a2b-6bca-4b95-8d44-accad209cf66.jpg', '多色校色：綠(去紅)、粉(提亮)、紫(去黃)、白(基礎保濕)。質地水潤如精華液。')"><span>프렌즈 아이드롭 葡萄糖眼藥水</span><span class="view-tag">VIEW</span></div>
-                        <div class="shop-item" onclick="openItem('안티푸라민 에스 로션 肌肉酸痛舒緩滾珠乳液', 'https://cdn.phototourl.com/member/2026-05-07-c1176b6d-5393-400c-b34c-cad408442801.png', '主打清涼膚感與便利設計，瓶身自帶滾輪，塗抹同時可輕鬆按摩，特別適合長時間走路或旅遊後使用。質地清爽不黏膩，使用起來相當舒服，不少網友分享已成為出國必備小物。')"><span>안티푸라민 에스 로션 肌肉酸痛舒緩滾珠乳液</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('안티푸라민 에스 로션 肌肉酸痛舒緩滾珠乳液', 'https://cdn.phototourl.com/member/2026-05-07-c1176b6d-5393-400c-b34c-cad408442801.png', '主打清涼膚感與便利設計，瓶身自帶滾輪，塗抹同時可輕鬆按摩，特別適合長時間走路或旅遊後使用。質地清爽不黏膩，使用起來相當舒服，不少網友分享已成為出國必備小物。')"><span>안티푸라민 에斯 로션 肌肉酸痛舒緩滾珠乳液</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('유그린에프 護腳霜', 'https://cdn.phototourl.com/member/2026-05-07-16f710b4-582e-4324-b594-2de81c1b76bd.jpg', '帶有茉莉花香的米白色軟膏能迅速滲入皮膚內層，不必使用磨砂膏就去除死皮，同時防止水分流失，讓皮膚柔軟。')"><span>유그린에프 護腳霜</span><span class="view-tag">VIEW</span></div>
                     </div>
                     <div class="accordion-header" onclick="toggleAccordion('list-souvenir')">
@@ -308,7 +319,7 @@
                },
                {t:"18:30", n:"廣安里散策", s:"沙灘漫步", type:"spot", map: "https://naver.me/GvWX0fgO",
                 detail: `
-                    <div class="px-5 pt-5 pb-5 text-[11px]導致的間距設定導致。 leading-relaxed space-y-4">
+                    <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
                         <img src="https://cdn.phototourl.com/free/2026-05-04-1b888c1c-262f-4380-bf36-8cdb495003e8.png" class="w-full h-auto rounded-xl shadow-sm border border-gray-100">
                         <p class="font-bold">廣安里必逛選物店</p>
                         <div class="space-y-2 border-l-2 border-[#E8E1D4] pl-3 py-1">
@@ -522,7 +533,6 @@
            }
        }
 
-       // 切換行旅支出分類明細
        function toggleSummaryCat(cat) {
            const el = document.getElementById(`summary-details-${cat}`);
            const icon = document.getElementById(`summary-arrow-${cat}`);
@@ -603,7 +613,6 @@
 
        function addExpense() { const nameEl = document.getElementById('exp-name'); const amountEl = document.getElementById('exp-amount'); const cat = document.getElementById('exp-cat').value; if(!amountEl.value) return; let val = Number(amountEl.value); let twd = (currentCurrency === 'TWD') ? val : Math.round(val / rate); const entry = { id: Date.now(), name: nameEl.value || '未命名', twd: twd, cat: cat, inputCur: currentCurrency, origVal: val }; if(!expenses[currentDay]) expenses[currentDay] = []; expenses[currentDay].unshift(entry); localStorage.setItem('busan_v_pro', JSON.stringify(expenses)); nameEl.value = ''; amountEl.value = ''; render(); }
        
-       // 更新：支援指定天數刪除，確保同步
        function delExp(id, day) { 
            const targetDay = day || currentDay;
            expenses[targetDay] = expenses[targetDay].filter(e => e.id !== id); 
@@ -627,7 +636,6 @@
            let catTotals = { "飲食": 0, "交通": 0, "美妝": 0, "門票": 0, "購物": 0 };
            let catItems = { "飲食": [], "交通": [], "美妝": [], "門票": [], "購物": [] };
 
-           // 收集所有天的消費並按分類分組
            Object.entries(expenses).forEach(([day, dayExps]) => { 
                dayExps.forEach(e => { 
                    grandTotal += e.twd; 
@@ -643,7 +651,6 @@
            
            if(summaryBreakdown) {
                summaryBreakdown.innerHTML = Object.entries(catTotals).map(([cat, amt]) => {
-                   // 生成詳細清單的 HTML，加入刪除按鈕
                    const itemsHtml = catItems[cat].map(item => `
                        <div class="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
                            <div class="flex flex-col">
