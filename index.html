@@ -2,14 +2,15 @@
 <html lang="zh-TW">
 <head>
    <meta charset="UTF-8">
+   <!-- 支援兩指縮放 -->
    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-   <title>五釜臨門</title>
+   <title>BLUESAN</title>
    
    <!-- iOS App Icon 設定 -->
-   <link rel="apple-touch-icon" href="https://cdn.phototourl.com/free/2026-05-07-5fc7673a-85ad-47d7-a87f-c3592cc626ea.png">
+   <link rel="apple-touch-icon" href="https://cdn.phototourl.com/free/2026-05-11-46896ea2-4a42-4a42-ad0f-dc85a45cbcc3.png">
    
    <!-- 設定加入主畫面後的 App 名稱 -->
-   <meta name="apple-mobile-web-app-title" content="五釜臨門">
+   <meta name="apple-mobile-web-app-title" content="BLUESAN">
    
    <!-- 開啟全螢幕 Standalone 模式 -->
    <meta name="apple-mobile-web-app-capable" content="yes">
@@ -176,6 +177,7 @@
        </div>
 
        <div id="view-guide" class="view-section px-6 space-y-6">
+           <!-- 刷卡回饋表格 -->
            <div class="card overflow-hidden">
                 <div class="bg-[#4A342E] p-4">
                     <h3 class="text-white text-sm font-bold flex items-center gap-2">刷卡回饋</h3>
@@ -186,9 +188,28 @@
                             <tr><th>信用卡</th><th>回饋%</th><th>上限</th><th>備註</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td class="font-bold">富邦 J-Card</td><td class="text-[#E67E22] font-bold">10%</td><td class="opacity-60">1,000/月</td><td>實體、超商</td></tr>
-                            <tr><td class="font-bold">玉山 Unicard</td><td class="text-[#E67E22] font-bold">5%</td><td class="opacity-60">無</td><td>需方案</td></tr>
-                            <tr><td class="font-bold">國泰 CUBE</td><td class="text-[#E67E22] font-bold">3%</td><td class="opacity-60">無</td><td>趣旅行</td></tr>
+                            <tr><td class="font-bold">富邦J卡</td><td class="text-[#E67E22] font-bold">單筆滿千元6%</td><td class="opacity-60">33333/季</td><td>實體</td></tr>
+                            <tr><td class="font-bold">聯邦 幸福M卡</td><td class="text-[#E67E22] font-bold">滿90,000韓元，10,000韓元現金回饋</td><td class="opacity-60">無</td><td>需領券</td></tr>
+                            <tr><td class="font-bold">國泰 CUBE</td><td class="text-[#E67E22] font-bold">3%</td><td class="opacity-60">無上限</td><td>趣旅行</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+           </div>
+
+           <!-- 新增：行動支付表格 -->
+           <div class="card overflow-hidden">
+                <div class="bg-[#4A342E] p-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">行動支付</h3>
+                </div>
+                <div class="p-2 overflow-x-auto">
+                    <table class="shopping-table">
+                        <thead>
+                            <tr><th>支付方式</th><th>回饋/優惠</th><th>搭配銀行</th><th>通路</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="font-bold">全支付</td><td class="text-[#E67E22] font-bold">3.5%</td><td class="opacity-60">國泰+5%</td><td>ZeroPay、HIVEX</td></tr>
+                            <tr><td class="font-bold">LINE Pay</td><td class="text-[#E67E22] font-bold">VISA+10%</td><td class="opacity-60">永豐DAWAY+5%</td><td>新世界、CU、7-11</td></tr>
+                            <tr><td class="font-bold">icash pay</td><td class="text-[#E67E22] font-bold">15%(免手續費)</td><td class="opacity-60">新戶+10%</td><td>四大超商</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -225,7 +246,7 @@
                         <div class="shop-item" onclick="openItem('Prime Primer持妝控油蜜粉', 'https://cdn.phototourl.com/member/2026-05-05-c489f154-c46d-40cf-acd5-02870864e552.jpg', '粉質極細，能即刻打造柔焦霧面感，長時間維持底妝乾爽不位移。')"><span>Prime Primer持妝控油蜜粉</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('FIXX so natural 定妝噴霧', 'https://cdn.phototourl.com/member/2026-05-05-9c9a4029-9b73-439a-b6ab-b8af3bfd5d4f.jpg', '韓國國民級定妝噴霧，噴霧極細且成膜快，讓妝容長時間持久。')"><span>FIXX so natural 定妝噴霧</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('D’alba 空姐精華噴霧', 'https://cdn.phototourl.com/member/2026-05-05-798b9e7a-3e22-4a97-82f2-156ff574e7de.jpg', '油水分離設計，搖勻後使用能瞬間補水補光，是乾燥環境的救星。')"><span>D’alba 空姐精華噴霧</span><span class="view-tag">VIEW</span></div>
-                        <div class="shop-item" onclick="openItem('Celimax A醇撫紋乳霜', 'https://cdn.phototourl.com/member/2026-05-05-7c4e9f8c-8413-48d2-acde-631f24bd3b8f.jpg', '搭配高濃度突破性成分，溫和加速肌膚更新，緊實毛孔並改善細紋。')"><span>Celimax A醇撫紋乳霜</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('Celimax A醇撫紋乳霜', 'https://cdn.phototourl.com/member/2026-05-05-7c4e9f8c-8413-48d2-acde-631f24bd3b8f.jpg', '搭配高濃度突破性成分，溫和加速肌庫更新，緊實毛孔並改善細紋。')"><span>Celimax A醇撫紋乳霜</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('Arencia 牛膝草凝膠精華 ', 'https://cdn.phototourl.com/member/2026-05-05-190b77bc-d881-4996-9b0e-d7066d29b8fc.jpg', '輕盈無黏感，能快速吸收進肌底，簡化保養流程並提升肌膚吸收力。')"><span>Arencia 牛膝草凝膠精華 </span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('Torriden 面膜系列', 'https://cdn.phototourl.com/member/2026-05-05-5d260176-e409-4b3a-bc38-3a4404030049.png', '針對不同膚況設計，含足量精華液，提供深層保濕與舒緩效果。')"><span>Torriden 面膜系列</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('MARSHIQUE 水凝膠頸膜', 'https://cdn.phototourl.com/free/2026-05-05-345e80a3-3b85-4b1f-85c7-b73583acb891.jpg', '針對難纏頸紋設計，貼合度高，幫助還原平滑緊緻的頸部肌膚。')"><span>MARSHIQUE 水凝膠頸膜</span><span class="view-tag">VIEW</span></div>
@@ -249,8 +270,8 @@
                         <div class="shop-item" onclick="openItem('Aclean Gel 애크린겔 水楊酸凝膠', 'https://cdn.phototourl.com/member/2026-05-07-47aa268a-4d82-4b11-9017-f3d5289f31f1.jpg', '2%水楊酸添加與茶樹精油成分，主要針對粉刺、肌膚粗糙等問題調理，並且幫助舒緩肌膚，預防粉刺、平滑肌膚都適用。')"><span>Aclean Gel 애크린겔 水楊酸凝膠</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('Noscarna 노스카나 去疤修復膏', 'https://cdn.phototourl.com/member/2026-05-07-adc7fdd2-4789-4a4d-8116-b45f7bd89faa.jpg', '針對痘印與各類肌膚瑕疵，長期使用後膚況看起來更均勻細緻。主打溫和配方，適合多數膚質日常保養使用，也因此成為許多人到韓國藥局會順手補貨的熱門選擇之一。')"><span>Noscarna 노스카나 去疤修復膏</span><span class="view-tag">VIEW</span></div>
                         <div class="shop-item" onclick="openItem('프렌즈 아이드롭 葡萄糖眼藥水', 'https://cdn.phototourl.com/member/2026-05-07-c4729a2b-6bca-4b95-8d44-accad209cf66.jpg', '多色校色：綠(去紅)、粉(提亮)、紫(去黃)、白(基礎保濕)。質地水潤如精華液。')"><span>프렌즈 아이드롭 葡萄糖眼藥水</span><span class="view-tag">VIEW</span></div>
-                        <div class="shop-item" onclick="openItem('안提普拉民 滾珠乳液', 'https://cdn.phototourl.com/member/2026-05-07-c1176b6d-5393-400c-b34c-cad408442801.png', '主打清涼膚感與便利設計，瓶身自帶滾輪，塗抹同時可輕鬆按摩，特別適合長時間走路或旅遊後使用。質地清爽不黏膩，使用起來相當舒服，不少網友分享已成為出國必備小物。')"><span>안티푸라민 에스 로션 肌肉酸痛舒緩滾珠乳液</span><span class="view-tag">VIEW</span></div>
-                        <div class="shop-item" onclick="openItem('유그린에프 護腳霜', 'https://cdn.phototourl.com/member/2026-05-07-16f710b4-582e-4324-b594-2de81c1b76bd.jpg', '帶有茉莉花香的米白色軟膏能迅速滲入皮膚內層，不必使用磨砂膏就去除死皮，同時防止水分流失，讓皮膚柔軟。')"><span>유그린에프 護腳霜</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('안提普拉民 滾珠乳液', 'https://cdn.phototourl.com/member/2026-05-07-c1176b6d-5393-400c-b34c-cad408442801.png', '主打清涼膚感與便利設計，瓶身自帶滾輪，塗抹同時可輕鬆按摩，特別適合長時間走路或旅遊後使用。質地清爽不黏膩，使用起來相當舒服，不少網友分享已成為出國必備小物。')"><span>안티푸라민 에斯 로션 肌肉酸痛舒緩滾珠乳液</span><span class="view-tag">VIEW</span></div>
+                        <div class="shop-item" onclick="openItem('유그連에프 護腳霜', 'https://cdn.phototourl.com/member/2026-05-07-16f710b4-582e-4324-b594-2de81c1b76bd.jpg', '帶有茉莉花香的米白色軟膏能迅速滲入皮膚內層，不必使用磨砂膏就去除死皮，同時防止水分流失，讓皮膚柔軟。')"><span>유그린에프 護腳霜</span><span class="view-tag">VIEW</span></div>
                     </div>
                     <div class="accordion-header" onclick="toggleAccordion('list-souvenir')">
                         <span>🎁 伴手禮及零食</span><span id="list-souvenir-icon">＋</span>
@@ -344,7 +365,7 @@
                {t:"09:30", n:"Working Holiday", s:"早午餐： 08:00 - 19:00", type:"food", map:"https://naver.me/FBalWbQp"},
                {t:"11:00", n:"海東龍宮寺", s:"靠海的壯麗佛寺", type:"spot", map:"https://naver.me/58NdWaSm"},
                {t:"13:00", n:"海東龍宮海鮮炸醬麵", s:"必點招牌炸醬麵", type:"food", map:"https://naver.me/FA2xQgVw"},
-               {t:"15:00", n:"清沙浦散策", s:"釜山小鎌倉", type:"spot", map:"https://naver.me/IItGsmtd"},
+               {t:"15:00", n:"清沙浦散策", s:"釜山小鎌倉", type:"spot", map:"https://naver.me/5o0i3bUY"},
                {t:"16:00", n:"Diart Coffee", s:"下午茶咖啡廳", type:"food", map:"https://naver.me/Gxk1OJez"},
                {t:"17:00", n:"清沙浦膠囊列車", s:"欣賞日落海景", type:"spot", map:"https://naver.me/xq3aEIjM",
                 detail: `
@@ -364,9 +385,9 @@
                {t:"20:30", n:"廣安里遊艇體驗", s:"海上看大橋夜景", type:"spot", map:"https://naver.me/GBF7x95e", boarding: "https://db.yachtholic.com/boarding/daily?lang=en"}
            ],
            3: [
-               {t:"09:30", n:"萊恩酒店", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
+               {t:"09:30", n:"라인호텔", s:"Check-in 放行李", type:"spot", map:"https://naver.me/FO9o0T3o"},
                {t:"10:00", n:"Hash Table", s:"田園風早午餐", type:"food", map:"https://naver.me/IxsqysmJ"},
-               {t:"11:00", n:"電影殿堂", s:"解構主義建築景點", type:"spot", map:"https://naver.me/GG7tPu8w"},
+               {t:"11:00", n:"電影殿堂", s:"藍天組解構主義建築", type:"spot", map:"https://naver.me/GG7tPu8w"},
                {t:"11:30", n:"釜山新世界百貨", s:"全世界最大百貨公司", type:"spot", map:"https://naver.me/5pwdTlhS"},
                {t:"15:00", n:"F1963", s:"廢棄鋼鐵廠改建的藝文空間", type:"spot", map:"https://naver.me/GNWk51tl",
                 detail: `
@@ -441,7 +462,7 @@
                 detail: `
                     <div class="px-5 pt-5 pb-5 text-[11px] leading-relaxed space-y-4">
                         <img src="https://cdn.phototourl.com/free/2026-05-07-d8c85bf5-759a-45f4-94a0-de1eb46e6610.jpg" class="w-full h-auto rounded-xl shadow-sm border border-gray-100" onerror="this.src='https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800'">
-                        <p class="font-bold">베이커리카페 가원｜모노건축사사무소</p>
+                        <p class="font-bold">베이커리카페 가원｜모諾건축사사무소</p>
                         <p class="opacity-80 text-justify">位於白雲浦的加願，透過建築與地形的深度對話，營造出如家屋般的安適感，並以最謙遜的姿態完成與環境的交融。</p>
                         <div class="space-y-3 border-l-2 border-[#E8E1D4] pl-3 py-1">
                             <p class="text-justify"><b>地形重塑與動線的空間轉譯</b>：建築核心在於「地形重塑」，利用「之」字形的動線引導訪客從最高點道路進入。透過最小化土方回填量，成功讓山勢與海景在視覺上連成一線，消除了人工擋土牆的壓迫感。</p>
@@ -534,6 +555,7 @@
            }
        }
 
+       // 切換行旅支出分類明細
        function toggleSummaryCat(cat) {
            const el = document.getElementById(`summary-details-${cat}`);
            const icon = document.getElementById(`summary-arrow-${cat}`);
