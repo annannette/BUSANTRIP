@@ -42,7 +42,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            position: fixed; /* 徹底鎖定最外層視窗，阻止 iOS Safari 拖動回彈造成導覽列晃動 */
+            position: relative; /* 💡 修正：由 fixed 改為 relative，避免 iOS Safari 彈出虛擬鍵盤時視區偏移與點擊失效的當機 Bug */
             top: 0;
             left: 0;
             display: flex;
@@ -327,10 +327,10 @@
             localStorage.setItem('ios_budget_currencies', JSON.stringify(window.state.currencies));
         }
 
-        // --- 安全算式解析運算器 (修復：修正空正規表示式 replace(//g) 與特殊減號取代邏輯) ---
+        // --- 安全算式解析運算器 (修復：修正空正規表示式 replace(//g) 與特殊減號取代邏輯，避免引發 Unexpected token 'if' 嚴重當機) ---
         function safeEval(str) {
             if (!str) return 0;
-            // 轉化運算元，支援各代碼中鍵盤之特規乘號與除號、減號等 (已將非法的 //g 完整替換為可正確執行的特殊減號正則 /−/g)
+            // 💡 核心修復：將原本非法的 //g 完整替換為正確的特殊減號 regex 轉義字元 /−/g
             let sanitized = str.replace(/✕/g, '*').replace(/÷/g, '/').replace(/×/g, '*').replace(/&times;/g, '*').replace(/−/g, '-');
             // 驗證只允許算術運算與數字組合
             if (!/^[0-9\s.+\-*/]*$/.test(sanitized)) return null;
@@ -385,7 +385,7 @@
             return `${Math.max(1.6, dynamicSize)}rem`;
         }
 
-        // --- Toast 提示功能 (修復：補回被遺漏定義的 showToast 函式) ---
+        // --- Toast 提示功能 ---
         function showToast(message, type = 'success') {
             const toastEl = document.getElementById('toast');
             if (!toastEl) return;
@@ -928,7 +928,7 @@
                             </div>
 
                             <!-- 完美對稱與標準化等寬 4x5 算式大鍵盤 -->
-                            <div class="grid grid-cols-4 gap-2 p-1.5 bg-white/30 backdrop-blur-xl border border-white/40 rounded-2xl shadow-md">
+                            <div class="grid grid-cols-4 gap-2 p-1.5 bg-white/30 backdrop-blur-xl border border-[#E6DFD5] rounded-2xl shadow-md">
                                 <!-- Row 1 -->
                                 <button type="button" onclick="handleCalcInput('7')" class="h-11 flex items-center justify-center rounded-xl bg-white/50 hover:bg-white/70 border border-[#E6DFD5] active:scale-95 shadow-sm font-black text-lg text-[#362C24]">7</button>
                                 <button type="button" onclick="handleCalcInput('8')" class="h-11 flex items-center justify-center rounded-xl bg-white/50 hover:bg-white/70 border border-[#E6DFD5] active:scale-95 shadow-sm font-black text-lg text-[#362C24]">8</button>
@@ -999,6 +999,7 @@
             window.state.txType = type;
             const keys = Object.keys(window.state.categories[type]);
             window.state.txMajorCategory = keys[0] || '';
+            // 💡 核心修復：修正成取得 txMajorCategory 之下的子分類，解決原本寫錯成使用 Categories 頁籤的暫存變數（editingMajorCat）導致的清單不更新或卡死問題
             const subList = window.state.categories[type][window.state.txMajorCategory]?.sub || [];
             window.state.txSubCategory = subList[0]?.name || '';
             render();
@@ -1384,7 +1385,7 @@
 
             let historyListHTML = '';
             selectedDayTxs.forEach(tx => {
-                const majorDetails = window.state.categories[tx.type]?.[tx.majorCategory] || { icon: '❓', color: 'bg-gray-100 text-gray-500' };
+                const majorDetails = window.state.categories[tx.type]?.[tx.majorCategory] || { icon: '🍳', color: 'bg-gray-100 text-gray-500' };
                 const convertedAmount = convertToBase(tx.amount, tx.currency);
                 const showSubCurrency = tx.currency !== window.state.baseCurrencyCode;
 
@@ -1540,19 +1541,19 @@
 
                         <form onsubmit="submitAddSub(event)" class="space-y-2.5">
                             <div class="grid grid-cols-2 gap-2">
-                                <select onchange="setCategoriesEditType(this.value)" class="px-2 py-1.5 text-xs bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg text-slate-700 font-black focus:outline-none">
+                                <select onchange="setCategoriesEditType(this.value)" class="px-2 py-1.5 text-xs bg-[#FAF7F2] border-[#E6DFD5] rounded-lg text-slate-700 font-black focus:outline-none">
                                     <option value="expense" ${window.state.editingMajorType === 'expense' ? 'selected' : ''}>支出類別</option>
                                     <option value="income" ${window.state.editingMajorType === 'income' ? 'selected' : ''}>收入類別</option>
                                 </select>
 
-                                <select id="cat-major-select" onchange="setCategoriesEditMajor(this.value)" class="px-2 py-1.5 text-xs bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg text-slate-700 font-black focus:outline-none">
+                                <select id="cat-major-select" onchange="setCategoriesEditMajor(this.value)" class="px-2 py-1.5 text-xs bg-[#FAF7F2] border-[#E6DFD5] rounded-lg text-slate-700 font-black focus:outline-none">
                                     ${majorOptions}
                                 </select>
                             </div>
 
                             <div class="grid grid-cols-3 gap-2">
-                                <input type="text" required maxLength="8" placeholder="小分類名稱" value="${window.state.newSubName}" oninput="setNewSubName(this.value)" class="col-span-2 px-3 py-1.5 text-xs bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg text-slate-700 font-bold focus:outline-none">
-                                <input type="text" required maxLength="2" placeholder="代表符" value="${window.state.newSubIcon}" oninput="setNewSubIcon(this.value)" class="px-2 py-1.5 text-xs bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg text-center font-black focus:outline-none">
+                                <input type="text" required maxLength="8" placeholder="小分類名稱" value="${window.state.newSubName}" oninput="setNewSubName(this.value)" class="col-span-2 px-3 py-1.5 text-xs bg-[#FAF7F2] border-[#E6DFD5] rounded-lg text-slate-700 font-bold focus:outline-none">
+                                <input type="text" required maxLength="2" placeholder="代表符" value="${window.state.newSubIcon}" oninput="setNewSubIcon(this.value)" class="px-2 py-1.5 text-xs bg-[#FAF7F2] border-[#E6DFD5] rounded-lg text-center font-black focus:outline-none">
                             </div>
 
                             <div class="flex justify-between p-1.5 bg-slate-50 rounded-lg overflow-x-auto gap-1">
@@ -1594,7 +1595,7 @@
                         <span class="font-black text-[#362C24]">${curr.code} (${curr.name})</span>
                         <div class="flex items-center gap-1.5">
                             <span class="text-slate-400">1 =</span>
-                            <input type="number" step="any" required id="rate-input-${curr.code}" value="${curr.rateToBase}" class="w-20 text-right px-2 py-1 bg-[#FAF7F2] border border-[#E6DFD5] rounded font-black focus:outline-none">
+                            <input type="number" step="any" required id="rate-input-${curr.code}" value="${curr.rateToBase}" class="w-20 text-right px-2 py-1 bg-[#FAF7F2] border-[#E6DFD5] rounded font-black focus:outline-none">
                             <span class="text-slate-400">NTD</span>
                         </div>
                     </div>`;
@@ -2003,6 +2004,7 @@
 
             saveState();
             closeSubActionModal();
+            // 💡 修正：將原本筆誤的 showToast+ 修正為標準呼叫 showToast(
             showToast(`小分類已成功更新為「${newIcon} ${newName}」`);
             render();
         };
